@@ -18,10 +18,17 @@ export default function Button(props: Props) {
   const [syst, setSyst] = useState<string>(getThm());
   const [them, setThem] = useState<string>(getThm());
 
-  // Listen to theme changes in the user's OS settings and trigger a re-render
-  // to configuration the desired colour theme.
-  {
+  // Add the relevant event listeners on the initial page render and ensure that
+  // the current system settings are already recorded, even if they are not
+  // requested yet.
+  useEffect(() => {
     const qry = window.matchMedia("(prefers-color-scheme: dark)");
+
+    if (qry.matches) {
+      setSyst(thmDrk);
+    } else {
+      setSyst(thmLgt);
+    }
 
     // Sync with system theme when the user changes the systems settings
     // manually in the OS settings.
@@ -44,22 +51,13 @@ export default function Button(props: Props) {
       }
     };
 
-    // Add the relevant event listeners on the initial page render and ensure
-    // that the current system settings are already recorded, even if they are
-    // not requested yet.
-    useEffect(() => {
-      if (qry.matches) {
-        setSyst(thmDrk);
-      } else {
-        setSyst(thmLgt);
-      }
-
-      {
-        qry.addEventListener("change", onChange);
-        document.addEventListener("visibilitychange", onVisibilityChange);
-      }
-    }, []);
-  }
+    // Listen to theme changes in the user's OS settings and trigger a re-render
+    // to configuration the desired colour theme.
+    {
+      qry.addEventListener("change", onChange);
+      document.addEventListener("visibilitychange", onVisibilityChange);
+    }
+  }, []);
 
   // Apply the user's colour theme selection using the component state.
   useEffect(() => {
