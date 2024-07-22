@@ -14,7 +14,7 @@ const thmDrk = "dark";
 
 interface Props { }
 
-export const Button = (props: Props) => {
+export const ThemeSwitch = (props: Props) => {
   const [syst, setSyst] = React.useState<string>(getThm());
   const [them, setThem] = React.useState<string>(getThm());
 
