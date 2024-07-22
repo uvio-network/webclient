@@ -3,22 +3,7 @@ import * as React from "react";
 import * as Toast from "@radix-ui/react-toast";
 
 import { XMarkIcon } from "@/components/icon/base/XMarkIcon";
-
-interface ToastBodyProps {
-  clss: string;
-  titl: string;
-}
-
-interface ToastRootData {
-  clss: string;
-  text: string;
-  titl: string;
-}
-
-interface ToastRootState {
-  dict: Map<number, ToastRootData>;
-  size: number;
-}
+import { ToastBodyProps, ToastRootData, ToastRootState } from "@/components/toast/Interface";
 
 // ToastRoot needs to be mounted in some react component using the reference of
 // a toast object.

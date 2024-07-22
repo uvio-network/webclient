@@ -5,7 +5,7 @@ import * as Toast from "@radix-ui/react-toast";
 
 import { ThemeSwitch } from "@/components/theme/ThemeSwitch";
 import { InfoCircleIcon } from "@/components/icon/base/InfoCircleIcon";
-import { ErrorToast, InfoToast, SuccessToast, ToastRoot } from "@/components/toast/InfoToast";
+import { ErrorToast, InfoToast, SuccessToast, ToastRoot } from "@/components/toast/Toast";
 
 export default function Home() {
   const err = ErrorToast();
