@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react";
+import * as React from "react";
 
 import { ContrastIcon } from "@/components/icon/base/ContrastIcon";
 import { MoonLineIcon } from "@/components/icon/base/MoonLineIcon";
@@ -14,14 +14,14 @@ const thmDrk = "dark";
 
 interface Props { }
 
-export default function Button(props: Props) {
-  const [syst, setSyst] = useState<string>(getThm());
-  const [them, setThem] = useState<string>(getThm());
+export const Button = (props: Props) => {
+  const [syst, setSyst] = React.useState<string>(getThm());
+  const [them, setThem] = React.useState<string>(getThm());
 
   // Add the relevant event listeners on the initial page render and ensure that
   // the current system settings are already recorded, even if they are not
   // requested yet.
-  useEffect(() => {
+  React.useEffect(() => {
     const qry = window.matchMedia("(prefers-color-scheme: dark)");
 
     if (qry.matches) {
@@ -60,7 +60,7 @@ export default function Button(props: Props) {
   }, []);
 
   // Apply the user's colour theme selection using the component state.
-  useEffect(() => {
+  React.useEffect(() => {
     if (them === thmSys) {
       if (syst === thmLgt) {
         setLgt();
@@ -101,7 +101,7 @@ export default function Button(props: Props) {
       </button>
     </>
   );
-}
+};
 
 // getThm returns the currently configured state for the user's theme settings,
 // which can either be "system", "light" or "dark". If the user has no theme
