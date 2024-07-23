@@ -1,19 +1,19 @@
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
 
-interface Toast {
-  class: "err" | "inf" | "suc";
-  title: string;
+export interface ToastMessage {
+  clss: string;
+  titl: string;
   text: string;
 }
 
 export const useToastStore = create(
   combine(
     {
-      toasts: [] as Toast[],
+      toasts: [] as ToastMessage[],
     },
     (set) => ({
-      addToast: (toast: Toast) => {
+      addToast: (toast: ToastMessage) => {
         set((state) => {
           const newToasts = [...state.toasts];
 
