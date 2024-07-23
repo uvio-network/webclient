@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import "@/app/globals.css";
 
@@ -48,4 +48,4 @@ export default function RootLayout({
       </body>
     </html>
   );
-}
+};
