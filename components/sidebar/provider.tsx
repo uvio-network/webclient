@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
 import * as React from "react";
 
 import { BarsLeftIcon } from "@/components/icon/base/BarsLeftIcon";
 import { BaseButton } from "@/components/button/BaseButton";
 
-export const Sidebar = () => {
+export const Provider = () => {
   const [show, setShow] = React.useState<boolean>(false);
 
   const tglShow = () => {
