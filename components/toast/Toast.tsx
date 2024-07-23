@@ -4,6 +4,7 @@ import * as Toast from "@radix-ui/react-toast";
 
 import { XMarkIcon } from "@/components/icon/base/XMarkIcon";
 import { ToastBodyProps, ToastRootData, ToastRootState } from "@/components/toast/Interface";
+import { ToastButton } from "@/components/button/ToastButton";
 
 // ToastRoot needs to be mounted in some react component using the reference of
 // a toast object.
@@ -42,8 +43,7 @@ export class ToastRoot extends React.Component<{}, ToastRootState> {
           <Toast.Root
             key={key}
             className={`
-              p-4
-              text-black rounded-md items-center
+              p-4 text-black rounded-md items-center
               data-[state=open]:animate-slideIn data-[state=closed]:animate-hide data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=cancel]:translate-x-0 data-[swipe=cancel]:transition-[transform_200ms_ease-out] data-[swipe=end]:animate-swipeOut
               ${val.clss}
             `}
@@ -53,15 +53,20 @@ export class ToastRoot extends React.Component<{}, ToastRootState> {
               }
             }}
           >
-            <Toast.Title className="relative font-medium">
-              {val.titl}
-              <Toast.Close className="float-right" aria-label="Close">
-                <span className="text-gray-600 hover:text-gray-900">
-                  <XMarkIcon />
-                </span>
+            <div className="flex">
+              <Toast.Title className="grow font-medium">
+                {val.titl}
+              </Toast.Title>
+              <Toast.Close className="flex-none" aria-label="Close">
+                <ToastButton>
+                  <XMarkIcon
+                    className="w-5 h-5 text-black group-hover:text-white dark:text-black dark:group-hover:text-white"
+                    overwrite={true}
+                  />
+                </ToastButton>
               </Toast.Close>
-            </Toast.Title>
-            <Toast.Description>
+            </div>
+            <Toast.Description >
               {val.text}
             </Toast.Description>
           </Toast.Root>
