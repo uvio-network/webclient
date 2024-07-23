@@ -1,11 +1,12 @@
 "use client"
 
 import * as React from "react";
-import * as Toast from "@radix-ui/react-toast";
 
-import { ThemeSwitch } from "@/components/theme/ThemeSwitch";
+import { BaseButton } from "@/components/button/BaseButton";
 import { InfoCircleIcon } from "@/components/icon/base/InfoCircleIcon";
+import { PageHeader } from "@/components/page/PageHeader";
 import { ErrorToast, InfoToast, SuccessToast, ToastRoot } from "@/components/toast/Toast";
+import { ThemeSwitch } from "@/components/theme/ThemeSwitch";
 
 export default function Home() {
   const err = ErrorToast();
@@ -13,38 +14,32 @@ export default function Home() {
   const suc = SuccessToast();
 
   return (
-    <Toast.Provider duration={10 * 1000} swipeDirection="right">
-      <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-white text-black dark:bg-black dark:text-white">
-        <div className="w-full max-w-5xl items-center justify-between text-sm">
+    <>
+      <PageHeader titl="Hello World" />
 
-          hello world
-          <ThemeSwitch />
+      <ThemeSwitch />
 
-          <button onClick={() => {
-            err.new("something's wrong");
-          }}>
-            <InfoCircleIcon />
-          </button>
+      <BaseButton onClick={() => {
+        err.new("something's wrong");
+      }}>
+        <InfoCircleIcon />
+      </BaseButton>
 
-          <button onClick={() => {
-            inf.new("you should read this");
-          }}>
-            <InfoCircleIcon />
-          </button>
+      <BaseButton onClick={() => {
+        inf.new("you should read this");
+      }}>
+        <InfoCircleIcon />
+      </BaseButton>
 
-          <button onClick={() => {
-            suc.new("this is great");
-          }}>
-            <InfoCircleIcon />
-          </button>
+      <BaseButton onClick={() => {
+        suc.new("this is great");
+      }}>
+        <InfoCircleIcon />
+      </BaseButton>
 
-          <ToastRoot ref={err.ref()} />
-          <ToastRoot ref={inf.ref()} />
-          <ToastRoot ref={suc.ref()} />
-
-          <Toast.Viewport className="[--viewport-padding:_25px] fixed bottom-0 right-0 flex flex-col p-[var(--viewport-padding)] gap-[10px] w-[390px] max-w-[100vw] m-0 list-none z-[2147483647] outline-none" />
-        </div>
-      </main >
-    </Toast.Provider >
+      <ToastRoot ref={err.ref()} />
+      <ToastRoot ref={inf.ref()} />
+      <ToastRoot ref={suc.ref()} />
+    </>
   );
 };

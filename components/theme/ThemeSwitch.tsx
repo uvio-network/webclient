@@ -2,6 +2,7 @@
 
 import * as React from "react";
 
+import { BaseButton } from "@/components/button/BaseButton";
 import { ContrastIcon } from "@/components/icon/base/ContrastIcon";
 import { MoonLineIcon } from "@/components/icon/base/MoonLineIcon";
 import { SunLineIcon } from "@/components/icon/base/SunLineIcon";
@@ -79,26 +80,26 @@ export const ThemeSwitch = (props: Props) => {
 
   return (
     <>
-      <button onClick={() => {
+      <BaseButton onClick={() => {
         localStorage.setItem(thmKey, thmSys);
         setThem(thmSys);
       }}>
         <ContrastIcon />
-      </button>
+      </BaseButton>
 
-      <button onClick={() => {
+      <BaseButton onClick={() => {
         localStorage.setItem(thmKey, thmLgt);
         setThem(thmLgt);
       }}>
         <SunLineIcon />
-      </button>
+      </BaseButton>
 
-      <button onClick={() => {
+      <BaseButton onClick={() => {
         localStorage.setItem(thmKey, thmDrk);
         setThem(thmDrk);
       }}>
         <MoonLineIcon />
-      </button>
+      </BaseButton>
     </>
   );
 };
