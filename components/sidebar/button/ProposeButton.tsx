@@ -1,0 +1,27 @@
+import * as ToastSender from "@/components/toast/ToastSender";
+
+import { AuthStore } from "@/components/auth/AuthStore";
+import { BaseButton } from "@/components/sidebar/button/BaseButton";
+import { AddSquareIcon } from "@/components/icon/AddSquareIcon";
+import { useRouter } from "next/navigation";
+
+export const ProposeButton = () => {
+  const { auth } = AuthStore();
+  const router = useRouter();
+
+  const onClick = () => {
+    if (auth.ready) {
+      router.push("/claim/create");
+    } else {
+      ToastSender.Info("You need to login to propose a claim!");
+    }
+  };
+
+  return (
+    <BaseButton
+      onClick={onClick}
+      icon={<AddSquareIcon />}
+      text="Propose Claim"
+    />
+  );
+};

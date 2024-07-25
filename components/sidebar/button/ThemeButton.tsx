@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { BaseButton } from "@/components/button/BaseButton";
+import { BaseButton } from "@/components/sidebar/button/BaseButton";
 import { ContrastIcon } from "@/components/icon/ContrastIcon";
 import { MoonLineIcon } from "@/components/icon/MoonLineIcon";
 import { SunLineIcon } from "@/components/icon/SunLineIcon";
@@ -11,11 +11,28 @@ const thmSys = "system";
 const thmLgt = "light";
 const thmDrk = "dark";
 
-interface Props { }
-
-export const ThemeSwitch = (props: Props) => {
+export const ThemeButton = () => {
   const [syst, setSyst] = React.useState<string>(getThm());
   const [them, setThem] = React.useState<string>(getThm());
+
+
+  // Apply the user's colour theme selection using the component state.
+  React.useEffect(() => {
+    if (them === thmSys) {
+      if (syst === thmLgt) {
+        setLgt();
+      }
+      if (syst === thmDrk) {
+        setDrk();
+      }
+    }
+    if (them === thmLgt) {
+      setLgt();
+    }
+    if (them === thmDrk) {
+      setDrk();
+    }
+  }, [syst, them]);
 
   // Add the relevant event listeners on the initial page render and ensure that
   // the current system settings are already recorded, even if they are not
@@ -58,46 +75,40 @@ export const ThemeSwitch = (props: Props) => {
     }
   }, []);
 
-  // Apply the user's colour theme selection using the component state.
-  React.useEffect(() => {
-    if (them === thmSys) {
-      if (syst === thmLgt) {
-        setLgt();
-      }
-      if (syst === thmDrk) {
-        setDrk();
-      }
-    }
-    if (them === thmLgt) {
-      setLgt();
-    }
-    if (them === thmDrk) {
-      setDrk();
-    }
-  }, [syst, them]);
-
   return (
     <>
-      <BaseButton onClick={() => {
-        localStorage.setItem(thmKey, thmSys);
-        setThem(thmSys);
-      }}>
-        <ContrastIcon />
-      </BaseButton>
+      {them == thmDrk && (
+        <BaseButton
+          onClick={() => {
+            localStorage.setItem(thmKey, thmSys);
+            setThem(thmSys);
+          }}
+          icon={<ContrastIcon />}
+          text="System Theme"
+        />
+      )}
 
-      <BaseButton onClick={() => {
-        localStorage.setItem(thmKey, thmLgt);
-        setThem(thmLgt);
-      }}>
-        <SunLineIcon />
-      </BaseButton>
+      {them == thmSys && (
+        <BaseButton
+          onClick={() => {
+            localStorage.setItem(thmKey, thmLgt);
+            setThem(thmLgt);
+          }}
+          icon={<SunLineIcon />}
+          text="Lights On"
+        />
+      )}
 
-      <BaseButton onClick={() => {
-        localStorage.setItem(thmKey, thmDrk);
-        setThem(thmDrk);
-      }}>
-        <MoonLineIcon />
-      </BaseButton>
+      {them == thmLgt && (
+        <BaseButton
+          onClick={() => {
+            localStorage.setItem(thmKey, thmDrk);
+            setThem(thmDrk);
+          }}
+          icon={<MoonLineIcon />}
+          text="Dark Mode"
+        />
+      )}
     </>
   );
 };
@@ -128,6 +139,18 @@ const getThm = (): string => {
 
   return thmSys;
 };
+
+const modShw = (num: number): number => {
+  {
+    num += 1;
+  }
+
+  if (num > 2) {
+    return 0;
+  }
+
+  return num;
+}
 
 // setDrk adds the "dark" classname to the dom's body and removes the classname
 // "light". That classname change enables Tailwind to switch the colour theme.
