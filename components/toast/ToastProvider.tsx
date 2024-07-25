@@ -1,16 +1,16 @@
 import * as React from "react";
 import * as RadixToast from "@radix-ui/react-toast";
-import * as UvioToast from "@/components/toast/store";
 
-import { XMarkIcon } from "@/components/icon/base/XMarkIcon";
-import { ToastButton } from "@/components/button/ToastButton";
+import { ToastMessage } from "@/components/toast/ToastStore";
+import { ToastStore } from "@/components/toast/ToastStore";
+import { XMarkIcon } from "@/components/icon/XMarkIcon";
 
-export const Provider = () => {
-  const { toasts } = UvioToast.useStore();
+export const ToastProvider = () => {
+  const { toasts } = ToastStore();
 
   return (
     <RadixToast.Provider duration={10 * 1000} swipeDirection="right">
-      {toasts.map((mes: UvioToast.Message) => {
+      {toasts.map((mes: ToastMessage) => {
         return (
           <RadixToast.Root
             key={mes.unix}
@@ -21,19 +21,19 @@ export const Provider = () => {
             `}
             onOpenChange={(open: boolean) => {
               if (open === false) {
-                UvioToast.useStore.getState().removeToast(mes);
+                ToastStore.getState().delete(mes);
               }
             }}
           >
             <div className="flex">
               <RadixToast.Title className="grow font-medium">{mes.titl}</RadixToast.Title>
               <RadixToast.Close className="flex-none" aria-label="Close">
-                <ToastButton>
+                <div className="h-fit items-center rounded-md hover:bg-black outline-none group">
                   <XMarkIcon
                     className="w-5 h-5 text-black group-hover:text-white dark:text-black dark:group-hover:text-white"
                     overwrite={true}
                   />
-                </ToastButton>
+                </div>
               </RadixToast.Close>
             </div>
             <RadixToast.Description>{mes.text}</RadixToast.Description>

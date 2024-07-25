@@ -1,30 +1,30 @@
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
 
-export interface Message {
+export interface ToastMessage {
   clss: string;
   titl: string;
   text: string;
   unix: number;
 };
 
-export const useStore = create(
+export const ToastStore = create(
   combine(
     {
-      toasts: [] as Message[],
+      toasts: [] as ToastMessage[],
     },
     (set) => ({
-      addToast: (m: Message) => {
+      create: (m: ToastMessage) => {
         set((state) => {
           const lis = [...state.toasts];
           lis.push(m);
           return { toasts: lis };
         });
       },
-      removeToast: (m: Message) => {
-        set((state) => {
+      delete: (m: ToastMessage) => {
+        set((state: { toasts: [] }) => {
           const lis = [...state.toasts];
-          return { toasts: lis.filter((x: Message) => x.unix !== m.unix) };
+          return { toasts: lis.filter((x: ToastMessage) => x.unix !== m.unix) };
         });
       },
     })

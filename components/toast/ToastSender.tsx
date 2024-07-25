@@ -1,7 +1,7 @@
-import * as Toast from "@/components/toast/store";
+import { ToastStore } from "@/components/toast/ToastStore";
 
 export const Error = (text: string) => {
-  Toast.useStore.getState().addToast({
+  ToastStore.getState().create({
     clss: "bg-red-500",
     titl: "Error",
     text: text,
@@ -10,7 +10,7 @@ export const Error = (text: string) => {
 };
 
 export const Info = (text: string) => {
-  Toast.useStore.getState().addToast({
+  ToastStore.getState().create({
     clss: "bg-yellow-300",
     titl: "Info",
     text: text,
@@ -19,7 +19,7 @@ export const Info = (text: string) => {
 };
 
 export const Success = (text: string) => {
-  Toast.useStore.getState().addToast({
+  ToastStore.getState().create({
     clss: "bg-green-500",
     titl: "Success",
     text: text,

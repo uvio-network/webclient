@@ -1,14 +1,17 @@
 "use client";
 
 import * as React from "react";
-import * as Toast from "@/components/toast/sender";
+import * as Toast from "@/components/toast/ToastSender";
 
+import { AuthStore } from "@/components/auth/AuthStore";
 import { BaseButton } from "@/components/button/BaseButton";
-import { InfoCircleIcon } from "@/components/icon/base/InfoCircleIcon";
+import { InfoCircleIcon } from "@/components/icon/InfoCircleIcon";
 import { PageHeader } from "@/components/page/PageHeader";
 import { ThemeSwitch } from "@/components/theme/ThemeSwitch";
 
 export default function Home() {
+  const { auth } = AuthStore();
+
   return (
     <>
       <PageHeader titl="Hello World" />
@@ -38,6 +41,14 @@ export default function Home() {
       >
         <InfoCircleIcon />
       </BaseButton>
+
+      <div>
+        {auth.ready ? (
+          <p>Access Token: {auth.token}</p>
+        ) : (
+          <p>User is not authenticated</p>
+        )}
+      </div>
     </>
   );
 };

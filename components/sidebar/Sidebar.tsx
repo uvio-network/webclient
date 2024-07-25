@@ -1,11 +1,10 @@
-"use client";
-
 import * as React from "react";
+import * as Button from "@/components/sidebar/button/auth";
 
-import { BarsLeftIcon } from "@/components/icon/base/BarsLeftIcon";
+import { BarsLeftIcon } from "@/components/icon/BarsLeftIcon";
 import { BaseButton } from "@/components/button/BaseButton";
 
-export const Provider = () => {
+export const Sidebar = () => {
   const [show, setShow] = React.useState<boolean>(false);
 
   const tglShow = () => {
@@ -15,10 +14,13 @@ export const Provider = () => {
   React.useEffect(() => {
     const qry = window.matchMedia("(min-width: 1024px)"); // lg breakpoint
 
+    // Set the initial state to decide whether the sidebar should be shown on
+    // page load.
     {
       setShow(qry.matches);
     }
 
+    // Toggle the show state as the screen width changes.
     const onChange = (eve: MediaQueryListEvent) => {
       setShow(eve.matches);
     };
@@ -43,10 +45,12 @@ export const Provider = () => {
         className="flex-none w-full p-4 h-full shadow-gray-400 dark:shadow-white shadow-[0_0_2px] overflow-y-auto"
       >
 
-        more
+        {/* All sidebar content goes here. */}
+        <Button.Auth />
 
       </div>
 
+      {/* This is the button that controls the visibility of the sidebar. */}
       <BaseButton
         className="mx-2 my-4 sm:m-4"
         onClick={tglShow}

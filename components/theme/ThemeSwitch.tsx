@@ -1,11 +1,9 @@
-"use client"
-
 import * as React from "react";
 
 import { BaseButton } from "@/components/button/BaseButton";
-import { ContrastIcon } from "@/components/icon/base/ContrastIcon";
-import { MoonLineIcon } from "@/components/icon/base/MoonLineIcon";
-import { SunLineIcon } from "@/components/icon/base/SunLineIcon";
+import { ContrastIcon } from "@/components/icon/ContrastIcon";
+import { MoonLineIcon } from "@/components/icon/MoonLineIcon";
+import { SunLineIcon } from "@/components/icon/SunLineIcon";
 
 const thmKey = "uvio.network/theme";
 
