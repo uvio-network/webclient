@@ -4,7 +4,7 @@ import * as Button from "@/components/sidebar/button/auth";
 import { BarsLeftIcon } from "@/components/icon/BarsLeftIcon";
 import { BaseButton } from "@/components/button/BaseButton";
 
-export const Provider = () => {
+export const Sidebar = () => {
   const [show, setShow] = React.useState<boolean>(false);
 
   const tglShow = () => {

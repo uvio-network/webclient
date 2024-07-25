@@ -1,8 +1,9 @@
 import * as Auth from "@/components/auth/provider";
 import * as Config from "@/modules/config";
 import * as Privy from "@privy-io/react-auth";
-import * as Sidebar from "@/components/sidebar/provider";
 import * as Toast from "@/components/toast/provider";
+
+import { Sidebar } from "@/components/sidebar/Sidebar";
 
 export const Provider = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -22,7 +23,7 @@ export const Provider = ({ children }: { children: React.ReactNode }) => {
       sidebar here ensures all of our tooltips are readable from anywhere any
       time.
       */}
-      <Sidebar.Provider />
+      <Sidebar />
 
       {children}
 
