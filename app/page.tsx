@@ -1,16 +1,16 @@
 "use client";
 
-import * as Auth from "@/components/auth/store";
 import * as React from "react";
-import * as Toast from "@/components/toast/sender";
+import * as Toast from "@/components/toast/ToastSender";
 
+import { AuthStore } from "@/components/auth/AuthStore";
 import { BaseButton } from "@/components/button/BaseButton";
 import { InfoCircleIcon } from "@/components/icon/InfoCircleIcon";
 import { PageHeader } from "@/components/page/PageHeader";
 import { ThemeSwitch } from "@/components/theme/ThemeSwitch";
 
 export default function Home() {
-  const { auth } = Auth.useStore();
+  const { auth } = AuthStore();
 
   return (
     <>

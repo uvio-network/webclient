@@ -1,19 +1,19 @@
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
 
-export interface Message {
+export interface AuthMessage {
   ready: boolean;
   token: string;
 };
 
-export const useStore = create(
+export const AuthStore = create(
   combine(
     {
-      auth: {} as Message,
+      auth: {} as AuthMessage,
     },
     (set) => ({
-      update: (m: Message) => {
-        set((state: { auth: Message }) => {
+      update: (m: AuthMessage) => {
+        set((state: { auth: AuthMessage }) => {
           return {
             auth: {
               ...state.auth,

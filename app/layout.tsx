@@ -3,8 +3,7 @@
 import "@/app/globals.css";
 
 import { Inter } from "next/font/google";
-
-import * as Uvio from "@/app/provider";
+import { AppProvider } from "@/components/app/AppProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,7 +16,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
 
-        <Uvio.Provider>
+        <AppProvider>
 
           <div className="mt-4 mx-2 justify-items-center">
             <div className="m-auto w-full max-w-xl">
@@ -36,7 +35,7 @@ export default function RootLayout({
             </div>
           </div >
 
-        </Uvio.Provider>
+        </AppProvider>
 
       </body>
     </html>

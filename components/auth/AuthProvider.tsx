@@ -1,17 +1,15 @@
-import * as Auth from "@/components/auth/store";
 import * as Privy from "@privy-io/react-auth";
-import * as React from "react";
 
-export const Provider = () => {
-  const { getAccessToken } = Privy.usePrivy();
+import { AuthStore } from "@/components/auth/AuthStore";
 
+export const AuthProvider = () => {
   Privy.useLogin({
     onComplete: async () => {
       try {
-        const token = await getAccessToken();
+        const token = await Privy.getAccessToken();
 
         if (token) {
-          Auth.useStore.getState().update({ ready: true, token: token });
+          AuthStore.getState().update({ ready: true, token: token });
         } else {
           console.error('Error fetching access token: null');
         }
@@ -26,7 +24,7 @@ export const Provider = () => {
 
   Privy.useLogout({
     onSuccess: () => {
-      Auth.useStore.getState().update({ ready: false, token: "" });
+      AuthStore.getState().update({ ready: false, token: "" });
     },
   });
 

@@ -1,15 +1,16 @@
 import * as React from "react";
 import * as RadixToast from "@radix-ui/react-toast";
-import * as Toast from "@/components/toast/store";
 
+import { ToastMessage } from "@/components/toast/ToastStore";
+import { ToastStore } from "@/components/toast/ToastStore";
 import { XMarkIcon } from "@/components/icon/XMarkIcon";
 
-export const Provider = () => {
-  const { toasts } = Toast.useStore();
+export const ToastProvider = () => {
+  const { toasts } = ToastStore();
 
   return (
     <RadixToast.Provider duration={10 * 1000} swipeDirection="right">
-      {toasts.map((mes: Toast.Message) => {
+      {toasts.map((mes: ToastMessage) => {
         return (
           <RadixToast.Root
             key={mes.unix}
@@ -20,7 +21,7 @@ export const Provider = () => {
             `}
             onOpenChange={(open: boolean) => {
               if (open === false) {
-                Toast.useStore.getState().delete(mes);
+                ToastStore.getState().delete(mes);
               }
             }}
           >
