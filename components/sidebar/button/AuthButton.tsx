@@ -1,24 +1,23 @@
-import * as Button from "@/components/sidebar/button/base";
 import * as Privy from "@privy-io/react-auth";
-import * as React from "react";
 
+import { BaseButton } from "@/components/sidebar/button/BaseButton";
 import { LoginIcon } from "@/components/icon/LoginIcon";
 import { LogoutIcon } from "@/components/icon/LogoutIcon";
 
-export const Auth = () => {
+export const AuthButton = () => {
   const { authenticated, login, logout, ready } = Privy.usePrivy();
 
   return (
     <>
       {authenticated ? (
-        <Button.Base
+        <BaseButton
           disabled={!ready}
           onClick={logout}
           icon={<LogoutIcon />}
           text="Logout"
         />
       ) : (
-        <Button.Base
+        <BaseButton
           disabled={!ready}
           onClick={login}
           icon={<LoginIcon />}

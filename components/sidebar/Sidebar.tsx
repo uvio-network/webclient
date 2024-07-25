@@ -1,8 +1,13 @@
 import * as React from "react";
-import * as Button from "@/components/sidebar/button/auth";
+import * as Separator from "@/components/sidebar/layout/separator";
 
+import { AppLogo } from "@/components/app/AppLogo";
+import { AuthButton } from "@/components/sidebar/button/AuthButton";
 import { BarsLeftIcon } from "@/components/icon/BarsLeftIcon";
 import { BaseButton } from "@/components/button/BaseButton";
+import { ProposeButton } from "@/components/sidebar/button/ProposeButton";
+import { SocialButton } from "@/components/sidebar/button/SocialButton";
+import { ThemeButton } from "@/components/sidebar/button/ThemeButton";
 
 export const Sidebar = () => {
   const [show, setShow] = React.useState<boolean>(false);
@@ -38,15 +43,26 @@ export const Sidebar = () => {
     <div
       className={`
         fixed top-0 left-0 w-64 flex flex-row h-screen transition-transform transform
+        bg-white dark:bg-black
         ${show ? 'translate-x-0' : '-translate-x-full'}
       `}
     >
       <div
-        className="flex-none w-full p-4 h-full shadow-gray-400 dark:shadow-white shadow-[0_0_2px] overflow-y-auto"
+        className="flex-none w-full p-4 h-full border-gray-300 dark:border-gray-600 border-r-[1px] overflow-y-auto"
       >
 
         {/* All sidebar content goes here. */}
-        <Button.Auth />
+        <AppLogo />
+        <Separator.Horizontal />
+        {/* lists */}
+        <ProposeButton />
+        <Separator.Horizontal />
+        {/* user profile */}
+        <ThemeButton />
+        {/* settings */}
+        <AuthButton />
+        <Separator.Horizontal />
+        <SocialButton />
 
       </div>
 

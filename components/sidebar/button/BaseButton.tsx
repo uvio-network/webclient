@@ -7,7 +7,7 @@ interface Props {
   text: string;
 }
 
-export const Base = (props: Props) => {
+export const BaseButton = (props: Props) => {
   return (
     <button
       className={`

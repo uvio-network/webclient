@@ -1,4 +1,4 @@
-import * as Base from "@/components/icon/base/icon";
+import { BaseIcon } from "@/components/icon/BaseIcon";
 
 interface Props {
   className?: string;
@@ -7,7 +7,7 @@ interface Props {
 
 export const LogoutIcon = (props: Props) => {
   return (
-    <Base.Icon
+    <BaseIcon
       className={props.className}
       disabled={props.disabled}
       strokeWidth="2"
@@ -17,6 +17,6 @@ export const LogoutIcon = (props: Props) => {
         <polyline stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" points="16 17 21 12 16 7" />
         <line stroke="currentColor" strokeLinecap="round" x1="21" y1="12" x2="9" y2="12" />
       </g>
-    </Base.Icon>
+    </BaseIcon>
   );
 };
