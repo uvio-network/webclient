@@ -1,4 +1,4 @@
-import { BaseIcon } from "@/components/icon/BaseIcon";
+import * as Base from "@/components/icon/base/icon";
 
 interface Props {
   className?: string;
@@ -6,7 +6,7 @@ interface Props {
 
 export const SunLineIcon = (props: Props) => {
   return (
-    <BaseIcon
+    <Base.Icon
       className={props.className}
       strokeWidth="2"
     >
@@ -22,6 +22,6 @@ export const SunLineIcon = (props: Props) => {
         <path stroke="currentColor" d="M12 20v2" />
         <path d="M0 0h24v24H0z" />
       </g>
-    </BaseIcon>
+    </Base.Icon>
   );
 };

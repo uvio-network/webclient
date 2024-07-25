@@ -14,15 +14,15 @@ export const useStore = create(
       toasts: [] as Message[],
     },
     (set) => ({
-      addToast: (m: Message) => {
+      create: (m: Message) => {
         set((state) => {
           const lis = [...state.toasts];
           lis.push(m);
           return { toasts: lis };
         });
       },
-      removeToast: (m: Message) => {
-        set((state) => {
+      delete: (m: Message) => {
+        set((state: { toasts: [] }) => {
           const lis = [...state.toasts];
           return { toasts: lis.filter((x: Message) => x.unix !== m.unix) };
         });
