@@ -50,20 +50,24 @@ export const Sidebar = () => {
       <div
         className="flex-none w-full p-4 h-full border-gray-300 dark:border-gray-600 border-r-[1px] overflow-y-auto"
       >
-
         {/* All sidebar content goes here. */}
         <AppLogo />
+
         <Separator.Horizontal />
+
         {/* lists */}
         <ProposeButton />
+
         <Separator.Horizontal />
+
         {/* user profile */}
         <ThemeButton />
         {/* settings */}
         <AuthButton />
-        <Separator.Horizontal />
-        <SocialButton />
 
+        <Separator.Horizontal />
+
+        <SocialButton />
       </div>
 
       {/* This is the button that controls the visibility of the sidebar. */}
