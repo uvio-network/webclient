@@ -12,9 +12,9 @@ const thmLgt = "light";
 const thmDrk = "dark";
 
 export const ThemeButton = () => {
+  const [mntd, setMntd] = React.useState<boolean>(false);
   const [syst, setSyst] = React.useState<string>(getThm());
   const [them, setThem] = React.useState<string>(getThm());
-
 
   // Apply the user's colour theme selection using the component state.
   React.useEffect(() => {
@@ -73,11 +73,22 @@ export const ThemeButton = () => {
       qry.addEventListener("change", onChange);
       document.addEventListener("visibilitychange", onVisibilityChange);
     }
+
+    // For some reason React or NextJs complain about content being rendered
+    // inconsistently. The conditional rendering of SVG based icons appears to
+    // be treated in a weird way and right now it is unclear what we do wrong
+    // here. See also https://github.com/facebook/react/issues/17741.
+    //
+    //     Warning: Prop strokeLinejoin did not match. Server: "null" Client: "round"
+    //
+    {
+      setMntd(true);
+    }
   }, []);
 
   return (
     <>
-      {them == thmDrk && (
+      {mntd && them == thmDrk && (
         <BaseButton
           onClick={() => {
             localStorage.setItem(thmKey, thmSys);
@@ -88,7 +99,7 @@ export const ThemeButton = () => {
         />
       )}
 
-      {them == thmSys && (
+      {mntd && them == thmSys && (
         <BaseButton
           onClick={() => {
             localStorage.setItem(thmKey, thmLgt);
@@ -99,7 +110,7 @@ export const ThemeButton = () => {
         />
       )}
 
-      {them == thmLgt && (
+      {mntd && them == thmLgt && (
         <BaseButton
           onClick={() => {
             localStorage.setItem(thmKey, thmDrk);
@@ -139,18 +150,6 @@ const getThm = (): string => {
 
   return thmSys;
 };
-
-const modShw = (num: number): number => {
-  {
-    num += 1;
-  }
-
-  if (num > 2) {
-    return 0;
-  }
-
-  return num;
-}
 
 // setDrk adds the "dark" classname to the dom's body and removes the classname
 // "light". That classname change enables Tailwind to switch the colour theme.

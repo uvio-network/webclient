@@ -13,9 +13,12 @@
     "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-toast": "^1.2.1",
     "@uvio-network/apitscode": "github:uvio-network/apitscode#v0.1.0",
+    "formik": "^2.4.6",
     "next": "14.2.5",
     "react": "^18",
     "react-dom": "^18",
+    "react-markdown": "^9.0.1",
+    "remark-gfm": "^4.0.0",
     "zustand": "^4.5.4"
   },
   "devDependencies": {
