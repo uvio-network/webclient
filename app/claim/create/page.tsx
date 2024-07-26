@@ -10,7 +10,7 @@ import { components } from "@/app/claim/create/components";
 import { EditorButton } from "@/app/claim/create/EditorButton";
 import { Formik, Form, Field } from "formik";
 
-export default function () {
+export default function Page() {
   const [edit, setEdit] = React.useState<boolean>(true);
 
   return (
