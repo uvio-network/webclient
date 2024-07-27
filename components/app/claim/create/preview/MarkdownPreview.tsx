@@ -1,6 +1,33 @@
-import { Components } from "react-markdown";
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
-export const EditorComponents: Components = {
+import { Components } from "react-markdown";
+import { EditorStore } from "@/components/app/claim/create/store/EditorStore";
+
+export const MarkdownPreview = () => {
+  return (
+    <Markdown
+      allowedElements={allowedElements}
+      className="w-full min-h-96"
+      components={components}
+      remarkPlugins={[remarkGfm]}
+      skipHtml={true}
+    >
+      {EditorStore.getState().editor.markdown}
+    </Markdown>
+  );
+};
+
+const allowedElements = [
+  "h1", "h3", "h5",
+  "a", "p",
+  "ol", "ul", "li",
+  "hr",
+  "em", "strong",
+  "blockquote",
+];
+
+const components: Components = {
   h1(props) {
     return <h1 className="my-4 text-black dark:text-white text-3xl" {...getRst(props)} />
   },

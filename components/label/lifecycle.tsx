@@ -1,6 +1,6 @@
 import { BaseLabel } from "@/components/label/BaseLabel";
 
-export const LabelAdjourn = () => {
+export const AdjournLabel = () => {
   return (
     <BaseLabel rose={true} text="adjourn" />
   );

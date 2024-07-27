@@ -1,16 +1,15 @@
 "use client";
 
-import * as Category from "@/components/label/category";
 import * as React from "react";
-import * as Lifecycle from "@/components/label/lifecycle";
+import * as Form from "@radix-ui/react-form";
 
-import Markdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-
-import { EditorElements } from "@/components/app/claim/create/editor/EditorElements";
-import { EditorComponents } from "@/components/app/claim/create/editor/EditorComponents";
 import { EditorButton } from "@/components/app/claim/create/editor/EditorButton";
-import { Formik, Form, Field } from "formik";
+import { ExpiryField } from "@/components/app/claim/create/field/ExpiryField";
+import { LabelsField } from "@/components/app/claim/create/field/LabelsField";
+import { LabelsPreview } from "@/components/app/claim/create/preview/LabelsPreview";
+import { MarkdownField } from "@/components/app/claim/create/field/MarkdownField";
+import { MarkdownPreview } from "@/components/app/claim/create/preview/MarkdownPreview";
+import { StakeField } from "@/components/app/claim/create/field/StakeField";
 
 export default function Page() {
   const [edit, setEdit] = React.useState<boolean>(true);
@@ -23,6 +22,7 @@ export default function Page() {
           onClick={() => setEdit((old) => !old)}
           text="Write"
         />
+
         <EditorButton
           active={!edit}
           onClick={() => setEdit((old) => !old)}
@@ -30,72 +30,36 @@ export default function Page() {
         />
       </div>
 
-      <Formik
-        initialValues={{ labels: "", markdown: "" }}
+      <Form.Root
+        className=""
         onSubmit={(values) => {
           console.log(values);
         }}
       >
-        {({ values }) => (
-          <Form>
-            {edit && (
-              <>
-                <Field
-                  as="textarea"
-                  className="block w-full min-h-96 bg-white dark:bg-black outline-none"
-                  name="markdown"
-                  placeholder="# Title"
-                />
-
-                <Field
-                  as="input"
-                  type="text"
-                  className="block w-full bg-white dark:bg-black outline-none"
-                  name="labels"
-                  placeholder="Labels"
-                />
-              </>
-            )}
-
-            {!edit && (
-              <>
-                <Markdown
-                  allowedElements={EditorElements}
-                  className="w-full min-h-96"
-                  components={EditorComponents}
-                  remarkPlugins={[remarkGfm]}
-                  skipHtml={true}
-                >
-                  {values.markdown}
-                </Markdown>
-
-                <div className="flex">
-                  <Lifecycle.ProposeLabel />
-                  {splLab(values.labels).map((x, i) => (
-                    <Category.CategoryLabel key={i} text={x} />
-                  ))}
-                </div>
-              </>
-            )}
-
-            <button type="submit">
-              Submit
-            </button>
-          </Form>
+        {edit ? (
+          <>
+            <MarkdownField />
+            <LabelsField />
+          </>
+        ) : (
+          <>
+            <MarkdownPreview />
+            <LabelsPreview />
+          </>
         )}
-      </Formik>
+
+        <div className="flex">
+          <ExpiryField />
+
+          <StakeField />
+
+          <Form.Submit asChild>
+            <button className="flex-none bg-blue-400">
+              Propose Claim
+            </button>
+          </Form.Submit>
+        </div>
+      </Form.Root>
     </>
   );
 };
-
-// splLab takes a comma separated string and returns a string array contain its
-// comma separated words.
-//
-//     "foo, bar  , baz  , hello world, duh  "
-//
-//     ["foo", "bar", "baz", "hello world", "duh"]
-//
-const splLab = (inp: string): string[] => {
-  if (inp === "") return [];
-  return inp.split(',').map(word => word.trim());
-}
