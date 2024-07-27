@@ -1,6 +1,6 @@
 import { Components } from "react-markdown";
 
-export const components: Components = {
+export const EditorComponents: Components = {
   h1(props) {
     return <h1 className="my-4 text-black dark:text-white text-3xl" {...getRst(props)} />
   },

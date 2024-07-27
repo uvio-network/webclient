@@ -1,6 +1,5 @@
 import * as React from "react";
-
-import * as Separator from "@/app/claim/create/separator";
+import * as Separator from "@/components/app/claim/create/editor/separator";
 
 interface Props {
   active: boolean;
