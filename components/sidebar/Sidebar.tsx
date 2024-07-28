@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import * as Separator from "@/components/sidebar/layout/separator";
 
