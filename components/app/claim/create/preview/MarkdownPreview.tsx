@@ -1,6 +1,33 @@
-import { Components } from "react-markdown";
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
-export const EditorComponents: Components = {
+import { Components } from "react-markdown";
+import { EditorStore } from "@/components/app/claim/create/store/EditorStore";
+
+export const MarkdownPreview = () => {
+  return (
+    <Markdown
+      allowedElements={allowedElements}
+      className="w-full min-h-96"
+      components={components}
+      remarkPlugins={[remarkGfm]}
+      skipHtml={true}
+    >
+      {EditorStore.getState().editor.markdown}
+    </Markdown>
+  );
+};
+
+const allowedElements = [
+  "h1", "h3", "h5",
+  "a", "p",
+  "ol", "ul", "li",
+  "hr",
+  "em", "strong",
+  "blockquote",
+];
+
+const components: Components = {
   h1(props) {
     return <h1 className="my-4 text-black dark:text-white text-3xl" {...getRst(props)} />
   },
@@ -17,10 +44,13 @@ export const EditorComponents: Components = {
     return <p className="my-4" {...getRst(props)} />
   },
   ol(props) {
-    return <ol className="my-4 list-decimal" {...getRst(props)} />
+    return <ol className="my-4 list-decimal list-inside" {...getRst(props)} />
   },
   ul(props) {
-    return <ul className="my-4 list-disc" {...getRst(props)} />
+    return <ul className="my-4 list-disc list-inside" {...getRst(props)} />
+  },
+  li(props) {
+    return <li className="ml-2" {...getRst(props)} />
   },
   hr(props) {
     return <hr className="my-4 border-gray-300 dark:border-gray-600" target="_blank" {...getRst(props)} />
