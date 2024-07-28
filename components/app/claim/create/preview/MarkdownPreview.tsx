@@ -44,10 +44,13 @@ const components: Components = {
     return <p className="my-4" {...getRst(props)} />
   },
   ol(props) {
-    return <ol className="my-4 list-decimal" {...getRst(props)} />
+    return <ol className="my-4 list-decimal list-inside" {...getRst(props)} />
   },
   ul(props) {
-    return <ul className="my-4 list-disc" {...getRst(props)} />
+    return <ul className="my-4 list-disc list-inside" {...getRst(props)} />
+  },
+  li(props) {
+    return <li className="ml-2" {...getRst(props)} />
   },
   hr(props) {
     return <hr className="my-4 border-gray-300 dark:border-gray-600" target="_blank" {...getRst(props)} />

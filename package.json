@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@privy-io/react-auth": "^1.76.2",
-    "@radix-ui/react-form": "^0.1.0",
     "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-toast": "^1.2.1",
     "@uvio-network/apitscode": "github:uvio-network/apitscode#v0.1.0",
