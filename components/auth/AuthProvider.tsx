@@ -1,16 +1,18 @@
 import * as Privy from "@privy-io/react-auth";
+import * as React from "react";
 import * as ToastSender from "@/components/toast/ToastSender";
 
 import { AuthStore } from "@/components/auth/AuthStore";
 import { UserCreate } from "@/modules/api/user/create/Create";
 
 export const AuthProvider = () => {
-  Privy.useCreateWallet({
-    onSuccess: (wallet: Privy.Wallet) => {
-      AuthStore.getState().updateWallet(wallet.address);
-      console.trace("useCreateWallet.onSuccess");
-    },
-  });
+  const { ready, wallets } = Privy.useWallets();
+
+  React.useEffect(() => {
+    if (ready) {
+      AuthStore.getState().updateWallet(wallets[0]?.address || "");
+    }
+  }, [ready, wallets]);
 
   Privy.useLogin({
     onComplete: async (user: Privy.User, isNewUser: boolean) => {
@@ -21,8 +23,6 @@ export const AuthProvider = () => {
       } catch (err) {
         ToastSender.Error("Haha, and you thought this would be easy!?");
       }
-
-      console.trace("useLogin.onComplete");
     },
   });
 
