@@ -10,6 +10,7 @@ import { BaseButton } from "@/components/button/BaseButton";
 import { ProposeButton } from "@/components/sidebar/button/ProposeButton";
 import { SocialButton } from "@/components/sidebar/button/SocialButton";
 import { ThemeButton } from "@/components/sidebar/button/ThemeButton";
+import { UserButton } from "@/components/sidebar/button/UserButton";
 
 export const Sidebar = () => {
   const [show, setShow] = React.useState<boolean>(false);
@@ -62,7 +63,7 @@ export const Sidebar = () => {
 
         <Separator.Horizontal />
 
-        {/* user profile */}
+        <UserButton />
         <ThemeButton />
         {/* settings */}
         <AuthButton />
