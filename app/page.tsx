@@ -10,9 +10,8 @@ export default function Page() {
     <>
       <PageHeader titl="Latest Claims" />
 
-
       <div>
-        {auth.ready ? (
+        {auth.valid ? (
           <p>Access Token: {auth.token}</p>
         ) : (
           <p>User is not authenticated</p>
