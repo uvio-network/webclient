@@ -2,12 +2,15 @@ import moment from "moment";
 
 import * as ToastSender from "@/components/toast/ToastSender";
 
+import { AuthStore } from "@/components/auth/AuthStore";
 import { EditorStore } from "@/components/app/claim/create/store/EditorStore";
+import { PostCreate } from "@/modules/api/post/create/Create";
+import { PostCreateRequest } from "@/modules/api/post/create/Request";
 import { SplitList } from "@/modules/string/SplitList";
 import { TimeFormat } from "@/modules/app/claim/create/TimeFormat";
 
 // SubmitForm validates user input and then performs the claim creation.
-export const SubmitForm = () => {
+export const SubmitForm = async () => {
   const state = EditorStore.getState().editor;
 
   // Note that the order of the validation blocks below accomodates the user
@@ -57,8 +60,22 @@ export const SubmitForm = () => {
     }
   }
 
-  // TODO
-  console.log(1, state)
+  const req: PostCreateRequest = {
+    expiry: moment(state.expiry, TimeFormat, true).unix().toString(),
+    kind: "claim",
+    lifecycle: "propose",
+    option: "true",
+    parent: "",
+    stake: state.stake.split(" ")[0],
+    text: state.markdown,
+    token: state.stake.split(" ")[1],
+  };
+
+  try {
+    await PostCreate(AuthStore.getState().auth.token, [req]);
+  } catch (err) {
+    ToastSender.Error("Oh snap, the beavers don't want you to tell the world right now!");
+  }
 };
 
 const regex = /^\d+(\.\d+)? \S+$/;

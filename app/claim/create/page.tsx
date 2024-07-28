@@ -2,6 +2,7 @@
 
 import * as React from "react";
 
+import { AuthPage } from "@/components/auth/AuthPage"; // TODO
 import { EditorButton } from "@/components/app/claim/create/editor/EditorButton";
 import { ExpiryField } from "@/components/app/claim/create/field/ExpiryField";
 import { LabelsField } from "@/components/app/claim/create/field/LabelsField";
@@ -11,7 +12,7 @@ import { MarkdownPreview } from "@/components/app/claim/create/preview/MarkdownP
 import { StakeField } from "@/components/app/claim/create/field/StakeField";
 import { SubmitButton } from "@/components/app/claim/create/editor/SubmitButton";
 
-export default function Page() {
+export const Page = () => {
   const [edit, setEdit] = React.useState<boolean>(true);
 
   return (
@@ -50,3 +51,5 @@ export default function Page() {
     </>
   );
 };
+
+export default Page;

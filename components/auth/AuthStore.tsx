@@ -2,8 +2,9 @@ import { create } from "zustand";
 import { combine } from "zustand/middleware";
 
 export interface AuthMessage {
-  ready: boolean;
   token: string;
+  valid: boolean;
+  wallet: string;
 };
 
 export const AuthStore = create(
@@ -17,8 +18,9 @@ export const AuthStore = create(
           return {
             auth: {
               ...state.auth,
-              ready: m.ready,
               token: m.token,
+              valid: m.valid,
+              wallet: m.wallet,
             }
           };
         });

@@ -7,11 +7,7 @@ import { AppProvider } from "@/components/app/AppProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function Layout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en">
       <body className={inter.className}>
@@ -41,3 +37,5 @@ export default function Layout({
     </html>
   );
 };
+
+export default Layout;

@@ -3,16 +3,15 @@
 import { AuthStore } from "@/components/auth/AuthStore";
 import { PageHeader } from "@/components/page/PageHeader";
 
-export default function Page() {
+export const Page = () => {
   const { auth } = AuthStore();
 
   return (
     <>
       <PageHeader titl="Latest Claims" />
 
-
       <div>
-        {auth.ready ? (
+        {auth.valid ? (
           <p>Access Token: {auth.token}</p>
         ) : (
           <p>User is not authenticated</p>
@@ -21,3 +20,5 @@ export default function Page() {
     </>
   );
 };
+
+export default Page;
