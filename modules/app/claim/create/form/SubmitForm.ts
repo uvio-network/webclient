@@ -76,6 +76,13 @@ export const SubmitForm = async () => {
   } catch (err) {
     ToastSender.Error("Oh snap, the beavers don't want you to tell the world right now!");
   }
+
+  {
+    ToastSender.Success("Hooray, thy claim proposed milady!");
+  }
+
+  // TODO prevent duplicated submits
+  // TODO redirect to the claim page after successfull creation
 };
 
 const regex = /^\d+(\.\d+)? \S+$/;
