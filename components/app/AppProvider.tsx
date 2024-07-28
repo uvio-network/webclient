@@ -1,3 +1,5 @@
+"use client";
+
 import * as Config from "@/modules/config";
 
 import { AuthProvider } from "@/components/auth/AuthProvider";

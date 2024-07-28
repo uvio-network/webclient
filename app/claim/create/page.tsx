@@ -2,7 +2,6 @@
 
 import * as React from "react";
 
-// import { AuthPage } from "@/components/auth/AuthPage"; // TODO
 import { EditorButton } from "@/components/app/claim/create/editor/EditorButton";
 import { ExpiryField } from "@/components/app/claim/create/field/ExpiryField";
 import { LabelsField } from "@/components/app/claim/create/field/LabelsField";

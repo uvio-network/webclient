@@ -1,3 +1,5 @@
+"use client";
+
 import * as ToastSender from "@/components/toast/ToastSender";
 
 import { AuthStore } from "@/components/auth/AuthStore";
@@ -7,6 +9,7 @@ import { useRouter } from "next/navigation";
 
 export const ProposeButton = () => {
   const { auth } = AuthStore();
+
   const router = useRouter();
 
   const onClick = () => {
