@@ -3,7 +3,7 @@
 import { AuthStore } from "@/components/auth/AuthStore";
 import { PageHeader } from "@/components/page/PageHeader";
 
-export const Page = () => {
+export default function Page() {
   const { auth } = AuthStore();
 
   return (
@@ -20,5 +20,3 @@ export const Page = () => {
     </>
   );
 };
-
-export default Page;
