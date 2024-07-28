@@ -13,14 +13,23 @@ export const AuthStore = create(
       auth: {} as AuthMessage,
     },
     (set) => ({
-      update: (m: AuthMessage) => {
+      updateToken: (t: string) => {
         set((state: { auth: AuthMessage }) => {
           return {
             auth: {
               ...state.auth,
-              token: m.token,
-              valid: m.valid,
-              wallet: m.wallet,
+              token: t,
+              valid: t !== "",
+            }
+          };
+        });
+      },
+      updateWallet: (w: string) => {
+        set((state: { auth: AuthMessage }) => {
+          return {
+            auth: {
+              ...state.auth,
+              wallet: w,
             }
           };
         });
