@@ -17,9 +17,7 @@ export const ClaimHeaderMenu = (props: Props) => {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <button
-          aria-label="Claim Actions"
-        >
+        <button aria-label="Claim Actions">
           <MenuHorizontalIcon size="w-6 h-6" />
         </button>
       </DropdownMenu.Trigger>
@@ -27,7 +25,7 @@ export const ClaimHeaderMenu = (props: Props) => {
       <DropdownMenu.Portal>
         <DropdownMenu.Content
           className={`
-            p-[5px] min-w-[220px]
+            p-2 min-w-[220px]
             background border-color border rounded
             will-change-[opacity,transform]
             data-[side=top]:animate-slideDownAndFade

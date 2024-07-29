@@ -3,7 +3,7 @@ import Link from "next/link";
 import * as ToastSender from "@/components/toast/ToastSender";
 
 import { AuthStore } from "@/components/auth/AuthStore";
-import { BaseButton } from "@/components/sidebar/button/BaseButton";
+import { BaseButton } from "@/components/button/BaseButton";
 import { UserFullIcon } from "@/components/icon/UserFullIcon";
 import { truncateEthAddress } from "@/modules/wallet/WalletAddress";
 

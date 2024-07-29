@@ -1,6 +1,6 @@
 import * as Privy from "@privy-io/react-auth";
 
-import { BaseButton } from "@/components/sidebar/button/BaseButton";
+import { BaseButton } from "@/components/button/BaseButton";
 import { LoginIcon } from "@/components/icon/LoginIcon";
 import { LogoutIcon } from "@/components/icon/LogoutIcon";
 
