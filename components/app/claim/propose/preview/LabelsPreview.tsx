@@ -1,6 +1,6 @@
 import { EditorStore } from "@/components/app/claim/propose/store/EditorStore";
-import { SplitList } from "@/modules/string/SplitList";
 import { LabelList } from "@/components/claim/LabelList";
+import { SplitList } from "@/modules/string/SplitList";
 
 export const LabelsPreview = () => {
   return (

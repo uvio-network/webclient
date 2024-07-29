@@ -10,7 +10,7 @@ export class ClaimObject {
 
   constructor(res: PostSearchResponse) {
     if (res.kind !== "claim") {
-      ToastSender.Error("Fog mey, it's even more over than we thought it was!");
+      throw Error(`The claim object requires the provided post kind to be "claim". Post kind "${res.kind}" was given instead.`);
     }
 
     {

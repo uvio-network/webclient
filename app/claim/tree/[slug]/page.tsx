@@ -1,7 +1,6 @@
-
-import { PageHeader } from "@/components/page/PageHeader";
 import { ClaimContainer } from "@/components/claim/ClaimContainer";
 import { ClaimObject } from "@/modules/claim/object/ClaimObject";
+import { PageHeader } from "@/components/page/PageHeader";
 
 const markdown = `
 # This is an H1
