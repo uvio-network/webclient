@@ -8,12 +8,26 @@
   }
 }
 
-.dark {
+/* background */
+
+.dark .background {
   background-color: black;
   color: white;
 }
 
-.light {
+.light .background {
   background-color: white;
   color: black;
+}
+
+/* border */
+
+.light .border-color {
+  /* gray-200 */
+  border-color: #e5e7eb;
+}
+
+.dark .border-color {
+  /* gray-700 */
+  border-color: #374151;
 }
