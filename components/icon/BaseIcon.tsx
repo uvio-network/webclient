@@ -6,13 +6,14 @@ interface Props {
   disabled?: boolean;
   onClick?: () => void;
   overwrite?: boolean;
+  size?: string;
   strokeWidth?: string;
   viewBox?: string;
 }
 
 export const BaseIcon = (props: Props) => {
   const defaultClassName = `
-    w-5 h-5
+    ${props.size ? props.size : "w-5 h-5"}
     text-gray-400 dark:text-gray-500
     ${props.disabled ? "opacity-80" : "group-hover:text-black dark:group-hover:text-white"}
   `;
