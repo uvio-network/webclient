@@ -14,7 +14,7 @@ export const ProposeButton = () => {
 
   const onClick = () => {
     if (auth.valid) {
-      router.push("/claim/create");
+      router.push("/claim/propose");
     } else {
       ToastSender.Info("You need to login to propose a claim!");
     }

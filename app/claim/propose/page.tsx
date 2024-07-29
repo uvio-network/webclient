@@ -2,14 +2,14 @@
 
 import * as React from "react";
 
-import { EditorButton } from "@/components/app/claim/create/editor/EditorButton";
-import { ExpiryField } from "@/components/app/claim/create/field/ExpiryField";
-import { LabelsField } from "@/components/app/claim/create/field/LabelsField";
-import { LabelsPreview } from "@/components/app/claim/create/preview/LabelsPreview";
-import { MarkdownField } from "@/components/app/claim/create/field/MarkdownField";
-import { MarkdownPreview } from "@/components/app/claim/create/preview/MarkdownPreview";
-import { StakeField } from "@/components/app/claim/create/field/StakeField";
-import { SubmitButton } from "@/components/app/claim/create/editor/SubmitButton";
+import { EditorButton } from "@/components/app/claim/propose/editor/EditorButton";
+import { ExpiryField } from "@/components/app/claim/propose/field/ExpiryField";
+import { LabelsField } from "@/components/app/claim/propose/field/LabelsField";
+import { LabelsPreview } from "@/components/app/claim/propose/preview/LabelsPreview";
+import { MarkdownField } from "@/components/app/claim/propose/field/MarkdownField";
+import { MarkdownPreview } from "@/components/app/claim/propose/preview/MarkdownPreview";
+import { StakeField } from "@/components/app/claim/propose/field/StakeField";
+import { SubmitButton } from "@/components/app/claim/propose/editor/SubmitButton";
 
 export default function Page() {
   const [edit, setEdit] = React.useState<boolean>(true);

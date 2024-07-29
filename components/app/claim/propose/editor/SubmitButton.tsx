@@ -1,4 +1,4 @@
-import { SubmitForm } from "@/modules/app/claim/create/form/SubmitForm";
+import { SubmitForm } from "@/modules/app/claim/propose/form/SubmitForm";
 
 export const SubmitButton = () => {
   return (
