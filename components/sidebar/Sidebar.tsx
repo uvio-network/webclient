@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import * as Separator from "@/components/sidebar/layout/separator";
+import * as Separator from "@/components/layout/separator";
 
 import { AppLogo } from "@/components/app/AppLogo";
 import { AuthButton } from "@/components/sidebar/button/AuthButton";

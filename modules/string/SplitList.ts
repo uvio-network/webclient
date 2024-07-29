@@ -5,7 +5,7 @@
 //
 //     ["foo", "bar", "baz", "hello world", "duh"]
 //
-export const SplitList = (inp: string): string[] => {
+export const SplitList = (inp: string, sep: string = ","): string[] => {
   if (!inp || inp === "") return [];
-  return inp.split(',').map(word => word.trim());
+  return inp.split(sep).map(word => word.trim());
 };
