@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { BaseButton } from "@/components/sidebar/button/BaseButton";
+import { BaseButton } from "@/components/button/BaseButton";
 import { ContrastIcon } from "@/components/icon/ContrastIcon";
 import { MoonLineIcon } from "@/components/icon/MoonLineIcon";
 import { SunLineIcon } from "@/components/icon/SunLineIcon";

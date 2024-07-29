@@ -7,20 +7,20 @@ interface Props {
 export const ClaimButtons = (props: Props) => {
   return (
     <div className="flex">
-      <div className="w-full mr-1">
+      <div className="w-full mr-2">
         <button
-          className="p-4 w-full rounded text-black bg-emerald-400 hover:bg-emerald-500"
+          className="p-4 w-full rounded text-gray-800 hover:text-black bg-emerald-400 hover:bg-emerald-500"
           type="button"
         >
-          yay
+          Agree
         </button>
       </div>
-      <div className="w-full ml-1">
+      <div className="w-full ml-2">
         <button
-          className="p-4 w-full text-black rounded bg-red-400 hover:bg-red-500"
+          className="p-4 w-full rounded text-gray-900 hover:text-black bg-rose-400 hover:bg-rose-500"
           type="button"
         >
-          nay
+          Disagree
         </button>
       </div>
     </div>

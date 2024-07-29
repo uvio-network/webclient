@@ -3,7 +3,7 @@
 import * as ToastSender from "@/components/toast/ToastSender";
 
 import { AuthStore } from "@/components/auth/AuthStore";
-import { BaseButton } from "@/components/sidebar/button/BaseButton";
+import { BaseButton } from "@/components/button/BaseButton";
 import { AddSquareIcon } from "@/components/icon/AddSquareIcon";
 import { useRouter } from "next/navigation";
 

@@ -10,7 +10,7 @@ export interface PostSearchResponse {
   kind: string;
   labels: string;
   lifecycle: string;
-  options: string;
+  option: string;
   stake: string;
   parent: string;
   text: string;

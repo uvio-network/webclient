@@ -3,6 +3,7 @@ import * as React from "react";
 interface Props {
   children: React.ReactNode;
   className?: string;
+  colour?: string;
   disabled?: boolean;
   onClick?: () => void;
   overwrite?: boolean;
@@ -14,7 +15,7 @@ interface Props {
 export const BaseIcon = (props: Props) => {
   const defaultClassName = `
     ${props.size ? props.size : "w-5 h-5"}
-    text-gray-400 dark:text-gray-500
+    ${props.colour ? props.colour : "text-gray-400 dark:text-gray-500"}
     ${props.disabled ? "opacity-80" : "group-hover:text-black dark:group-hover:text-white"}
   `;
 

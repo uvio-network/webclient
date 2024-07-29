@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import * as ToastSender from "@/components/toast/ToastSender";
 
-import { BaseButton } from "@/components/sidebar/button/BaseButton";
+import { BaseButton } from "@/components/button/BaseButton";
 import { DiscordLineIcon } from "@/components/icon/DiscordIcon";
 import { GitBookIcon } from "@/components/icon/GitBookIcon";
 import { GithubIcon } from "@/components/icon/GithubIcon";
