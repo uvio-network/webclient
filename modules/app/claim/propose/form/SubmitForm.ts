@@ -3,11 +3,11 @@ import moment from "moment";
 import * as ToastSender from "@/components/toast/ToastSender";
 
 import { AuthStore } from "@/components/auth/AuthStore";
-import { EditorStore } from "@/components/app/claim/create/store/EditorStore";
+import { EditorStore } from "@/components/app/claim/propose/store/EditorStore";
 import { PostCreate } from "@/modules/api/post/create/Create";
 import { PostCreateRequest } from "@/modules/api/post/create/Request";
 import { SplitList } from "@/modules/string/SplitList";
-import { TimeFormat } from "@/modules/app/claim/create/TimeFormat";
+import { TimeFormat } from "@/modules/app/claim/propose/TimeFormat";
 
 // SubmitForm validates user input and then performs the claim creation.
 export const SubmitForm = async () => {

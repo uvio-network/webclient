@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { EditorStore } from "@/components/app/claim/create/store/EditorStore";
+import { EditorStore } from "@/components/app/claim/propose/store/EditorStore";
 
 export const MarkdownField = () => {
   return (

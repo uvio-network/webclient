@@ -1,7 +1,7 @@
 import * as Category from "@/components/label/category";
 import * as Lifecycle from "@/components/label/lifecycle";
 
-import { EditorStore } from "@/components/app/claim/create/store/EditorStore";
+import { EditorStore } from "@/components/app/claim/propose/store/EditorStore";
 import { SplitList } from "@/modules/string/SplitList";
 
 export const LabelsPreview = () => {

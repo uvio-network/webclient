@@ -2,7 +2,7 @@ import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 import { Components } from "react-markdown";
-import { EditorStore } from "@/components/app/claim/create/store/EditorStore";
+import { EditorStore } from "@/components/app/claim/propose/store/EditorStore";
 
 export const MarkdownPreview = () => {
   return (
