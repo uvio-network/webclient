@@ -16,46 +16,48 @@ electronic typesetting, remaining essentially unchanged.
 * Lets you define your own components (to render
 `;
 
+const list: ClaimObject[] = [
+  new ClaimObject({
+    // intern
+    created: "1722254829",
+    id: "1",
+    owner: "",
+    tree: "123",
+
+    // public
+    expiry: "1763766000",
+    kind: "claim",
+    labels: "econ, finance",
+    lifecycle: "propose",
+    options: "true",
+    stake: "15.273,2.773,0.5,0.5,1.5",
+    parent: "",
+    text: markdown,
+    token: "ETH",
+  }),
+  new ClaimObject({
+    // intern
+    created: "1722254829",
+    id: "2",
+    owner: "",
+    tree: "123",
+
+    // public
+    expiry: "1763766000",
+    kind: "claim",
+    labels: "crypto, foobar",
+    lifecycle: "resolve",
+    options: "true",
+    stake: "15.273,2.773,0.5,0.5,1.5",
+    parent: "1",
+    text: markdown,
+    token: "ETH",
+  }),
+];
+
 export default function Page({ params }: { params: { slug: string } }) {
-  const list: ClaimObject[] = [
-    new ClaimObject({
-      // intern
-      created: "",
-      id: "",
-      owner: "",
-      tree: params.slug,
-
-      // public
-      expiry: "",
-      kind: "claim",
-      labels: "econ, finance",
-      lifecycle: "propose",
-      options: "true",
-      stake: "0.5",
-      parent: "",
-      text: markdown,
-      token: "ETH",
-    }),
-    new ClaimObject({
-      // intern
-      created: "",
-      id: "",
-      owner: "",
-      tree: params.slug,
-
-      // public
-      expiry: "",
-      kind: "claim",
-      labels: "crypto, foobar",
-      lifecycle: "resolve",
-      options: "true",
-      stake: "0.5",
-      parent: "",
-      text: markdown,
-      token: "ETH",
-    }),
-  ];
-
+  // TODO fetch claim tree
+  // TODO fetch all relevant users
   return (
     <>
       <PageHeader titl="Claim Tree" />
