@@ -46,12 +46,12 @@ export const Sidebar = () => {
     <div
       className={`
         fixed top-0 left-0 w-64 flex flex-row h-screen transition-transform transform
-        bg-white dark:bg-black
+        background
         ${show ? 'translate-x-0' : '-translate-x-full'}
       `}
     >
       <div
-        className="flex-none w-full p-4 h-full border-gray-300 dark:border-gray-600 border-r-[1px] overflow-y-auto"
+        className="flex-none w-full p-4 h-full border-r border-color overflow-y-auto"
       >
         {/* All sidebar content goes here. */}
         <AppLogo />

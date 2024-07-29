@@ -1,6 +1,6 @@
+import { ClaimHeaderMenu } from "@/components/claim/ClaimHeaderMenu";
 import { ClaimObject } from "@/modules/claim/object/ClaimObject";
-import { StarLineIcon } from "../icon/StarLineIcon";
-import { MenuHorizontalIcon } from "../icon/MenuHorizontalIcon";
+import { StarLineIcon } from "@/components/icon/StarLineIcon";
 
 interface Props {
   claim: ClaimObject;
@@ -9,7 +9,7 @@ interface Props {
 export const ClaimHeader = (props: Props) => {
   return (
     <div className="flex">
-      <div className="flex-none w-12 h-12 mr-2 rounded bg-gray-200 dark:bg-gray-700 border border-gray-300 dark:border-gray-600">
+      <div className="flex-none w-12 h-12 mr-2 rounded bg-gray-100 dark:bg-gray-800 border border-color">
         {props.claim.owner().image()}
       </div>
       <div className="flex-1 w-full">
@@ -26,10 +26,12 @@ export const ClaimHeader = (props: Props) => {
       </div>
       <div className="flex-none">
         <div>
-          <MenuHorizontalIcon size="w-6 h-6" />
+          <ClaimHeaderMenu claim={props.claim} />
         </div>
         <div>
-          <StarLineIcon size="w-6 h-6" />
+          <button type="button">
+            <StarLineIcon size="w-6 h-6" />
+          </button>
         </div>
       </div>
     </div>
