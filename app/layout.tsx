@@ -13,16 +13,16 @@ export const metadata: Metadata = {
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html className="min-h-screen" lang="en">
       {/*
       Note that the body element will receive either the "light" or "dark" class
       based on the chosen theme.
       */}
-      <body className={inter.className}>
+      <body className={`min-h-screen ${inter.className}`}>
 
         <AppProvider>
 
-          <div className="py-4 px-2 background justify-items-center">
+          <div className="py-4 px-2  background justify-items-center">
             <div className="m-auto w-full max-w-xl">
               {/*
               The div below works together with the Sidebar component to ensure

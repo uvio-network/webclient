@@ -1,9 +1,12 @@
 import { BaseButton } from "@/components/button/BaseButton";
+import { ClaimStake } from "@/modules/claim/object/ClaimStake";
 import { XMarkIcon } from "@/components/icon/XMarkIcon";
 
 interface Props {
-  setOpen: (open: string) => void;
   open: string;
+  setOpen: (open: string) => void;
+  stake: ClaimStake;
+  token: string;
 }
 
 export const ClaimButtons = (props: Props) => {
@@ -39,7 +42,7 @@ export const ClaimButtons = (props: Props) => {
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                   if (e.key === "Escape") props.setOpen("");
                 }}
-                placeholder="0.003 ETH"
+                placeholder={`${props.stake.minimum} ${props.token}`}
                 autoFocus={true}
                 type="text"
               />
@@ -49,6 +52,7 @@ export const ClaimButtons = (props: Props) => {
               <button
                 className="p-4 w-full rounded text-gray-900 hover:text-black bg-sky-400 hover:bg-sky-500"
                 type="button"
+              // TODO process submit, validate input, handle errors like minimum stake too low
               >
                 Stake Reputation
               </button>
