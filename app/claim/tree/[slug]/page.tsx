@@ -1,3 +1,5 @@
+import * as Separator from "@/components/layout/separator";
+
 import { ClaimContainer } from "@/components/claim/ClaimContainer";
 import { ClaimObject } from "@/modules/claim/object/ClaimObject";
 import { PageHeader } from "@/components/page/PageHeader";
@@ -62,8 +64,20 @@ export default function Page({ params }: { params: { slug: string } }) {
     <>
       <PageHeader titl="Claim Tree" />
 
-      {list.map((x: ClaimObject) => (
-        <ClaimContainer key={x.id()} claim={x} />
+      {list.map((x: ClaimObject, i: number) => (
+        <>
+          <ClaimContainer key={x.id()} claim={x} />
+
+          {/*
+          Show a vertical separator between claims and make sure that the last
+          claim does not display a separator anymore.
+          */}
+          {i < list.length - 1 && (
+            <div className="w-full h-12 mb-8">
+              <Separator.Vertical />
+            </div>
+          )}
+        </>
       ))}
     </>
   );

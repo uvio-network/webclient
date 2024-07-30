@@ -8,26 +8,52 @@
   }
 }
 
+/* font */
+
+.dark {
+  color: white;
+}
+
+.light {
+  color: black;
+}
+
 /* background */
 
 .dark .background {
   background-color: black;
-  color: white;
 }
 
 .light .background {
   background-color: white;
-  color: black;
+}
+
+.dark .background-overlay {
+  /* gray-900 */
+  background-color: #111827;
+}
+
+.light .background-overlay {
+  /* gray-50 */
+  background-color: #f9fafb;
 }
 
 /* border */
 
-.light .border-color {
-  /* gray-200 */
-  border-color: #e5e7eb;
+.dark .border-background {
+  border-color: black;
+}
+
+.light .border-background {
+  border-color: white;
 }
 
 .dark .border-color {
   /* gray-700 */
   border-color: #374151;
+}
+
+.light .border-color {
+  /* gray-200 */
+  border-color: #e5e7eb;
 }

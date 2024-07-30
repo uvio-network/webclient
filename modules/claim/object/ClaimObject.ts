@@ -1,17 +1,9 @@
 import moment from "moment";
 
+import { ClaimStake } from "@/modules/claim/object/ClaimStake";
 import { PostSearchResponse } from "@/modules/api/post/search/Response";
 import { SplitList } from "@/modules/string/SplitList";
 import { UserObject } from "@/modules/user/object/UserObject";
-
-interface ClaimStake {
-  agree: number;
-  disagree: number;
-  initial: number;
-  minimum: number;
-  pnl: number;
-  user: number;
-}
 
 export class ClaimObject {
   private claimStake: ClaimStake;
