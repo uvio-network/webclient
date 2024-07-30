@@ -15,7 +15,7 @@ export const ClaimButtons = (props: Props) => {
             <div className="flex-1 p-2 text-xs">
               You are staking reputation in <strong> {props.show} </strong> with
               the proposed claim. Funds cannot be withdrawn, but will be
-              distributed according to this market's resolution.
+              distributed according to this market&apos;s resolution.
             </div>
 
             <div className="flex-none">

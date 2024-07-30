@@ -64,12 +64,19 @@ export default function Page({ params }: { params: { slug: string } }) {
     <>
       <PageHeader titl="Claim Tree" />
 
-      {list.map((x: ClaimObject) => (
+      {list.map((x: ClaimObject, i: number) => (
         <>
           <ClaimContainer key={x.id()} claim={x} />
-          <div className="w-full h-12 mb-8">
-            <Separator.Vertical />
-          </div>
+
+          {/*
+          Show a vertical separator between claims and make sure that the last
+          claim does not display a separator anymore.
+          */}
+          {i < list.length - 1 && (
+            <div className="w-full h-12 mb-8">
+              <Separator.Vertical />
+            </div>
+          )}
         </>
       ))}
     </>
