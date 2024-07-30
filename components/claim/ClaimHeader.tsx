@@ -9,7 +9,7 @@ interface Props {
 export const ClaimHeader = (props: Props) => {
   return (
     <div className="flex">
-      <div className="flex-none w-12 h-12 mr-2 rounded bg-gray-100 dark:bg-gray-800 border border-color">
+      <div className="flex-none w-12 h-12 mr-2 rounded background-overlay border border-color">
         {props.claim.owner().image()}
       </div>
       <div className="flex-1 w-full">

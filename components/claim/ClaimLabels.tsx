@@ -1,16 +1,16 @@
-import { ClaimObject } from "@/modules/claim/object/ClaimObject";
 import { LabelList } from "@/components/claim/LabelList";
 
 interface Props {
-  claim: ClaimObject;
+  labels: string[];
+  lifecycle: string;
 }
 
 export const ClaimLabels = (props: Props) => {
   return (
-    <div className="">
+    <div className="px-2">
       <LabelList
-        labels={props.claim.labels()}
-        lifecycle={props.claim.lifecycle()}
+        labels={props.labels}
+        lifecycle={props.lifecycle}
       />
     </div>
   );

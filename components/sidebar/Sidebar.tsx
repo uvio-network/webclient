@@ -45,7 +45,7 @@ export const Sidebar = () => {
   return (
     <div
       className={`
-        fixed top-0 left-0 w-64 flex flex-row h-screen transition-transform transform
+        fixed top-0 left-0 z-10 w-64 flex flex-row h-screen transition-transform transform
         background
         ${show ? 'translate-x-0' : '-translate-x-full'}
       `}
