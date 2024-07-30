@@ -7,17 +7,19 @@ import * as Separator from "@/components/layout/separator";
 import { ClaimButtons } from "@/components/claim/ClaimButtons";
 import { ClaimFooter } from "@/components/claim/ClaimFooter";
 import { ClaimLabels } from "@/components/claim/ClaimLabels";
+import { ClaimOption } from "@/modules/claim/object/ClaimOption";
 import { ClaimStake } from "@/modules/claim/object/ClaimStake";
 
 interface Props {
   labels: string[];
   lifecycle: string;
+  option: ClaimOption;
   stake: ClaimStake;
   token: string;
 }
 
 export const ClaimActions = (props: Props) => {
-  const [show, setShow] = React.useState<string>("");
+  const [open, setOpen] = React.useState<string>("");
 
   return (
     // This relative container is the anchor for elements inside of the
@@ -29,21 +31,28 @@ export const ClaimActions = (props: Props) => {
       className={`
         relative w-full py-2
         border
-        ${show !== "" ? "border-color rounded background-overlay" : "border-background"}
+        ${open !== "" ? "background-overlay border-color rounded" : "border-background"}
       `}
     >
-      <ClaimLabels labels={props.labels} lifecycle={props.lifecycle} />
+      <ClaimLabels
+        labels={props.labels}
+        lifecycle={props.lifecycle}
+      />
 
       <div className="px-2">
         <Separator.Horizontal />
       </div>
 
       <ClaimButtons
-        setShow={setShow}
-        show={show}
+        setOpen={setOpen}
+        open={open}
       />
 
-      <ClaimFooter stake={props.stake} token={props.token} />
+      <ClaimFooter
+        option={props.option}
+        stake={props.stake}
+        token={props.token}
+      />
     </div>
   );
 };

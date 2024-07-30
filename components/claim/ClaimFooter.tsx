@@ -1,16 +1,19 @@
 import { BaseButton } from "@/components/button/BaseButton";
+import { ClaimFooterCard } from "@/components/claim/ClaimFooterCard";
+import { ClaimOption } from "@/modules/claim/object/ClaimOption";
 import { ClaimStake } from "@/modules/claim/object/ClaimStake";
 import { TriangleDownIcon } from "@/components/icon/TriangleDownIcon";
 import { TriangleUpIcon } from "@/components/icon/TriangleUpIcon";
 
 interface Props {
+  option: ClaimOption;
   stake: ClaimStake;
   token: string;
 }
 
 export const ClaimFooter = (props: Props) => {
   return (
-    <div className="flex mt-2 px-2 text-gray-500 dark:text-gray-400">
+    <div className="flex mt-2 px-2">
       <div className="flex-1 relative">
         <div className="absolute left-0 w-fit">
           <BaseButton
@@ -23,8 +26,12 @@ export const ClaimFooter = (props: Props) => {
       </div>
 
       <div className="flex-1 w-full">
-        <div className="mx-auto p-2 w-fit text-gray-400 dark:text-gray-500 underline underline-offset-4 decoration-dashed cursor-default">
-          {`${props.stake.pnl.toFixed(2)} %`}
+        <div className="mx-auto w-fit">
+          <ClaimFooterCard
+            option={props.option}
+            stake={props.stake}
+            token={props.token}
+          />
         </div>
       </div>
 

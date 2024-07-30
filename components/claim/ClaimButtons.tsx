@@ -2,18 +2,18 @@ import { BaseButton } from "@/components/button/BaseButton";
 import { XMarkIcon } from "@/components/icon/XMarkIcon";
 
 interface Props {
-  setShow: (show: string) => void;
-  show: string;
+  setOpen: (open: string) => void;
+  open: string;
 }
 
 export const ClaimButtons = (props: Props) => {
   return (
     <>
-      {props.show && (
+      {props.open && (
         <>
           <div className="absolute top-0 flex w-full h-14 rounded-t background-overlay">
             <div className="flex-1 p-2 text-xs">
-              You are staking reputation in <strong> {props.show} </strong> with
+              You are staking reputation in <strong> {props.open} </strong> with
               the proposed claim. Funds cannot be withdrawn, but will be
               distributed according to this market&apos;s resolution.
             </div>
@@ -22,7 +22,7 @@ export const ClaimButtons = (props: Props) => {
               <BaseButton
                 hover="hover:text-black enabled:dark:hover:text-white"
                 icon={<XMarkIcon />}
-                onClick={() => props.setShow("")}
+                onClick={() => props.setOpen("")}
               />
             </div>
           </div>
@@ -37,7 +37,7 @@ export const ClaimButtons = (props: Props) => {
                   text-2xl sm:text-4xl font-light text-right caret-sky-400
                 `}
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                  if (e.key === "Escape") props.setShow("");
+                  if (e.key === "Escape") props.setOpen("");
                 }}
                 placeholder="0.003 ETH"
                 autoFocus={true}
@@ -57,12 +57,12 @@ export const ClaimButtons = (props: Props) => {
         </>
       )}
 
-      {!props.show && (
+      {!props.open && (
         <div className="flex px-2">
           <div className="w-full mr-2">
             <button
               className="p-4 w-full rounded text-gray-800 hover:text-black bg-emerald-400 hover:bg-emerald-500"
-              onClick={() => props.setShow("agreement")}
+              onClick={() => props.setOpen("agreement")}
               type="button"
             >
               Agree
@@ -72,7 +72,7 @@ export const ClaimButtons = (props: Props) => {
           <div className="w-full ml-2">
             <button
               className="p-4 w-full rounded text-gray-900 hover:text-black bg-rose-400 hover:bg-rose-500"
-              onClick={() => props.setShow("disagreement")}
+              onClick={() => props.setOpen("disagreement")}
               type="button"
             >
               Disagree

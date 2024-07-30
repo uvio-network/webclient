@@ -11,6 +11,7 @@
   "dependencies": {
     "@privy-io/react-auth": "^1.76.2",
     "@radix-ui/react-dropdown-menu": "^2.1.1",
+    "@radix-ui/react-hover-card": "^1.1.1",
     "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-toast": "^1.2.1",
     "@uvio-network/apitscode": "github:uvio-network/apitscode#v0.1.0",

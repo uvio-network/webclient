@@ -31,7 +31,7 @@ const list: ClaimObject[] = [
     kind: "claim",
     labels: "econ, finance",
     lifecycle: "propose",
-    option: "true",
+    option: "",
     stake: "15.273,2.773,0.5,0.5,1.5",
     parent: "",
     text: markdown,
@@ -49,8 +49,8 @@ const list: ClaimObject[] = [
     kind: "claim",
     labels: "crypto, foobar",
     lifecycle: "resolve",
-    option: "false",
-    stake: "15.273,2.773,0.5,0.5,1.5",
+    option: "true",
+    stake: "2.773,15.273,0.5,0.5,1.5",
     parent: "1",
     text: markdown,
     token: "ETH",
@@ -65,8 +65,8 @@ export default function Page({ params }: { params: { slug: string } }) {
       <PageHeader titl="Claim Tree" />
 
       {list.map((x: ClaimObject, i: number) => (
-        <>
-          <ClaimContainer key={x.id()} claim={x} />
+        <div key={x.id()}>
+          <ClaimContainer claim={x} />
 
           {/*
           Show a vertical separator between claims and make sure that the last
@@ -77,7 +77,7 @@ export default function Page({ params }: { params: { slug: string } }) {
               <Separator.Vertical />
             </div>
           )}
-        </>
+        </div>
       ))}
     </>
   );
