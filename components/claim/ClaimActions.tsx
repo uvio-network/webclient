@@ -44,8 +44,10 @@ export const ClaimActions = (props: Props) => {
       </div>
 
       <ClaimButtons
-        setOpen={setOpen}
         open={open}
+        setOpen={setOpen}
+        stake={props.stake}
+        token={props.token}
       />
 
       <ClaimFooter

@@ -151,16 +151,18 @@ const getThm = (): string => {
   return thmSys;
 };
 
-// setDrk adds the "dark" classname to the dom's body and removes the classname
-// "light". That classname change enables Tailwind to switch the colour theme.
+// setDrk adds the "dark" classname to the dom's document element and removes
+// the classname "light". That classname change enables Tailwind to switch the
+// colour theme.
 const setDrk = () => {
-  document.body.classList.add(thmDrk);
-  document.body.classList.remove(thmLgt);
+  document.documentElement.classList.add(thmDrk);
+  document.documentElement.classList.remove(thmLgt);
 };
 
-// setLgt adds the "light" classname to the dom's body and removes the classname
-// "dark". That classname change enables Tailwind to switch the colour theme.
+// setLgt adds the "light" classname to the dom's document element and removes
+// the classname "dark". That classname change enables Tailwind to switch the
+// colour theme.
 const setLgt = () => {
-  document.body.classList.add(thmLgt);
-  document.body.classList.remove(thmDrk);
+  document.documentElement.classList.add(thmLgt);
+  document.documentElement.classList.remove(thmDrk);
 };
