@@ -57,7 +57,7 @@ const list: ClaimObject[] = [
   }),
 ];
 
-export default function Page({ params }: { params: { slug: string } }) {
+export default function Page({ props }: { props: { slug: string } }) {
   // TODO fetch claim tree
   // TODO fetch all relevant users
   return (

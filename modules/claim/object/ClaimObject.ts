@@ -5,6 +5,7 @@ import { ClaimOption, ParseClaimOption } from "@/modules/claim/object/ClaimOptio
 import { PostSearchResponse } from "@/modules/api/post/search/Response";
 import { SplitList } from "@/modules/string/SplitList";
 import { UserObject } from "@/modules/user/object/UserObject";
+import { UserSearchResponse } from "@/modules/api/user/search/Response";
 
 export class ClaimObject {
   private claimOption: ClaimOption;
@@ -12,7 +13,7 @@ export class ClaimObject {
   private post: PostSearchResponse;
   private user: UserObject;
 
-  constructor(post: PostSearchResponse) {
+  constructor(post: PostSearchResponse, user: UserSearchResponse) {
     if (post.kind !== "claim") {
       throw Error(`The claim object requires the provided post kind to be "claim". Post kind "${post.kind}" was given instead.`);
     }
@@ -21,7 +22,7 @@ export class ClaimObject {
       this.claimOption = ParseClaimOption(post.option);
       this.claimStake = CalculateClaimStake(post.stake, this.claimOption);
       this.post = post;
-      this.user = new UserObject({ created: "", id: "8236427635", image: "", name: "RevengeArch47" }); // TODO
+      this.user = new UserObject(user);
     }
   }
 

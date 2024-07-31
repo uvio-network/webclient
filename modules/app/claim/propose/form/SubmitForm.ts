@@ -4,13 +4,14 @@ import * as ToastSender from "@/components/toast/ToastSender";
 
 import { AuthStore } from "@/components/auth/AuthStore";
 import { EditorStore } from "@/components/app/claim/propose/store/EditorStore";
+import { HasDuplicate } from "@/modules/string/HasDuplicate";
 import { PostCreate } from "@/modules/api/post/create/Create";
 import { PostCreateRequest } from "@/modules/api/post/create/Request";
 import { SplitList } from "@/modules/string/SplitList";
 import { TimeFormat } from "@/modules/app/claim/propose/TimeFormat";
 
 // SubmitForm validates user input and then performs the claim creation.
-export const SubmitForm = async () => {
+export const SubmitForm = async (cb: (id: string) => void) => {
   const state = EditorStore.getState().editor;
 
   // Note that the order of the validation blocks below accomodates the user
@@ -37,6 +38,9 @@ export const SubmitForm = async () => {
     if (SplitList(state.labels).length > 4) {
       return ToastSender.Error("The proposed claim must not have more than four category labels.");
     }
+    if (HasDuplicate(SplitList(state.labels))) {
+      return ToastSender.Error("The proposed claim must not have duplicated category labels.");
+    }
   }
 
   {
@@ -52,6 +56,9 @@ export const SubmitForm = async () => {
     if (!state.stake || state.stake === "") {
       return ToastSender.Error("You must stake a minimum amount of reputation with your claim.");
     }
+    if (!inpPrt(state.stake)) {
+      return ToastSender.Error("The format for staked reputation must be [number token].");
+    }
     if (!inpNum(state.stake)) {
       return ToastSender.Error("The amount of staked reputation must be positive.");
     }
@@ -63,6 +70,7 @@ export const SubmitForm = async () => {
   const req: PostCreateRequest = {
     expiry: moment(state.expiry, TimeFormat, true).unix().toString(),
     kind: "claim",
+    labels: SplitList(state.labels).join(","),
     lifecycle: "propose",
     option: "true",
     parent: "",
@@ -72,42 +80,46 @@ export const SubmitForm = async () => {
   };
 
   try {
-    await PostCreate(AuthStore.getState().auth.token, [req]);
+    const [res] = await PostCreate(AuthStore.getState().auth.token, [req]);
+    ToastSender.Success("Hooray, thy claim proposed milady!");
+    cb(res.id);
   } catch (err) {
     ToastSender.Error("Oh snap, the beavers don't want you to tell the world right now!");
   }
 
-  {
-    ToastSender.Success("Hooray, thy claim proposed milady!");
-  }
-
   // TODO prevent duplicated submits
-  // TODO redirect to the claim page after successfull creation
+};
+
+// inpPrt returns true if the given input is a two part string separated by a
+// single whitespace. We use this to ensure we get user input like shown below.
+//
+//     "0.003 ETH"
+//
+const inpPrt = (inp: string): boolean => {
+  return inp.split(" ").length === 2;
 };
 
 const regex = /^\d+(\.\d+)? \S+$/;
 
-// inpNum returns true if the given input string has a numerical prefix. The
-// implication here is that the input string must have only one whitespace
-// separating prefix and suffix.
+// inpNum returns true if the given input string has a numerical prefix. This
+// prefix might be an integer or floating point number.
 //
-//     "0.003 ETH"
+//     5
+//     0.003
 //
 const inpNum = (inp: string): boolean => {
   if (!inp || inp === "") return false;
-  if (inp.split(" ").length !== 2) return false;
   return regex.test(inp);
 };
 
 // inpTok returns true if the given input string has one of the following
-// suffixes. The implication here is that the input string must have only one
-// whitespace separating prefix and suffix.
+// suffixes. Those ticker symbols define our token whitelist for proposing
+// claims.
 //
 //     ETH
 //     USDC
 //
 const inpTok = (inp: string): boolean => {
   if (!inp || inp === "") return false;
-  if (inp.split(" ").length !== 2) return false;
   return inp.endsWith("ETH") || inp.endsWith("USDC");
 };

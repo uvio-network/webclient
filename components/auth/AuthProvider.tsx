@@ -2,38 +2,66 @@ import * as Privy from "@privy-io/react-auth";
 import * as React from "react";
 import * as ToastSender from "@/components/toast/ToastSender";
 
-import { AuthStore } from "@/components/auth/AuthStore";
+import { AuthMessage, AuthStore } from "@/components/auth/AuthStore";
+import { truncateEthAddress } from "@/modules/wallet/WalletAddress";
 import { UserCreate } from "@/modules/api/user/create/Create";
+import { UserSearch } from "@/modules/api/user/search/Search";
 
 export const AuthProvider = () => {
-  const { ready, wallets } = Privy.useWallets();
+  const { authenticated, user, ready } = Privy.usePrivy();
 
+  // TODO ensure we make the calls below only once per page reload
   React.useEffect(() => {
-    if (ready) {
-      AuthStore.getState().updateWallet(wallets[0]?.address || "");
-    }
-  }, [ready, wallets]);
-
-  Privy.useLogin({
-    onComplete: async (user: Privy.User, isNewUser: boolean) => {
-      if (!isNewUser) return;
+    const fetchData = async () => {
+      const token = await Privy.getAccessToken();
+      if (!token) {
+        return ToastSender.Error("Haha, and you thought this would be easy!?");
+      }
 
       try {
-        await UserCreate(AuthStore.getState().auth.token, [{ image: "", name: "" }]);
+        await UserCreate(token, [{ image: "", name: truncateEthAddress(user?.wallet?.address) }]);
       } catch (err) {
         ToastSender.Error("Haha, and you thought this would be easy!?");
       }
-    },
-  });
 
+      const auth: AuthMessage = {
+        image: "",
+        name: "",
+        token: token,
+        valid: true,
+        wallet: user?.wallet?.address || "",
+      };
+
+      try {
+        const [use] = await UserSearch(token, [{ id: "self" }]);
+        auth.image = use.image;
+        auth.name = use.name;
+      } catch (err) {
+        ToastSender.Error("Haha, and you thought this would be easy!?");
+      }
+
+      {
+        AuthStore.getState().update(auth);
+        console.log("AuthStore.update()")
+      }
+    };
+
+    if (ready && authenticated) {
+      fetchData();
+    }
+  }, [authenticated, user, ready]);
+
+  // Every time the user's access token is granted or refreshed we update our
+  // internal auth store. Conversely, if the user's access token was revoked, we
+  // delete our internally tracked state as well.
   Privy.useToken({
     onAccessTokenGranted: (accessToken: string) => {
       AuthStore.getState().updateToken(accessToken);
-      console.trace("useToken.onAccessTokenGranted");
+      console.log("Privy.getAccessToken");
     },
     onAccessTokenRemoved: () => {
-      AuthStore.getState().updateToken("");
-      console.trace("useToken.onAccessTokenRemoved");
+      AuthStore.getState().delete();
+      console.log("useToken.onAccessTokenRemoved");
     },
   });
 

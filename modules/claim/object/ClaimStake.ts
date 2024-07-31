@@ -15,7 +15,7 @@ export interface ClaimStake {
 // information for the given claim and returns an object of relevant staking
 // information in structured form. The inline comments below are based on the
 // following apischema formatted string value, where, as a reminder, the format
-// is "agreement,disagree,minimum,initial,user".
+// is "agreement,disagreement,minimum,initial,user".
 //
 //     "15.273,2.773,0.5,0.5,1.5"
 //
@@ -25,13 +25,13 @@ export const CalculateClaimStake = (stk: string, opt: ClaimOption): ClaimStake =
   });
 
   let claimStake: ClaimStake = {
-    agree: num[0],
-    disagree: num[1],
-    initial: num[3],
-    minimum: num[2],
+    agree: num[0] || 0,
+    disagree: num[1] || 0,
+    initial: num[3] || 0,
+    minimum: num[2] || 0,
     probability: 0,
     upside: 0,
-    user: num[4],
+    user: num[4] || 0,
   };
 
   // Calculate the probability as the fraction of staked reputation that agrees

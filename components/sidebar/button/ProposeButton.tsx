@@ -6,14 +6,15 @@ import { AuthStore } from "@/components/auth/AuthStore";
 import { BaseButton } from "@/components/button/BaseButton";
 import { AddSquareIcon } from "@/components/icon/AddSquareIcon";
 import { useRouter } from "next/navigation";
+import { useShallow } from "zustand/react/shallow";
 
 export const ProposeButton = () => {
-  const { auth } = AuthStore();
+  const { valid } = AuthStore(useShallow((state) => ({ valid: state.auth.valid })));
 
   const router = useRouter();
 
   const onClick = () => {
-    if (auth.valid) {
+    if (valid) {
       router.push("/claim/propose");
     } else {
       ToastSender.Info("You need to login to propose a claim!");
