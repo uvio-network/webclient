@@ -14,18 +14,13 @@ export const UserButton = () => {
     ToastSender.Info("It's comming just chill ok!");
   };
 
-  let text = "User Profile";
-  if (name !== "") {
-    text = name;
-  }
-
   return (
     <>
-      {text && (
+      {name && (
         <Link href="">
           <BaseButton
             icon={<UserFullIcon />}
-            text={text}
+            text={name}
             onClick={onClick}
           />
         </Link>
