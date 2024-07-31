@@ -22,7 +22,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
         <AppProvider>
 
-          <div className="py-4 px-2  background justify-items-center">
+          <div className="py-4 px-2 background justify-items-center">
             <div className="m-auto w-full max-w-xl">
               {/*
               The div below works together with the Sidebar component to ensure

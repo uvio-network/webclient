@@ -5,23 +5,23 @@ import * as ToastSender from "@/components/toast/ToastSender";
 import { AuthStore } from "@/components/auth/AuthStore";
 import { BaseButton } from "@/components/button/BaseButton";
 import { UserFullIcon } from "@/components/icon/UserFullIcon";
-import { truncateEthAddress } from "@/modules/wallet/WalletAddress";
+import { useShallow } from "zustand/react/shallow";
 
 export const UserButton = () => {
-  const { auth } = AuthStore();
+  const { name } = AuthStore(useShallow((state) => ({ name: state.auth.name })));
 
   const onClick = () => {
     ToastSender.Info("It's comming just chill ok!");
   };
 
   let text = "User Profile";
-  if (auth.wallet !== "") {
-    text = truncateEthAddress(auth.wallet);
+  if (name !== "") {
+    text = name;
   }
 
   return (
     <>
-      {auth.valid && (
+      {text && (
         <Link href="">
           <BaseButton
             icon={<UserFullIcon />}
