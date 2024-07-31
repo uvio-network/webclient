@@ -19,45 +19,61 @@ electronic typesetting, remaining essentially unchanged.
 `;
 
 const list: ClaimObject[] = [
-  new ClaimObject({
-    // intern
-    created: "1722254829",
-    id: "1",
-    owner: "",
-    tree: "123",
+  new ClaimObject(
+    {
+      // intern
+      created: "1722254829",
+      id: "1",
+      owner: "",
+      tree: "123",
 
-    // public
-    expiry: "1763766000",
-    kind: "claim",
-    labels: "econ, finance",
-    lifecycle: "propose",
-    option: "",
-    stake: "15.273,2.773,0.5,0.5,1.5",
-    parent: "",
-    text: markdown,
-    token: "ETH",
-  }),
-  new ClaimObject({
-    // intern
-    created: "1722254829",
-    id: "2",
-    owner: "",
-    tree: "123",
+      // public
+      expiry: "1763766000",
+      kind: "claim",
+      labels: "econ, finance",
+      lifecycle: "propose",
+      option: "",
+      stake: "15.273,2.773,0.5,0.5,1.5",
+      parent: "",
+      text: markdown,
+      token: "ETH",
+    },
+    {
+      created: "",
+      id: "8236427635",
+      image: "",
+      name: "RevengeArch47",
+    },
+  ),
+  new ClaimObject(
+    {
+      // intern
+      created: "1722254829",
+      id: "2",
+      owner: "",
+      tree: "123",
 
-    // public
-    expiry: "1763766000",
-    kind: "claim",
-    labels: "crypto, foobar",
-    lifecycle: "resolve",
-    option: "true",
-    stake: "2.773,15.273,0.5,0.5,1.5",
-    parent: "1",
-    text: markdown,
-    token: "ETH",
-  }),
+      // public
+      expiry: "1763766000",
+      kind: "claim",
+      labels: "crypto, foobar",
+      lifecycle: "resolve",
+      option: "true",
+      stake: "2.773,15.273,0.5,0.5,1.5",
+      parent: "1",
+      text: markdown,
+      token: "ETH",
+    },
+    {
+      created: "",
+      id: "8236427635",
+      image: "",
+      name: "RevengeArch47",
+    },
+  ),
 ];
 
-export default function Page({ props }: { props: { slug: string } }) {
+export default function Page({ params }: { params: { slug: string } }) {
   // TODO fetch claim tree
   // TODO fetch all relevant users
   return (

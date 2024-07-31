@@ -24,7 +24,7 @@ export default function Page({ params }: { params: { slug: string } }) {
     {
       fetchData();
     }
-  }, []);
+  }, [params.slug]);
 
   return (
     <>
