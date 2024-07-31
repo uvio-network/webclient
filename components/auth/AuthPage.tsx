@@ -1,17 +1,26 @@
 "use client";
 
-import * as Privy from "@privy-io/react-auth";
 import * as React from "react";
 
-export const AuthPage = ({ children }: { children: React.ReactNode }) => {
-  const { authenticated, ready } = Privy.usePrivy();
+import { AuthStore } from "@/components/auth/AuthStore";
+import { useShallow } from "zustand/react/shallow";
 
-  if (!ready) return <></>;
-  if (!authenticated) return <>You need to login to see this page.</>;
+export const AuthPage = ({ children }: { children: React.ReactNode }) => {
+  const { valid } = AuthStore(useShallow((state) => ({ valid: state.auth.valid })));
+
+  if (!valid) return;
 
   return (
     <>
-      {children}
+      {valid ? (
+        <div>
+          {children}
+        </div>
+      ) : (
+        <div>
+          You need to login to see this page.
+        </div>
+      )}
     </>
   );
 };

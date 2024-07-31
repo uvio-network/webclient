@@ -3,62 +3,60 @@ import * as React from "react";
 import * as ToastSender from "@/components/toast/ToastSender";
 
 import { AuthMessage, AuthStore } from "@/components/auth/AuthStore";
+import { Locker } from "@/modules/locker/Locker";
 import { truncateEthAddress } from "@/modules/wallet/WalletAddress";
 import { UserCreate } from "@/modules/api/user/create/Create";
 import { UserSearch } from "@/modules/api/user/search/Search";
 
+const locker = new Locker();
+
 export const AuthProvider = () => {
-  const { authenticated, user, ready } = Privy.usePrivy();
+  const { user } = Privy.usePrivy();
+  const { wallets, ready } = Privy.useWallets();
 
-  // TODO ensure we make the calls below only once per page reload
+  const [login, setLogin] = React.useState<boolean>(false);
+
   React.useEffect(() => {
-    const fetchData = async () => {
-      const token = await Privy.getAccessToken();
-      if (!token) {
-        return ToastSender.Error("Haha, and you thought this would be easy!?");
-      }
+    if (login && ready && user && !locker.locked()) {
+      // Before we do anything else we need to lock the process of fetching
+      // data. This is to make sure that we only call external APIs if we
+      // expicitely ask for it. The locker will release itself after a couple of
+      // seconds and another login can be processed again.
+      locker.lock();
 
-      try {
-        await UserCreate(token, [{ image: "", name: truncateEthAddress(user?.wallet?.address) }]);
-      } catch (err) {
-        ToastSender.Error("Haha, and you thought this would be easy!?");
-      }
+      // We have to reset our login flag because consecutive logins require to
+      // be waited for each. So if have a login once, but a user logs out and
+      // logs in again, then we have to make sure that we are waiting for the
+      // useLogin.onComplete very time. Otherwise the user's wallet information
+      // will not be available to us.
+      setLogin(false);
 
-      const auth: AuthMessage = {
-        image: "",
-        name: "",
-        token: token,
-        valid: true,
-        wallet: user?.wallet?.address || "",
-      };
-
-      try {
-        const [use] = await UserSearch(token, [{ id: "self" }]);
-        auth.image = use.image;
-        auth.name = use.name;
-      } catch (err) {
-        ToastSender.Error("Haha, and you thought this would be easy!?");
-      }
-
-      {
-        AuthStore.getState().update(auth);
-        console.log("AuthStore.update()")
-      }
-    };
-
-    if (ready && authenticated) {
-      fetchData();
+      // Finally process all external API calls and all data collected up to
+      // this point in order to update our internal user store.
+      fetchData(user, wallets);
     }
-  }, [authenticated, user, ready]);
+  }, [user, login, ready, wallets]);
 
-  // Every time the user's access token is granted or refreshed we update our
-  // internal auth store. Conversely, if the user's access token was revoked, we
-  // delete our internally tracked state as well.
-  Privy.useToken({
-    onAccessTokenGranted: (accessToken: string) => {
-      AuthStore.getState().updateToken(accessToken);
-      console.log("Privy.getAccessToken");
+  // Note that we need to use this login hook for all wallets top be available
+  // on signup and login. Only if we set login to true we can proceed to fetch
+  // our own data and setup our internal user store.
+  Privy.useLogin({
+    onComplete: () => {
+      setLogin(true);
     },
+  });
+
+  Privy.useToken({
+    // Every time the user's access token is refreshed we update our internal
+    // auth store.
+    onAccessTokenGranted: (accessToken: string) => {
+      if (AuthStore.getState().auth.valid) {
+        AuthStore.getState().updateToken(accessToken);
+        console.log("useToken.onAccessTokenGranted");
+      }
+    },
+    // If the user's access token was revoked, we delete our internally tracked
+    // state as well.
     onAccessTokenRemoved: () => {
       AuthStore.getState().delete();
       console.log("useToken.onAccessTokenRemoved");
@@ -68,4 +66,39 @@ export const AuthProvider = () => {
   return (
     <></>
   );
+};
+
+const fetchData = async (user: Privy.User, wallets: Privy.ConnectedWallet[]) => {
+  console.log("AuthProvider.fetchData");
+
+  const token = await Privy.getAccessToken();
+  if (!token) {
+    return ToastSender.Error("Haha, and you thought this would be easy!?");
+  }
+
+  try {
+    await UserCreate(token, [{ image: "", name: truncateEthAddress(wallets[0]?.address) }]);
+  } catch (err) {
+    return ToastSender.Error("Haha, and you thought this would be easy!?");
+  }
+
+  const auth: AuthMessage = {
+    image: "",
+    name: "",
+    token: token,
+    valid: true,
+    wallet: user?.wallet?.address || "",
+  };
+
+  try {
+    const [use] = await UserSearch(token, [{ id: "self" }]);
+    auth.image = use.image;
+    auth.name = use.name;
+  } catch (err) {
+    return ToastSender.Error("Haha, and you thought this would be easy!?");
+  }
+
+  {
+    AuthStore.getState().update(auth);
+  }
 };
