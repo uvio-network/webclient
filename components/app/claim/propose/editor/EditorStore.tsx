@@ -10,47 +10,47 @@ export interface EditorMessage {
 
 export const EditorStore = create(
   combine(
-    {
-      editor: {} as EditorMessage,
-    },
+    {} as EditorMessage,
     (set) => ({
-      updateExpiry: (e: string) => {
-        set((state: { editor: EditorMessage }) => {
+      delete: () => {
+        set(() => {
           return {
-            editor: {
-              ...state.editor,
-              expiry: e,
-            }
+            expiry: "",
+            labels: "",
+            markdown: "",
+            stake: "",
+          };
+        });
+      },
+      updateExpiry: (e: string) => {
+        set((state: EditorMessage) => {
+          return {
+            ...state,
+            expiry: e,
           };
         });
       },
       updateLabels: (l: string) => {
-        set((state: { editor: EditorMessage }) => {
+        set((state: EditorMessage) => {
           return {
-            editor: {
-              ...state.editor,
-              labels: l,
-            }
+            ...state,
+            labels: l,
           };
         });
       },
       updateMarkdown: (m: string) => {
-        set((state: { editor: EditorMessage }) => {
+        set((state: EditorMessage) => {
           return {
-            editor: {
-              ...state.editor,
-              markdown: m,
-            }
+            ...state,
+            markdown: m,
           };
         });
       },
       updateStake: (s: string) => {
-        set((state: { editor: EditorMessage }) => {
+        set((state: EditorMessage) => {
           return {
-            editor: {
-              ...state.editor,
-              stake: s,
-            }
+            ...state,
+            stake: s,
           };
         });
       },

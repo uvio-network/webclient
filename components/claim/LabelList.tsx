@@ -1,9 +1,12 @@
+import Link from "next/link";
+
 import { CategoryLabel } from "@/components/label/CategoryLabel";
 import { LifecycleLabel } from "@/components/label/LifecycleLabel";
 
 interface Props {
   labels: string[];
   lifecycle: string;
+  target?: string;
 }
 
 export const LabelList = (props: Props) => {
@@ -12,7 +15,13 @@ export const LabelList = (props: Props) => {
       <LifecycleLabel lifecycle={props.lifecycle} />
 
       {props.labels.map((x, i) => (
-        <CategoryLabel key={i} text={x} />
+        <Link
+          key={i}
+          href={`/claim/label/${x}`}
+          target={props.target}
+        >
+          <CategoryLabel text={x} />
+        </Link>
       ))}
     </div>
   );

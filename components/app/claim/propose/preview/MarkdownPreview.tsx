@@ -1,11 +1,13 @@
-import { EditorStore } from "@/components/app/claim/propose/store/EditorStore";
+import { EditorStore } from "@/components/app/claim/propose/editor/EditorStore";
 import { RenderMarkdown } from "@/components/markdown/RenderMarkdown";
 
 export const MarkdownPreview = () => {
+  const editor = EditorStore.getState();
+
   return (
     <div className="w-full min-h-96">
       <RenderMarkdown
-        text={EditorStore.getState().editor.markdown}
+        text={editor.markdown}
       />
     </div>
   );

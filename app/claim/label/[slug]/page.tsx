@@ -6,8 +6,8 @@ import { PageHeader } from "@/components/page/PageHeader";
 export default function Page({ params }: { params: { slug: string } }) {
   return (
     <>
-      <PageHeader titl="Claim object" />
-      <ClaimList request={[{ id: params.slug }]} />
+      <PageHeader titl={`Claims for label "${params.slug}"`} />
+      <ClaimList request={[{ labels: params.slug }]} />
     </>
   );
 };
