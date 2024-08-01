@@ -2,13 +2,10 @@ import * as Privy from "@privy-io/react-auth";
 import * as React from "react";
 import * as ToastSender from "@/components/toast/ToastSender";
 
-import { AuthMessage, AuthStore } from "@/components/auth/AuthStore";
-import { Locker } from "@/modules/locker/Locker";
+import { AuthStore } from "@/components/auth/AuthStore";
 import { truncateEthAddress } from "@/modules/wallet/WalletAddress";
 import { UserCreate } from "@/modules/api/user/create/Create";
 import { UserSearch } from "@/modules/api/user/search/Search";
-
-const locker = new Locker();
 
 export const AuthProvider = () => {
   const { user } = Privy.usePrivy();
@@ -17,13 +14,7 @@ export const AuthProvider = () => {
   const [login, setLogin] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    if (login && ready && user && !locker.locked()) {
-      // Before we do anything else we need to lock the process of fetching
-      // data. This is to make sure that we only call external APIs if we
-      // expicitely ask for it. The locker will release itself after a couple of
-      // seconds and another login can be processed again.
-      locker.lock();
-
+    if (login && ready && user) {
       // We have to reset our login flag because consecutive logins require to
       // be waited for each. So if have a login once, but a user logs out and
       // logs in again, then we have to make sure that we are waiting for the
@@ -82,7 +73,7 @@ const fetchData = async (user: Privy.User, wallets: Privy.ConnectedWallet[]) => 
     return ToastSender.Error("Haha, and you thought this would be easy!?");
   }
 
-  const auth: AuthMessage = {
+  const auth = {
     image: "",
     name: "",
     token: token,

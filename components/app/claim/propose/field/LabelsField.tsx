@@ -1,15 +1,17 @@
 import * as React from "react";
 
-import { EditorStore } from "@/components/app/claim/propose/store/EditorStore";
+import { EditorStore } from "@/components/app/claim/propose/editor/EditorStore";
 
 export const LabelsField = () => {
+  const editor = EditorStore.getState();
+
   return (
     <input
       className="block w-full bg-white dark:bg-black outline-none"
-      defaultValue={EditorStore.getState().editor.labels}
+      defaultValue={editor.labels}
       name="labels"
       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-        EditorStore.getState().updateLabels(e.currentTarget.value);
+        editor.updateLabels(e.currentTarget.value);
       }}
       placeholder="crypto, economics, sports"
       type="text"
