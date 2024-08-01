@@ -31,15 +31,20 @@ export const SubmitForm = async (cb: (id: string) => void) => {
     }
   }
 
-  // TODO limit character set for labels, make it alpha numerical
   {
+    const exp = /^[a-zA-Z0-9-\s]+$/;
+    const lis = SplitList(editor.labels);
+
+    if (!lis.every((x) => exp.test(x))) {
+      return ToastSender.Error("The format for the claim labels must be alpha numerical.");
+    }
     if (!editor.labels || editor.labels === "") {
       return ToastSender.Error("The proposed claim must have at least one category label.");
     }
-    if (SplitList(editor.labels).length > 4) {
+    if (lis.length > 4) {
       return ToastSender.Error("The proposed claim must not have more than four category labels.");
     }
-    if (HasDuplicate(SplitList(editor.labels))) {
+    if (HasDuplicate(lis)) {
       return ToastSender.Error("The proposed claim must not have duplicated category labels.");
     }
   }
