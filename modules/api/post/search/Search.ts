@@ -6,6 +6,7 @@ export async function PostSearch(tok: string, req: PostSearchRequest[]): Promise
   try {
     const cal = await API.search(
       {
+        filter: req[0].time === "latest" ? { paging: { kind: "page", start: "0", stop: "49" } } : {},
         object: req.map((x) => ({
           intern: {
             id: x.id || "",

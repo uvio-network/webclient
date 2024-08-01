@@ -31,6 +31,7 @@ export const SubmitForm = async (cb: (id: string) => void) => {
     }
   }
 
+  // TODO limit character set for labels, make it alpha numerical
   {
     if (!editor.labels || editor.labels === "") {
       return ToastSender.Error("The proposed claim must have at least one category label.");
