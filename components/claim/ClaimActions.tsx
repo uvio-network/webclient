@@ -7,15 +7,15 @@ import * as Separator from "@/components/layout/separator";
 import { ClaimButtons } from "@/components/claim/ClaimButtons";
 import { ClaimFooter } from "@/components/claim/ClaimFooter";
 import { ClaimLabels } from "@/components/claim/ClaimLabels";
-import { ClaimOption } from "@/modules/claim/object/ClaimOption";
-import { ClaimStake } from "@/modules/claim/object/ClaimStake";
+import { ClaimUpside } from "@/modules/claim/object/ClaimUpside";
+import { ClaimVotes } from "@/modules/claim/object/ClaimVotes";
 
 interface Props {
   labels: string[];
   lifecycle: string;
-  option: ClaimOption;
-  stake: ClaimStake;
   token: string;
+  upside: ClaimUpside;
+  votes: ClaimVotes;
 }
 
 export const ClaimActions = (props: Props) => {
@@ -46,14 +46,14 @@ export const ClaimActions = (props: Props) => {
       <ClaimButtons
         open={open}
         setOpen={setOpen}
-        stake={props.stake}
         token={props.token}
+        votes={props.votes}
       />
 
       <ClaimFooter
-        option={props.option}
-        stake={props.stake}
         token={props.token}
+        upside={props.upside}
+        votes={props.votes}
       />
     </div>
   );

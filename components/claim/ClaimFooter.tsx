@@ -1,14 +1,14 @@
 import { BaseButton } from "@/components/button/BaseButton";
 import { ClaimFooterCard } from "@/components/claim/ClaimFooterCard";
-import { ClaimOption } from "@/modules/claim/object/ClaimOption";
-import { ClaimStake } from "@/modules/claim/object/ClaimStake";
+import { ClaimUpside } from "@/modules/claim/object/ClaimUpside";
+import { ClaimVotes } from "@/modules/claim/object/ClaimVotes";
 import { TriangleDownIcon } from "@/components/icon/TriangleDownIcon";
 import { TriangleUpIcon } from "@/components/icon/TriangleUpIcon";
 
 interface Props {
-  option: ClaimOption;
-  stake: ClaimStake;
   token: string;
+  upside: ClaimUpside;
+  votes: ClaimVotes;
 }
 
 export const ClaimFooter = (props: Props) => {
@@ -20,7 +20,7 @@ export const ClaimFooter = (props: Props) => {
             font="font-normal"
             icon={<TriangleUpIcon className="mb-[1px]" />}
             position="right"
-            text={`${props.stake.agree.toFixed(2)} ${props.token}`}
+            text={`${props.votes.agreement.toFixed(2)} ${props.token}`}
           />
         </div>
       </div>
@@ -28,9 +28,9 @@ export const ClaimFooter = (props: Props) => {
       <div className="flex-1 w-full">
         <div className="mx-auto w-fit">
           <ClaimFooterCard
-            option={props.option}
-            stake={props.stake}
             token={props.token}
+            upside={props.upside}
+            votes={props.votes}
           />
         </div>
       </div>
@@ -41,7 +41,7 @@ export const ClaimFooter = (props: Props) => {
             font="font-normal"
             icon={<TriangleDownIcon className="mb-[1px]" />}
             position="left"
-            text={`${props.stake.disagree.toFixed(2)} ${props.token}`}
+            text={`${props.votes.disagreement.toFixed(2)} ${props.token}`}
           />
         </div>
       </div>

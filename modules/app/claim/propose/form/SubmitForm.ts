@@ -2,16 +2,21 @@ import moment from "moment";
 
 import * as ToastSender from "@/components/toast/ToastSender";
 
-import { AuthStore } from "@/components/auth/AuthStore";
-import { EditorStore } from "@/components/app/claim/propose/editor/EditorStore";
+import { AuthMessage, AuthStore } from "@/components/auth/AuthStore";
+import { EditorMessage, EditorStore } from "@/components/app/claim/propose/editor/EditorStore";
 import { HasDuplicate } from "@/modules/string/HasDuplicate";
 import { PostCreate } from "@/modules/api/post/create/Create";
 import { PostCreateRequest } from "@/modules/api/post/create/Request";
 import { SplitList } from "@/modules/string/SplitList";
 import { TimeFormat } from "@/modules/app/claim/propose/TimeFormat";
+import { PostCreateResponse } from "@/modules/api/post/create/Response";
+import { VoteCreateResponse } from "@/modules/api/vote/create/Response";
+import { VoteCreate } from "@/modules/api/vote/create/Create";
+import { VoteCreateRequest } from "@/modules/api/vote/create/Request";
 
 // SubmitForm validates user input and then performs the claim creation.
-export const SubmitForm = async (cb: (id: string) => void) => {
+export const SubmitForm = async (suc: (pos: string, vot: string) => void) => {
+  const { auth } = AuthStore.getState();
   const editor = EditorStore.getState();
 
   // Note that the order of the validation blocks below accomodates the user
@@ -76,25 +81,13 @@ export const SubmitForm = async (cb: (id: string) => void) => {
     }
   }
 
-  const req: PostCreateRequest = {
-    expiry: moment(editor.expiry, TimeFormat, true).unix().toString(),
-    kind: "claim",
-    labels: SplitList(editor.labels).join(","),
-    lifecycle: "propose",
-    option: "true",
-    parent: "",
-    stake: editor.stake.split(" ")[0],
-    text: editor.markdown,
-    token: editor.stake.split(" ")[1],
-  };
+  const pos = await posCre(auth, editor);
+  const vot = await votCre(auth, editor, pos);
 
-  try {
-    const [res] = await PostCreate(AuthStore.getState().auth.token, [req]);
+  {
     ToastSender.Success("Hooray, thy claim proposed milady!");
     editor.delete();
-    cb(res.id);
-  } catch (err) {
-    ToastSender.Error("Oh snap, the beavers don't want you to tell the world right now!");
+    suc(pos.id, vot.id);
   }
 
   // TODO prevent duplicated submits
@@ -133,3 +126,38 @@ const inpTok = (inp: string): boolean => {
   if (!inp || inp === "") return false;
   return inp.endsWith("ETH") || inp.endsWith("USDC");
 };
+
+const posCre = async (aut: AuthMessage, edi: EditorMessage): Promise<PostCreateResponse> => {
+  const req: PostCreateRequest = {
+    expiry: moment(edi.expiry, TimeFormat, true).unix().toString(),
+    kind: "claim",
+    labels: SplitList(edi.labels).join(","),
+    lifecycle: "propose",
+    parent: "",
+    text: edi.markdown,
+    token: edi.stake.split(" ")[1],
+  };
+
+  try {
+    const [res] = await PostCreate(aut.token, [req]);
+    return res;
+  } catch (err) {
+    return Promise.reject(err);
+  }
+}
+
+const votCre = async (aut: AuthMessage, edi: EditorMessage, pos: PostCreateResponse): Promise<VoteCreateResponse> => {
+  const req: VoteCreateRequest = {
+    claim: pos.id,
+    kind: "stake",
+    option: "true",
+    value: edi.stake.split(" ")[0],
+  };
+
+  try {
+    const [res] = await VoteCreate(aut.token, [req]);
+    return res;
+  } catch (err) {
+    return Promise.reject(err);
+  }
+}

@@ -1,29 +1,55 @@
 import moment from "moment";
 
-import { ClaimStake, CalculateClaimStake } from "@/modules/claim/object/ClaimStake";
-import { ClaimOption, ParseClaimOption } from "@/modules/claim/object/ClaimOption";
+import { ClaimUpside, CreateClaimUpside } from "@/modules/claim/object/ClaimUpside";
+import { ClaimVotes, CreateClaimVotes } from "@/modules/claim/object/ClaimVotes";
 import { PostSearchResponse } from "@/modules/api/post/search/Response";
 import { SplitList } from "@/modules/string/SplitList";
 import { UserObject } from "@/modules/user/object/UserObject";
 import { UserSearchResponse } from "@/modules/api/user/search/Response";
+import { VoteObject } from "@/modules/vote/object/VoteObject";
+import { VoteSearchResponse } from "@/modules/api/vote/search/Response";
 
 export class ClaimObject {
-  private claimOption: ClaimOption;
-  private claimStake: ClaimStake;
   private post: PostSearchResponse;
-  private user: UserObject;
+  private user: UserSearchResponse;
+  private vote: VoteSearchResponse[];
 
-  constructor(post: PostSearchResponse, user: UserSearchResponse) {
+  private claimOwner: UserObject;
+  private claimUpside: ClaimUpside;
+  private claimVotes: ClaimVotes;
+
+  constructor(post: PostSearchResponse, user: UserSearchResponse, vote: VoteSearchResponse[]) {
     if (post.kind !== "claim") {
       throw Error(`The claim object requires the provided post kind to be "claim". Post kind "${post.kind}" was given instead.`);
     }
 
     {
-      this.claimOption = ParseClaimOption(post.option);
-      this.claimStake = CalculateClaimStake(post.stake, this.claimOption);
       this.post = post;
-      this.user = new UserObject(user);
+      this.user = user;
+      this.vote = vote;
     }
+
+    {
+      this.claimOwner = new UserObject(user);
+      this.claimVotes = CreateClaimVotes(post);
+      this.claimUpside = CreateClaimUpside(this.claimVotes, vote.map((x) => (new VoteObject(x))));
+    }
+  }
+
+  //
+  // getter
+  //
+
+  getPost(): PostSearchResponse {
+    return this.post;
+  }
+
+  getUser(): UserSearchResponse {
+    return this.user;
+  }
+
+  getVote(): VoteSearchResponse[] {
+    return this.vote;
   }
 
   //
@@ -34,12 +60,12 @@ export class ClaimObject {
     return moment.unix(Number(this.post.created)).utc();
   }
 
-  id(): number {
-    return parseInt(this.post.id, 10);
+  id(): string {
+    return this.post.id;
   }
 
   owner(): UserObject {
-    return this.user;
+    return this.claimOwner;
   }
 
   //
@@ -62,15 +88,15 @@ export class ClaimObject {
     return this.post.text;
   }
 
-  option(): ClaimOption {
-    return this.claimOption;
-  }
-
-  stake(): ClaimStake {
-    return this.claimStake;
-  }
-
   token(): string {
     return this.post.token;
+  }
+
+  upside(): ClaimUpside {
+    return this.claimUpside;
+  }
+
+  votes(): ClaimVotes {
+    return this.claimVotes;
   }
 }

@@ -18,9 +18,9 @@ export const ClaimContainer = (props: Props) => {
       <ClaimActions
         labels={props.claim.labels()}
         lifecycle={props.claim.lifecycle()}
-        option={props.claim.option()}
-        stake={props.claim.stake()}
         token={props.claim.token()}
+        upside={props.claim.upside()}
+        votes={props.claim.votes()}
       />
     </div>
   );
