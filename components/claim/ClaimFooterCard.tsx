@@ -51,26 +51,26 @@ export const ClaimFooterCard = (props: Props) => {
             {totalAgree !== "0" && (
               <div>
                 You have {totalAgree} {props.token} staked in&nbsp;
-                <strong>agreement</strong> with the claim's statement.
+                <strong>agreement</strong> with the claim&apos;s statement.
 
                 <br /><br />
 
                 Your potential upside is currently <strong>{upsideAgree}%</strong>,
                 for which this market must be resolved in agreement with the
-                claim's statement.
+                claim&apos;s statement.
               </div>
             )}
 
             {totalDisagree !== "0" && (
               <div>
                 You have {totalDisagree} {props.token} staked in&nbsp;
-                <strong>disagreement</strong> with the claim's statement.
+                <strong>disagreement</strong> with the claim&apos;s statement.
 
                 <br /><br />
 
                 Your potential upside is currently <strong>{upsideDisagree}%</strong>,
                 for which this market must be resolved in disagreement with the
-                claim's statement.
+                claim&apos;s statement.
               </div>
             )}
 
