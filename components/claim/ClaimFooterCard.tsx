@@ -1,4 +1,5 @@
 import * as HoverCard from "@radix-ui/react-hover-card";
+import * as Separator from "@/components/layout/separator";
 
 import { ClaimUpside } from "@/modules/claim/object/ClaimUpside";
 import { ClaimVotes } from "@/modules/claim/object/ClaimVotes";
@@ -11,12 +12,13 @@ interface Props {
 
 export const ClaimFooterCard = (props: Props) => {
   const probability = props.votes.probability.toFixed(0);
+  const total = props.votes.agreement + props.votes.disagreement;
 
-  const totalAgree = props.upside.total[0].toFixed(0);
-  const totalDisagree = props.upside.total[1].toFixed(0);
+  const stakeAgree = props.upside.stake[0];
+  const stakeDisagree = props.upside.stake[1];
 
-  const upsideAgree = props.upside.upside[0].toFixed(0);
-  const upsideDisagree = props.upside.upside[1].toFixed(0);
+  const shareAgree = props.upside.share[0].toFixed(0);
+  const shareDisagree = props.upside.share[1].toFixed(0);
 
   return (
     <HoverCard.Root
@@ -44,39 +46,50 @@ export const ClaimFooterCard = (props: Props) => {
         >
           <div className="text-gray-500 dark:text-gray-400 text-sm">
             This claim has a probability of <strong>{probability}%</strong> to
-            be true.
+            be true, based on a total of {total} {props.token} staked.
 
-            <br /><br />
-
-            {totalAgree !== "0" && (
+            {stakeAgree !== 0 && (
               <div>
-                You have {totalAgree} {props.token} staked in&nbsp;
-                <strong>agreement</strong> with the claim&apos;s statement.
+                <Separator.Horizontal />
 
-                <br /><br />
+                <div>
+                  You have {stakeAgree} {props.token} staked in&nbsp;
+                  <strong>agreement</strong> with the claim&apos;s statement.
 
-                Your potential upside is currently <strong>{upsideAgree}%</strong>,
-                for which this market must be resolved in agreement with the
-                claim&apos;s statement.
+                  <br /><br />
+
+                  Your potential upside is currently <strong>{shareAgree}%</strong>,
+                  for which this market must be resolved in agreement with the
+                  claim&apos;s statement.
+                </div>
               </div>
             )}
 
-            {totalDisagree !== "0" && (
+            {stakeDisagree !== 0 && (
               <div>
-                You have {totalDisagree} {props.token} staked in&nbsp;
-                <strong>disagreement</strong> with the claim&apos;s statement.
+                <Separator.Horizontal />
 
-                <br /><br />
+                <div>
 
-                Your potential upside is currently <strong>{upsideDisagree}%</strong>,
-                for which this market must be resolved in disagreement with the
-                claim&apos;s statement.
+                  You have {stakeDisagree} {props.token} staked in&nbsp;
+                  <strong>disagreement</strong> with the claim&apos;s statement.
+
+                  <br /><br />
+
+                  Your potential upside is currently <strong>{shareDisagree}%</strong>,
+                  for which this market must be resolved in disagreement with the
+                  claim&apos;s statement.
+                </div>
               </div>
             )}
 
-            {totalAgree === "0" && totalDisagree === "0" && (
+            {stakeAgree === 0 && stakeDisagree === 0 && (
               <div>
-                You have no reputation staked in this market.
+                <Separator.Horizontal />
+
+                <div>
+                  You have no reputation staked in this market.
+                </div>
               </div>
             )}
           </div>

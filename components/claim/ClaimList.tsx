@@ -18,10 +18,13 @@ interface Props {
 }
 
 export const ClaimList = (props: Props) => {
-  const { token } = AuthStore(useShallow((state) => ({ token: state.auth.token })));
+  const { token, valid } = AuthStore(useShallow((state) => ({
+    token: state.auth.token,
+    valid: state.auth.valid,
+  })));
 
   const claims = useQuery({
-    queryKey: props.query,
+    queryKey: [...props.query, "CreateClaimList"],
     queryFn: async () => {
       return await CreateClaimList(props.request);
     },
@@ -30,11 +33,11 @@ export const ClaimList = (props: Props) => {
   // Fetching the votes of the authenticated user is conditional and depends on
   // the auth token, and the result of the claims query above.
   const votes = useQuery({
-    queryKey: props.query,
+    queryKey: [...props.query, "CreateVoteList"],
     queryFn: async () => {
       return await CreateVoteList(token, ClaimIDs(claims.data || []));
     },
-    enabled: token !== "" && !claims.isPending && claims.data?.length !== 0,
+    enabled: valid && !claims.isPending && claims.data?.length !== 0 ? true : false,
   })
 
   const list = getLis(claims.data, votes.data);
@@ -78,20 +81,20 @@ const mrgLis = (cla: ClaimObject[], vot: VoteObject[]): ClaimObject[] => {
   const map: Map<string, VoteObject[]> = new Map();
 
   for (const x of vot) {
-    const v = map.get(x.claim()) || [];
-    v.push(x);
-    map.set(x.claim(), v);
+    const l = map.get(x.claim()) || [];
+    l.push(x);
+    map.set(x.claim(), l);
   }
 
   const lis: ClaimObject[] = [];
 
   for (const x of cla) {
-    const v = map.get(x.id())?.map((y) => (y.getVote()));
+    const l = map.get(x.id())?.map((y) => (y.getVote()));
 
     lis.push(new ClaimObject(
       x.getPost(),
       x.getUser(),
-      v || [],
+      l || [],
     ));
   }
 
