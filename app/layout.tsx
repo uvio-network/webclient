@@ -1,17 +1,13 @@
+"use client";
+
 import "@/app/globals.css";
 
 import { AppProvider } from "@/components/app/AppProvider";
 import { Inter } from "next/font/google";
-import { Metadata } from "next";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const inter = Inter({ subsets: ["latin"] });
 const query = new QueryClient();
-
-export const metadata: Metadata = {
-  title: "Uvio Network",
-  description: "The Social Network For Prediction Markets",
-}
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
