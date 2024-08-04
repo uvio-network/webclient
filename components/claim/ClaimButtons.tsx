@@ -1,12 +1,12 @@
 import { BaseButton } from "@/components/button/BaseButton";
-import { ClaimStake } from "@/modules/claim/object/ClaimStake";
+import { ClaimVotes } from "@/modules/claim/object/ClaimVotes";
 import { XMarkIcon } from "@/components/icon/XMarkIcon";
 
 interface Props {
   open: string;
   setOpen: (open: string) => void;
-  stake: ClaimStake;
   token: string;
+  votes: ClaimVotes;
 }
 
 export const ClaimButtons = (props: Props) => {
@@ -17,7 +17,7 @@ export const ClaimButtons = (props: Props) => {
           <div className="absolute top-0 flex w-full h-14 rounded-t background-overlay">
             <div className="flex-1 p-2 text-xs">
               You are staking reputation in <strong> {props.open} </strong> with
-              the proposed claim. Funds cannot be withdrawn, but will be
+              the claim's statement. Funds cannot be withdrawn, but will be
               distributed according to this market&apos;s resolution.
             </div>
 
@@ -42,7 +42,7 @@ export const ClaimButtons = (props: Props) => {
                 onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                   if (e.key === "Escape") props.setOpen("");
                 }}
-                placeholder={`${props.stake.minimum} ${props.token}`}
+                placeholder={`${props.votes.minimum} ${props.token}`}
                 autoFocus={true}
                 type="text"
               />

@@ -17,8 +17,8 @@ export class UserObject {
     return moment.unix(Number(this.user.created)).utc();
   }
 
-  id(): number {
-    return parseInt(this.user.id, 10);
+  id(): string {
+    return this.user.id;
   }
 
   //

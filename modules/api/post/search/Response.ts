@@ -10,11 +10,10 @@ export interface PostSearchResponse {
   kind: string;
   labels: string;
   lifecycle: string;
-  option: string;
-  stake: string;
   parent: string;
   text: string;
   token: string;
+  votes: string;
 };
 
 export const UniqueOwners = (inp: PostSearchResponse[]): string[] => {

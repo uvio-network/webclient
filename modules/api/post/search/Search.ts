@@ -39,11 +39,10 @@ export async function PostSearch(tok: string, req: PostSearchRequest[]): Promise
       kind: x.public?.kind || "",
       labels: x.public?.labels || "",
       lifecycle: x.public?.lifecycle || "",
-      option: x.public?.option || "",
-      stake: x.public?.stake || "",
       parent: x.public?.parent || "",
       text: x.public?.text || "",
       token: x.public?.token || "",
+      votes: x.public?.votes || "",
     }));
   } catch (err) {
     return Promise.reject(err);

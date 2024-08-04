@@ -3,8 +3,10 @@ import "@/app/globals.css";
 import { AppProvider } from "@/components/app/AppProvider";
 import { Inter } from "next/font/google";
 import { Metadata } from "next";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const inter = Inter({ subsets: ["latin"] });
+const query = new QueryClient();
 
 export const metadata: Metadata = {
   title: "Uvio Network",
@@ -20,24 +22,27 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       */}
       <body className={`min-h-screen ${inter.className}`}>
 
-        <AppProvider />
+        <QueryClientProvider client={query}>
+          <AppProvider />
 
-        <div className="py-4 px-2 background justify-items-center">
-          <div className="m-auto w-full max-w-xl">
-            {/*
+          <div className="py-4 px-2 background justify-items-center">
+            <div className="m-auto w-full max-w-xl">
+              {/*
             The div below works together with the Sidebar component to ensure
             that no main element within the page is hidden during media query
             transitions. Therefore this div applies a margin on the left side in
             order to shift the page content slightly to the right between screen
             width of 1024px and 1120px.
             */}
-            <div className="min-[1024px]:ml-12 min-[1120px]:ml-0">
+              <div className="min-[1024px]:ml-12 min-[1120px]:ml-0">
 
-              {children}
+                {children}
 
+              </div>
             </div>
-          </div>
-        </div >
+          </div >
+        </QueryClientProvider>
+
       </body>
     </html>
   );

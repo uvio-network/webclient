@@ -7,7 +7,10 @@ export default function Page({ params }: { params: { slug: string } }) {
   return (
     <>
       <PageHeader titl="Claim object" />
-      <ClaimList request={[{ id: params.slug }]} />
+      <ClaimList
+        query={["claims", "id", params.slug]}
+        request={[{ id: params.slug }]}
+      />
     </>
   );
 };
