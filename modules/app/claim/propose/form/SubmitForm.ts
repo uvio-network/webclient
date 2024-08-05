@@ -31,8 +31,8 @@ export const SubmitForm = async (suc: (pos: string, vot: string) => void) => {
     if (editor.markdown.length <= 100) {
       return ToastSender.Error("The provided markdown must at least have 100 characters.");
     }
-    if (editor.markdown.length >= 2500) {
-      return ToastSender.Error("The provided markdown must not be longer than 2500 characters.");
+    if (editor.markdown.length >= 5000) {
+      return ToastSender.Error("The provided markdown must not be longer than 5000 characters.");
     }
   }
 
