@@ -1,6 +1,7 @@
 import { ClaimHeaderMenu } from "@/components/claim/ClaimHeaderMenu";
 import { ClaimObject } from "@/modules/claim/object/ClaimObject";
 import { StarLineIcon } from "@/components/icon/StarLineIcon";
+import Link from "next/link";
 
 interface Props {
   claim: ClaimObject;
@@ -9,8 +10,10 @@ interface Props {
 export const ClaimHeader = (props: Props) => {
   return (
     <div className="flex">
-      <div className="flex-none w-12 h-12 mr-2 rounded background-overlay border border-color">
-        {props.claim.owner().image()}
+      <div className="flex-none w-12 h-12 mr-2 rounded background-overlay border border-color overflow-hidden">
+        <Link href="/">
+          <img src={props.claim.owner().image()} />
+        </Link>
       </div>
       <div className="flex-1 w-full">
         <div className="font-medium">

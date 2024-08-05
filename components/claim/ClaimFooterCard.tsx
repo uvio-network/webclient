@@ -12,7 +12,7 @@ interface Props {
 
 export const ClaimFooterCard = (props: Props) => {
   const probability = props.votes.probability.toFixed(0);
-  const total = props.votes.agreement + props.votes.disagreement;
+  const total = (props.votes.agreement + props.votes.disagreement).toFixed(2);
 
   const stakeAgree = props.upside.stake[0];
   const stakeDisagree = props.upside.stake[1];
