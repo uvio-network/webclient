@@ -16,6 +16,7 @@ export const ClaimContainer = (props: Props) => {
       </div>
 
       <ClaimActions
+        claim={props.claim.id()}
         labels={props.claim.labels()}
         lifecycle={props.claim.lifecycle()}
         token={props.claim.token()}

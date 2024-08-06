@@ -7,7 +7,7 @@ export const MarkdownPreview = () => {
   return (
     <div className="w-full min-h-96">
       <RenderMarkdown
-        text={editor.markdown}
+        markdown={editor.markdown}
       />
     </div>
   );
