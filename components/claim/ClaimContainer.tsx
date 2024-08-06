@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import { ClaimActions } from "@/components/claim/ClaimActions";
 import { ClaimContent } from "@/components/claim/ClaimContent";
 import { ClaimHeader } from "@/components/claim/ClaimHeader";
