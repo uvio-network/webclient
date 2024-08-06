@@ -73,6 +73,6 @@ export const ClaimActions = (props: Props) => {
         upside={props.upside}
         votes={props.votes}
       />
-    </div >
+    </div>
   );
 };
