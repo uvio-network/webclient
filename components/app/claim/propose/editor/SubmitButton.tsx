@@ -1,4 +1,4 @@
-import { SubmitForm } from "@/modules/app/claim/propose/form/SubmitForm";
+import { SubmitForm } from "@/modules/app/claim/propose/SubmitForm";
 import { useRouter } from "next/navigation";
 
 export const SubmitButton = () => {

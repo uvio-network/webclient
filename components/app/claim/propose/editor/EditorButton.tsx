@@ -1,4 +1,3 @@
-import * as React from "react";
 import * as Separator from "@/components/app/claim/propose/editor/separator";
 
 interface Props {
@@ -23,6 +22,7 @@ export const EditorButton = (props: Props) => {
       `}>
         {props.text}
       </h3>
+
       <Separator.Horizontal highlight={props.active} />
     </button>
   );

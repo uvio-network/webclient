@@ -8,6 +8,7 @@ import { ClaimObject } from "@/modules/claim/object/ClaimObject";
 import { ClaimIDs, CreateClaimList } from "@/modules/claim/object/ClaimList";
 import { CreateVoteList } from "@/modules/vote/object/VoteList";
 import { PostSearchRequest } from "@/modules/api/post/search/Request";
+import { QueryStore } from "@/modules/query/QueryStore";
 import { useQuery } from "@tanstack/react-query";
 import { useShallow } from "zustand/react/shallow";
 import { VoteObject } from "@/modules/vote/object/VoteObject";
@@ -18,6 +19,8 @@ interface Props {
 }
 
 export const ClaimList = (props: Props) => {
+  const query = QueryStore.getState();
+
   const { token, valid } = AuthStore(useShallow((state) => ({
     token: state.auth.token,
     valid: state.auth.valid,
@@ -39,6 +42,13 @@ export const ClaimList = (props: Props) => {
     },
     enabled: valid && !claims.isPending && claims.data?.length !== 0 ? true : false,
   })
+
+  query.updateClaim({
+    refresh: () => {
+      claims.refetch();
+      votes.refetch();
+    },
+  });
 
   const list = getLis(claims.data, votes.data);
 

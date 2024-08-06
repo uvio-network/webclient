@@ -45,22 +45,18 @@ export const ClaimFooterCard = (props: Props) => {
           sideOffset={5}
         >
           <div className="text-gray-500 dark:text-gray-400 text-sm">
-            This claim has a probability of <strong>{probability}%</strong> to
-            be true, based on a total of {total} {props.token} staked.
+            This claim has a probability of <strong>{probability}%</strong> to be true, based on a total of {total} {props.token} staked.
 
             {stakeAgree !== 0 && (
               <div>
                 <Separator.Horizontal />
 
                 <div>
-                  You have {stakeAgree} {props.token} staked in&nbsp;
-                  <strong>agreement</strong> with the claim&apos;s statement.
+                  You have {stakeAgree} {props.token} staked in <strong>agreement</strong> with the claim&apos;s statement.
 
                   <br /><br />
 
-                  Your potential upside is currently <strong>{shareAgree}%</strong>,
-                  for which this market must be resolved in agreement with the
-                  claim&apos;s statement.
+                  Your potential upside is currently <strong>{shareAgree}%</strong>, for which this market must be resolved in agreement with the claim&apos;s statement.
                 </div>
               </div>
             )}
@@ -70,15 +66,11 @@ export const ClaimFooterCard = (props: Props) => {
                 <Separator.Horizontal />
 
                 <div>
-
-                  You have {stakeDisagree} {props.token} staked in&nbsp;
-                  <strong>disagreement</strong> with the claim&apos;s statement.
+                  You have {stakeDisagree} {props.token} staked in <strong>disagreement</strong> with the claim&apos;s statement.
 
                   <br /><br />
 
-                  Your potential upside is currently <strong>{shareDisagree}%</strong>,
-                  for which this market must be resolved in disagreement with the
-                  claim&apos;s statement.
+                  Your potential upside is currently <strong>{shareDisagree}%</strong>, for which this market must be resolved in disagreement with the claim&apos;s statement.
                 </div>
               </div>
             )}
