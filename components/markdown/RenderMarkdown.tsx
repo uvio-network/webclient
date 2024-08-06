@@ -1,10 +1,11 @@
+import Link from "next/link";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 import { Components } from "react-markdown";
 
 interface Props {
-  text: string;
+  markdown: string;
 }
 
 export const RenderMarkdown = (props: Props) => {
@@ -16,7 +17,7 @@ export const RenderMarkdown = (props: Props) => {
       remarkPlugins={[remarkGfm]}
       skipHtml={true}
     >
-      {props.text}
+      {props.markdown}
     </Markdown>
   );
 };
@@ -41,16 +42,30 @@ const components: Components = {
     return <h5 className="my-4 text-black dark:text-white text-xl" {...getRst(props)} />
   },
   a(props) {
-    return <a className="my-4 text-blue-400" target="_blank" {...getRst(props)} />
+    // We are parsing links provided with the markdown and want to ensure that
+    // external links open in a new browser tab. It may happen that links are
+    // injected that point to app specific pages. For instance our own internal
+    // " ... show more" link points to the specific claim page at which all
+    // content can be read without truncation. For our internal links we do not
+    // want to open new browser tabs, but instead allow the user to stay where
+    // they are. That is why the link target below is conditional on the href
+    // atribute of the parsed link.
+    //
+    // Further note that we are using the next/link component for all parsed
+    // links. We are doing that in order to using the NextJs native navigation
+    // for internal links. If we were to use plain <a> elements here, then our
+    // internat " ... show more" links would reload the entire app only to get
+    // to the specified claim page. And we do not want that behaviour.
+    return <Link className="text-blue-400" target={props.href?.startsWith("/claim/") ? "" : "_blank"} {...getRst(props)} />
   },
   p(props) {
-    return <p className="my-4" {...getRst(props)} />
+    return <p className="mt-4" {...getRst(props)} />
   },
   ol(props) {
-    return <ol className="my-4 list-decimal list-inside" {...getRst(props)} />
+    return <ol className="mt-4 list-decimal list-inside" {...getRst(props)} />
   },
   ul(props) {
-    return <ul className="my-4 list-disc list-inside" {...getRst(props)} />
+    return <ul className="mt-4 list-disc list-inside" {...getRst(props)} />
   },
   li(props) {
     return <li className="ml-2" {...getRst(props)} />

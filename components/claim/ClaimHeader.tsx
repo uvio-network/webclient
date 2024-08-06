@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import * as ToastSender from "@/components/toast/ToastSender";
+
 import { ClaimHeaderMenu } from "@/components/claim/ClaimHeaderMenu";
 import { ClaimObject } from "@/modules/claim/object/ClaimObject";
 import { StarLineIcon } from "@/components/icon/StarLineIcon";
@@ -10,6 +12,10 @@ interface Props {
 
 export const ClaimHeader = (props: Props) => {
   const image = props.claim.owner().image();
+
+  const onClick = () => {
+    ToastSender.Info("It's comming just chill ok!");
+  };
 
   return (
     <div className="flex">
@@ -39,11 +45,11 @@ export const ClaimHeader = (props: Props) => {
         </div>
       </div>
       <div className="flex-none">
-        <div>
+        <div className="h-6">
           <ClaimHeaderMenu claim={props.claim} />
         </div>
-        <div>
-          <button type="button">
+        <div className="h-6">
+          <button type="button" onClick={onClick}>
             <StarLineIcon size="w-6 h-6" />
           </button>
         </div>

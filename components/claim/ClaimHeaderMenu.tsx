@@ -1,4 +1,5 @@
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import * as ToastSender from "@/components/toast/ToastSender";
 
 import { ClaimObject } from "@/modules/claim/object/ClaimObject";
 import { MenuHorizontalIcon } from "@/components/icon/MenuHorizontalIcon";
@@ -14,6 +15,10 @@ const itemClassName = `
 `;
 
 export const ClaimHeaderMenu = (props: Props) => {
+  const onClick = () => {
+    ToastSender.Info("It's comming just chill ok!");
+  };
+
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
@@ -35,16 +40,16 @@ export const ClaimHeaderMenu = (props: Props) => {
           `}
           sideOffset={5}
         >
-          <DropdownMenu.Item className={itemClassName}>
+          <DropdownMenu.Item className={itemClassName} onClick={onClick}>
             Adjourn
           </DropdownMenu.Item>
-          <DropdownMenu.Item className={itemClassName}>
+          <DropdownMenu.Item className={itemClassName} onClick={onClick}>
             Dispute
           </DropdownMenu.Item>
-          <DropdownMenu.Item className={itemClassName}>
+          <DropdownMenu.Item className={itemClassName} onClick={onClick}>
             Nullify
           </DropdownMenu.Item>
-          <DropdownMenu.Item className={itemClassName}>
+          <DropdownMenu.Item className={itemClassName} onClick={onClick}>
             Resolve
           </DropdownMenu.Item>
         </DropdownMenu.Content>
