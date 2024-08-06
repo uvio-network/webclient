@@ -10,7 +10,6 @@ export const StakeField = () => {
       <input
         className="block mr-2 w-full bg-white dark:bg-black outline-none"
         defaultValue={editor.stake}
-        name="stake"
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           editor.updateStake(e.currentTarget.value);
         }}

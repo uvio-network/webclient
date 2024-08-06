@@ -2,17 +2,19 @@ import moment from "moment";
 
 import * as ToastSender from "@/components/toast/ToastSender";
 
-import { AuthMessage, AuthStore } from "@/components/auth/AuthStore";
-import { EditorMessage, EditorStore } from "@/components/app/claim/propose/editor/EditorStore";
+import { AuthMessage } from "@/components/auth/AuthStore";
+import { AuthStore } from "@/components/auth/AuthStore";
+import { EditorMessage } from "@/components/app/claim/propose/editor/EditorStore";
+import { EditorStore } from "@/components/app/claim/propose/editor/EditorStore";
 import { HasDuplicate } from "@/modules/string/HasDuplicate";
 import { PostCreate } from "@/modules/api/post/create/Create";
 import { PostCreateRequest } from "@/modules/api/post/create/Request";
+import { PostCreateResponse } from "@/modules/api/post/create/Response";
 import { SplitList } from "@/modules/string/SplitList";
 import { TimeFormat } from "@/modules/app/claim/propose/TimeFormat";
-import { PostCreateResponse } from "@/modules/api/post/create/Response";
-import { VoteCreateResponse } from "@/modules/api/vote/create/Response";
 import { VoteCreate } from "@/modules/api/vote/create/Create";
 import { VoteCreateRequest } from "@/modules/api/vote/create/Request";
+import { VoteCreateResponse } from "@/modules/api/vote/create/Response";
 
 // SubmitForm validates user input and then performs the claim creation.
 export const SubmitForm = async (suc: (pos: string, vot: string) => void) => {
@@ -68,13 +70,13 @@ export const SubmitForm = async (suc: (pos: string, vot: string) => void) => {
 
   {
     if (!editor.stake || editor.stake === "") {
-      return ToastSender.Error("You must stake a minimum amount of reputation with your claim.");
+      return ToastSender.Error("The staking value for your claim must not be empty.");
     }
     if (!inpPrt(editor.stake)) {
       return ToastSender.Error("The format for staked reputation must be [number token].");
     }
     if (!inpNum(editor.stake)) {
-      return ToastSender.Error("The amount of staked reputation must be positive.");
+      return ToastSender.Error("The amount of staked reputation must be a positive number.");
     }
     if (!inpTok(editor.stake)) {
       return ToastSender.Error("The amount of staked reputation must be denominated in a whitelisted token.");
@@ -142,6 +144,8 @@ const posCre = async (aut: AuthMessage, edi: EditorMessage): Promise<PostCreateR
     const [res] = await PostCreate(aut.token, [req]);
     return res;
   } catch (err) {
+    console.error(err);
+    ToastSender.Error(err instanceof Error ? err.message : String(err));
     return Promise.reject(err);
   }
 }
@@ -158,6 +162,8 @@ const votCre = async (aut: AuthMessage, edi: EditorMessage, pos: PostCreateRespo
     const [res] = await VoteCreate(aut.token, [req]);
     return res;
   } catch (err) {
+    console.error(err);
+    ToastSender.Error(err instanceof Error ? err.message : String(err));
     return Promise.reject(err);
   }
 }

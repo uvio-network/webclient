@@ -37,7 +37,11 @@ export const ClaimContent = (props: Props) => {
 
     if (t.tagName === "A") return;
 
-    router.push(claimPage);
+    if (e.metaKey || e.ctrlKey) {
+      window.open(claimPage, "_blank");
+    } else {
+      router.push(claimPage);
+    }
   };
 
   return (

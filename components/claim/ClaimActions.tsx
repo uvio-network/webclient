@@ -61,6 +61,7 @@ export const ClaimActions = (props: Props) => {
 
       {isClaimPage && (
         <ClaimButtons
+          claim={props.claim}
           open={open}
           setOpen={setOpen}
           token={props.token}
