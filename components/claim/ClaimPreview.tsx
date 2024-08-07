@@ -15,7 +15,7 @@ export const ClaimPreview = (props: Props) => {
     queryKey: [...props.query, "ClaimPreview", "PostSearch"],
     queryFn: async () => {
       const [pos] = await PostSearch("", props.request);
-      return new ClaimObject(pos, EmptyUserSearchResponse(), []);
+      return new ClaimObject(pos, EmptyUserSearchResponse(), undefined, []);
     },
   })
 

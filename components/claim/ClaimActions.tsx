@@ -13,6 +13,7 @@ import { usePathname } from "next/navigation";
 
 interface Props {
   claim: string;
+  kind: string;
   labels: string[];
   lifecycle: string;
   token: string;
@@ -23,7 +24,8 @@ interface Props {
 export const ClaimActions = (props: Props) => {
   const [open, setOpen] = React.useState<string>("");
 
-  const isClaimPage = usePathname() === "/claim/" + props.claim ? true : false;
+  const isClaim = props.kind === "claim";
+  const isPage = usePathname() === "/claim/" + props.claim ? true : false;
 
   return (
     // This relative container is the anchor for elements inside of the
@@ -38,7 +40,7 @@ export const ClaimActions = (props: Props) => {
         ${open !== "" ? "background-overlay border-color rounded" : "border-background"}
       `}
     >
-      {isClaimPage && (
+      {isClaim && isPage && (
         <ClaimLabels
           labels={props.labels}
           lifecycle={props.lifecycle}
@@ -56,10 +58,10 @@ export const ClaimActions = (props: Props) => {
       about an equal distance to one another.
       */}
       <div className="px-2">
-        <Separator.Horizontal margin={isClaimPage ? "" : "mt-0 mb-2"} />
+        <Separator.Horizontal margin={isPage ? "" : "mt-0 mb-2"} />
       </div>
 
-      {isClaimPage && (
+      {isClaim && isPage && (
         <ClaimButtons
           claim={props.claim}
           open={open}

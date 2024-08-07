@@ -3,6 +3,7 @@ import * as ToastSender from "@/components/toast/ToastSender";
 import { ClaimObject } from "@/modules/claim/object/ClaimObject";
 import { PostSearch } from "@/modules/api/post/search/Search";
 import { PostSearchRequest } from "@/modules/api/post/search/Request";
+import { PostSearchResponse } from "@/modules/api/post/search/Response";
 import { UniqueOwners } from "@/modules/api/post/search/Response";
 import { UserSearchResponse } from "@/modules/api/user/search/Response";
 import { UserSearch } from "@/modules/api/user/search/Search";
@@ -19,18 +20,31 @@ export const CreateClaimList = async (req: PostSearchRequest[]): Promise<ClaimOb
 
     const use = await UserSearch("", UniqueOwners(pos).map(x => ({ id: x })));
 
-    const map = new Map<string, UserSearchResponse>();
+    const pmp = new Map<string, PostSearchResponse>();
+    for (const x of pos) {
+      pmp.set(x.id, x);
+    }
+
+    const ump = new Map<string, UserSearchResponse>();
     for (const x of use) {
-      map.set(x.id, x);
+      ump.set(x.id, x);
     }
 
     for (const x of pos) {
-      const y = map.get(x.owner);
-      if (y) {
-        lis.push(new ClaimObject(x, y, []));
-      } else {
+      const y = ump.get(x.owner);
+      if (!y) {
         console.error("The received lists of server responses are inconsistent. At least one UserSearchResponse could not be found for its corresponding PostSearchResponse.");
         return [];
+      }
+
+      const z = pmp.get(x.parent);
+      if (!z && x.kind === "comment") {
+        console.error("The received lists of server responses are inconsistent. At least one parent PostSearchResponse could not be found for its corresponding comment PostSearchResponse.");
+        return [];
+      }
+
+      {
+        lis.push(new ClaimObject(x, y, z, []));
       }
     }
 
@@ -40,7 +54,9 @@ export const CreateClaimList = async (req: PostSearchRequest[]): Promise<ClaimOb
       lis.sort((x: ClaimObject, y: ClaimObject) => y.created().diff(x.created()));
     }
   } catch (err) {
+    console.error(err);
     ToastSender.Error("Fog mey, it's even more over than we thought it was!");
+    return Promise.reject(err);
   }
 
   return lis;

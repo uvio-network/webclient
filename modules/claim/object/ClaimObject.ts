@@ -2,6 +2,7 @@ import moment from "moment";
 
 import { ClaimUpside, CreateClaimUpside } from "@/modules/claim/object/ClaimUpside";
 import { ClaimVotes, CreateClaimVotes } from "@/modules/claim/object/ClaimVotes";
+import { EmptyUserSearchResponse } from "@/modules/api/user/search/Response";
 import { PostSearchResponse } from "@/modules/api/post/search/Response";
 import { SplitList } from "@/modules/string/SplitList";
 import { UserObject } from "@/modules/user/object/UserObject";
@@ -12,25 +13,25 @@ import { VoteSearchResponse } from "@/modules/api/vote/search/Response";
 export class ClaimObject {
   private post: PostSearchResponse;
   private user: UserSearchResponse;
+  private prnt: PostSearchResponse | undefined;
   private vote: VoteSearchResponse[];
 
   private claimOwner: UserObject;
+  private claimParent: ClaimObject | undefined;
   private claimUpside: ClaimUpside;
   private claimVotes: ClaimVotes;
 
-  constructor(post: PostSearchResponse, user: UserSearchResponse, vote: VoteSearchResponse[]) {
-    if (post.kind !== "claim") {
-      throw Error(`The claim object requires the provided post kind to be "claim". Post kind "${post.kind}" was given instead.`);
-    }
-
+  constructor(post: PostSearchResponse, user: UserSearchResponse, prnt: PostSearchResponse | undefined, vote: VoteSearchResponse[]) {
     {
       this.post = post;
       this.user = user;
+      this.prnt = prnt;
       this.vote = vote;
     }
 
     {
       this.claimOwner = new UserObject(user);
+      this.claimParent = prnt ? new ClaimObject(prnt, EmptyUserSearchResponse(), undefined, []) : undefined;
       this.claimVotes = CreateClaimVotes(post);
       this.claimUpside = CreateClaimUpside(this.claimVotes, vote.map((x) => (new VoteObject(x))));
     }
@@ -46,6 +47,10 @@ export class ClaimObject {
 
   getUser(): UserSearchResponse {
     return this.user;
+  }
+
+  getPrnt(): PostSearchResponse | undefined {
+    return this.prnt;
   }
 
   getVote(): VoteSearchResponse[] {
@@ -76,6 +81,10 @@ export class ClaimObject {
     return moment.unix(parseInt(this.post.expiry, 10)).utc();
   }
 
+  kind(): string {
+    return this.post.kind;
+  }
+
   labels(): string[] {
     return SplitList(this.post.labels);
   }
@@ -86,6 +95,10 @@ export class ClaimObject {
 
   markdown(): string {
     return this.post.text;
+  }
+
+  parent(): ClaimObject | undefined {
+    return this.claimParent;
   }
 
   token(): string {

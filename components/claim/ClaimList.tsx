@@ -104,6 +104,7 @@ const mrgLis = (cla: ClaimObject[], vot: VoteObject[]): ClaimObject[] => {
     lis.push(new ClaimObject(
       x.getPost(),
       x.getUser(),
+      x.getPrnt(),
       l || [],
     ));
   }
