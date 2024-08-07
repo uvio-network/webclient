@@ -16,7 +16,7 @@ export const ClaimContainer = (props: Props) => {
       </div>
 
       {props.claim.kind() === "comment" && (
-        <div className="m-2 p-2 background-overlay rounded border border-color">
+        <div className="mx-2 mt-2 px-2 pb-2 background-overlay rounded border border-color">
           <ClaimContent
             claim={props.claim.parent()!} // if kind is "comment" then parent() will never be undefined
             embed={true}

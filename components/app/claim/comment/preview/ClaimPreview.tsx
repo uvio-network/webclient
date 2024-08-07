@@ -28,9 +28,10 @@ export const ClaimPreview = (props: Props) => {
       )}
 
       {claim.data && (
-        <div className="m-2 p-2 background-overlay rounded border border-color">
+        <div className="m-2 px-2 pb-2 background-overlay rounded border border-color">
           <ClaimContent
             claim={claim.data}
+            editor={true}
             embed={true}
           />
         </div>

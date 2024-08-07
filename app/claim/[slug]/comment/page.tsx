@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-import { ClaimPreview } from "@/components/claim/ClaimPreview";
+import { ClaimPreview } from "@/components/app/claim/comment/preview/ClaimPreview";
 import { EditorButton } from "@/components/app/claim/comment/editor/EditorButton";
 import { EditorStore } from "@/components/app/claim/comment/editor/EditorStore";
 import { MarkdownField } from "@/components/app/claim/comment/field/MarkdownField";

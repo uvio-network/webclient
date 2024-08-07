@@ -35,7 +35,8 @@ export const ClaimActions = (props: Props) => {
     // the anchor with its relative position.
     <div
       className={`
-        relative w-full py-2
+        relative w-full
+        ${isClaim ? "py-2" : "pb-2"}
         border
         ${open !== "" ? "background-overlay border-color rounded" : "border-background"}
       `}
@@ -57,9 +58,11 @@ export const ClaimActions = (props: Props) => {
       separator margin in a way that the claim content and the clainm footer are
       about an equal distance to one another.
       */}
-      <div className="px-2">
-        <Separator.Horizontal margin={isPage ? "" : "mt-0 mb-2"} />
-      </div>
+      {isClaim && (
+        <div className="px-2">
+          <Separator.Horizontal margin={isPage ? "" : "mt-0 mb-2"} />
+        </div>
+      )}
 
       {isClaim && isPage && (
         <ClaimButtons

@@ -14,6 +14,7 @@ import { useShallow } from "zustand/react/shallow";
 import { VoteObject } from "@/modules/vote/object/VoteObject";
 
 interface Props {
+  page?: boolean;
   query: string[];
   request: PostSearchRequest[];
 }
@@ -50,7 +51,7 @@ export const ClaimList = (props: Props) => {
     },
   });
 
-  const list = getLis(claims.data, votes.data);
+  const list = getLis(claims.data, votes.data, props.page || false);
 
   return (
     <div>
@@ -79,7 +80,18 @@ export const ClaimList = (props: Props) => {
   );
 };
 
-const getLis = (cla: ClaimObject[] | undefined, vot: VoteObject[] | undefined): ClaimObject[] => {
+const fltCla = (cla: ClaimObject[]): ClaimObject[] => {
+  for (const x of cla) {
+    if (x.kind() === "comment") {
+      return [x];
+    }
+  }
+
+  return cla;
+};
+
+const getLis = (cla: ClaimObject[] | undefined, vot: VoteObject[] | undefined, pag: boolean): ClaimObject[] => {
+  if (pag && cla && cla.length == 2) return fltCla(cla);
   if (cla && !vot) return cla;
   if (cla && vot) return mrgLis(cla, vot);
   return [];
