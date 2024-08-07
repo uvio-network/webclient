@@ -33,11 +33,15 @@
 .dark .background-overlay {
   /* gray-900 */
   background-color: #111827;
+  /* gray-50 */
+  color: #f9fafb;
 }
 
 .light .background-overlay {
   /* gray-50 */
   background-color: #f9fafb;
+  /* gray-900 */
+  color: #111827;
 }
 
 /* border */

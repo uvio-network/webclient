@@ -8,7 +8,7 @@ export const SubmitButton = () => {
     <button
       className="flex-none px-1 bg-blue-500 text-white rounded"
       onClick={() => {
-        SubmitForm((id: string) => router.push(`/claim/${id}`));
+        SubmitForm((pos: string) => router.push(`/claim/${pos}`));
       }}
       type="button"
     >

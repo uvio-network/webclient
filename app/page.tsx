@@ -8,7 +8,7 @@ export default function Page() {
     <>
       <PageHeader titl="Latest Claims" />
       <ClaimList
-        query={["claims", "time", "latest"]}
+        query={["claim", "time", "latest"]}
         request={[{ time: "latest" }]}
       />
     </>

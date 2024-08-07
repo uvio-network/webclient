@@ -5,6 +5,9 @@ const agreement = 0;
 const disagreement = 1;
 
 export interface ClaimUpside {
+  // hsitg expresses whether the user for which this upside is calculated has in
+  // fact skin in the game.
+  hsitg: boolean;
   // share is the potential percentage that the current user has to gain
   // theoretically for either side of the bet.
   //
@@ -24,6 +27,7 @@ export interface ClaimUpside {
 // participate in the given market.
 export const CreateClaimUpside = (sum: ClaimVotes, res: VoteObject[]): ClaimUpside => {
   const ups = {
+    hsitg: false,
     stake: [0, 0],
     share: [0, 0],
   };
@@ -33,10 +37,12 @@ export const CreateClaimUpside = (sum: ClaimVotes, res: VoteObject[]): ClaimUpsi
   }
 
   if (ups.stake[agreement] !== 0) {
+    ups.hsitg = true;
     ups.share[agreement] = calSha(sum, ups.stake[agreement], true);
   }
 
   if (ups.stake[disagreement] !== 0) {
+    ups.hsitg = true;
     ups.share[disagreement] = calSha(sum, ups.stake[disagreement], false);
   }
 
