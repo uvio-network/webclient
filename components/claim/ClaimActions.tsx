@@ -7,24 +7,17 @@ import * as Separator from "@/components/layout/separator";
 import { ClaimButtons } from "@/components/claim/ClaimButtons";
 import { ClaimFooter } from "@/components/claim/ClaimFooter";
 import { ClaimLabels } from "@/components/claim/ClaimLabels";
-import { ClaimUpside } from "@/modules/claim/object/ClaimUpside";
-import { ClaimVotes } from "@/modules/claim/object/ClaimVotes";
+import { ClaimObject } from "@/modules/claim/object/ClaimObject";
 import { usePathname } from "next/navigation";
 
 interface Props {
-  claim: string;
-  kind: string;
-  labels: string[];
-  lifecycle: string;
-  token: string;
-  upside: ClaimUpside;
-  votes: ClaimVotes;
+  claim: ClaimObject;
 }
 
 export const ClaimActions = (props: Props) => {
   const [open, setOpen] = React.useState<string>("");
 
-  const isClaim = props.kind === "claim";
+  const isClaim = props.claim.kind() === "claim";
   const isPage = usePathname() === "/claim/" + props.claim ? true : false;
 
   return (
@@ -43,8 +36,8 @@ export const ClaimActions = (props: Props) => {
     >
       {isClaim && isPage && (
         <ClaimLabels
-          labels={props.labels}
-          lifecycle={props.lifecycle}
+          labels={props.claim.labels()}
+          lifecycle={props.claim.lifecycle()}
         />
       )}
 
@@ -69,15 +62,11 @@ export const ClaimActions = (props: Props) => {
           claim={props.claim}
           open={open}
           setOpen={setOpen}
-          token={props.token}
-          votes={props.votes}
         />
       )}
 
       <ClaimFooter
-        token={props.token}
-        upside={props.upside}
-        votes={props.votes}
+        claim={props.claim}
       />
     </div>
   );

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-import { ClaimVotes } from "@/modules/claim/object/ClaimVotes";
+import { ClaimObject } from "@/modules/claim/object/ClaimObject";
 import { EditorOverlay } from "@/components/app/claim/stake/editor/EditorOverlay";
 import { EditorStore } from "@/components/app/claim/stake/editor/EditorStore";
 import { QueryStore } from "@/modules/query/QueryStore";
@@ -11,11 +11,9 @@ import { SubmitButton } from "@/components/app/claim/stake/editor/SubmitButton";
 import { ValueField } from "@/components/app/claim/stake/field/ValueField";
 
 interface Props {
-  claim: string;
+  claim: ClaimObject;
   open: string;
   setOpen: (open: string) => void;
-  token: string;
-  votes: ClaimVotes;
 }
 
 export const ClaimButtons = (props: Props) => {
@@ -26,9 +24,9 @@ export const ClaimButtons = (props: Props) => {
     if (props.open === "") {
       editor.delete();
     } else {
-      editor.updateClaim(props.claim)
-      editor.updateMinimum(props.votes.minimum)
-      editor.updateToken(props.token)
+      editor.updateClaim(props.claim.id())
+      editor.updateMinimum(props.claim.votes().minimum)
+      editor.updateToken(props.claim.token())
     }
   }, [props.open, editor]);
 
@@ -45,8 +43,8 @@ export const ClaimButtons = (props: Props) => {
             <div className="w-full mr-2">
               <ValueField
                 setOpen={props.setOpen}
-                token={props.token}
-                votes={props.votes}
+                token={props.claim.token()}
+                votes={props.claim.votes()}
               />
             </div>
 

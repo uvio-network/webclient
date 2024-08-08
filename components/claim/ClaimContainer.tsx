@@ -1,3 +1,5 @@
+"use client";
+
 import { ClaimActions } from "@/components/claim/ClaimActions";
 import { ClaimContent } from "@/components/claim/ClaimContent";
 import { ClaimHeader } from "@/components/claim/ClaimHeader";
@@ -9,7 +11,7 @@ interface Props {
 
 export const ClaimContainer = (props: Props) => {
   return (
-    <div className="mb-8">
+    <div className={`${props.claim.kind() === "claim" ? "mb-6" : "mb-2"}`}>
       <div className="p-2 w-full">
         <ClaimHeader claim={props.claim} />
         <ClaimContent claim={props.claim} />
@@ -25,13 +27,7 @@ export const ClaimContainer = (props: Props) => {
       )}
 
       <ClaimActions
-        claim={props.claim.id()}
-        kind={props.claim.kind()}
-        labels={props.claim.labels()}
-        lifecycle={props.claim.lifecycle()}
-        token={props.claim.token()}
-        upside={props.claim.upside()}
-        votes={props.claim.votes()}
+        claim={props.claim}
       />
     </div>
   );

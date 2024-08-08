@@ -1,24 +1,26 @@
+"use client";
+
 import * as HoverCard from "@radix-ui/react-hover-card";
 import * as Separator from "@/components/layout/separator";
 
-import { ClaimUpside } from "@/modules/claim/object/ClaimUpside";
-import { ClaimVotes } from "@/modules/claim/object/ClaimVotes";
+import { ClaimObject } from "@/modules/claim/object/ClaimObject";
 
 interface Props {
-  token: string;
-  upside: ClaimUpside;
-  votes: ClaimVotes;
+  claim: ClaimObject;
 }
 
 export const ClaimFooterCard = (props: Props) => {
-  const probability = props.votes.probability.toFixed(0);
-  const total = (props.votes.agreement + props.votes.disagreement).toFixed(2);
+  const hsitg = props.claim.upside().hsitg;
+  const token = props.claim.token();
 
-  const stakeAgree = props.upside.stake[0];
-  const stakeDisagree = props.upside.stake[1];
+  const probability = props.claim.votes().probability.toFixed(0);
+  const total = (props.claim.votes().agreement + props.claim.votes().disagreement).toFixed(2);
 
-  const shareAgree = props.upside.share[0].toFixed(0);
-  const shareDisagree = props.upside.share[1].toFixed(0);
+  const stakeAgree = props.claim.upside().stake[0];
+  const stakeDisagree = props.claim.upside().stake[1];
+
+  const shareAgree = props.claim.upside().share[0].toFixed(0);
+  const shareDisagree = props.claim.upside().share[1].toFixed(0);
 
   return (
     <HoverCard.Root
@@ -45,14 +47,14 @@ export const ClaimFooterCard = (props: Props) => {
           sideOffset={5}
         >
           <div className="text-gray-500 dark:text-gray-400 text-sm">
-            This claim has a probability of <strong>{probability}%</strong> to be true, based on a total of {total} {props.token} staked.
+            This claim has a probability of <strong>{probability}%</strong> to be true, based on a total of {total} {token} staked.
 
             {stakeAgree !== 0 && (
               <div>
                 <Separator.Horizontal />
 
                 <div>
-                  You have {stakeAgree} {props.token} staked in <strong>agreement</strong> with the claim&apos;s statement.
+                  You have {stakeAgree} {token} staked in <strong>agreement</strong> with the claim&apos;s statement.
 
                   <br /><br />
 
@@ -66,7 +68,7 @@ export const ClaimFooterCard = (props: Props) => {
                 <Separator.Horizontal />
 
                 <div>
-                  You have {stakeDisagree} {props.token} staked in <strong>disagreement</strong> with the claim&apos;s statement.
+                  You have {stakeDisagree} {token} staked in <strong>disagreement</strong> with the claim&apos;s statement.
 
                   <br /><br />
 
@@ -75,7 +77,7 @@ export const ClaimFooterCard = (props: Props) => {
               </div>
             )}
 
-            {props.upside.hsitg === false && (
+            {hsitg === false && (
               <div>
                 <Separator.Horizontal />
 
