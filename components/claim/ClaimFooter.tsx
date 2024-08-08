@@ -18,12 +18,6 @@ export const ClaimFooter = (props: Props) => {
   const stakeAgree = isComment && props.claim.votes().agreement !== 0 ? true : false;
   const stakeDisagree = isComment && props.claim.votes().disagreement !== 0 ? true : false;
 
-  console.log("isClaim", isClaim)
-  console.log("isComment", isComment)
-  console.log("stakeAgree", stakeAgree)
-  console.log("stakeDisagree", stakeDisagree)
-  console.log("upside", props.claim.upside())
-
   return (
     <div className="flex mt-2 px-2">
       <div className="flex-1 w-full">

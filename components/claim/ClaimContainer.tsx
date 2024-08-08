@@ -7,6 +7,7 @@ import { ClaimObject } from "@/modules/claim/object/ClaimObject";
 
 interface Props {
   claim: ClaimObject;
+  embed: boolean;
 }
 
 export const ClaimContainer = (props: Props) => {
@@ -17,11 +18,11 @@ export const ClaimContainer = (props: Props) => {
         <ClaimContent claim={props.claim} />
       </div>
 
-      {props.claim.kind() === "comment" && (
+      {props.claim.kind() === "comment" && props.embed && (
         <div className="mx-2 mt-2 px-2 pb-2 background-overlay rounded border border-color">
           <ClaimContent
             claim={props.claim.parent()!} // if kind is "comment" then parent() will never be undefined
-            embed={true}
+            embed={props.embed}
           />
         </div>
       )}

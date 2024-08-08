@@ -14,7 +14,7 @@ import { useShallow } from "zustand/react/shallow";
 import { VoteObject } from "@/modules/vote/object/VoteObject";
 
 interface Props {
-  page?: boolean;
+  page?: string;
   query: string[];
   request: PostSearchRequest[];
 }
@@ -51,7 +51,13 @@ export const ClaimList = (props: Props) => {
     },
   });
 
-  const list = getLis(claims.data, votes.data, props.page || false);
+  const list = getLis(claims.data, votes.data, props.page || "");
+
+  // We want to embed claims on comment posts on basically every page, except on
+  // the claim page where we show claims and their comments underneath. So if we
+  // render the claim page, then negate the condition below and use the result
+  // as boolean flag to embed claims everywhere else but here.
+  const embed = !(list.length >= 1 && list[0].id() === props.page && list[0].kind() === "claim");
 
   return (
     <div>
@@ -63,7 +69,10 @@ export const ClaimList = (props: Props) => {
 
       {list.map((x: ClaimObject, i: number) => (
         <div key={x.id()}>
-          <ClaimContainer claim={x} />
+          <ClaimContainer
+            claim={x}
+            embed={embed}
+          />
 
           {/*
           Show a vertical separator between claims and make sure that the last
@@ -80,18 +89,8 @@ export const ClaimList = (props: Props) => {
   );
 };
 
-const fltCla = (cla: ClaimObject[]): ClaimObject[] => {
-  for (const x of cla) {
-    if (x.kind() === "comment") {
-      return [x];
-    }
-  }
-
-  return cla;
-};
-
-const getLis = (cla: ClaimObject[] | undefined, vot: VoteObject[] | undefined, pag: boolean): ClaimObject[] => {
-  if (pag && cla && cla.length == 2) return fltCla(cla);
+const getLis = (cla: ClaimObject[] | undefined, vot: VoteObject[] | undefined, pag: string): ClaimObject[] => {
+  if (cla && pag) return selPos(cla, pag);
   if (cla && !vot) return cla;
   if (cla && vot) return mrgLis(cla, vot);
   return [];
@@ -122,4 +121,14 @@ const mrgLis = (cla: ClaimObject[], vot: VoteObject[]): ClaimObject[] => {
   }
 
   return lis;
+};
+
+const selPos = (cla: ClaimObject[], pag: string): ClaimObject[] => {
+  for (const x of cla) {
+    if (x.kind() === "comment" && x.id() === pag) {
+      return [x];
+    }
+  }
+
+  return cla;
 };
