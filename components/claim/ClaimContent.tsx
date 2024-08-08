@@ -10,6 +10,8 @@ import { LimitMarkdown } from "@/modules/string/LimitMarkdown";
 
 interface Props {
   claim: ClaimObject;
+  editor?: boolean;
+  embed?: boolean;
 }
 
 export const ClaimContent = (props: Props) => {
@@ -37,7 +39,7 @@ export const ClaimContent = (props: Props) => {
 
     if (t.tagName === "A") return;
 
-    if (e.metaKey || e.ctrlKey) {
+    if (e.metaKey || e.ctrlKey || props.editor === true) {
       window.open(claimPage, "_blank");
     } else {
       router.push(claimPage);
@@ -47,6 +49,7 @@ export const ClaimContent = (props: Props) => {
   return (
     <div className="" onClick={onClick}>
       <RenderMarkdown
+        embed={props.embed}
         markdown={process(props.claim.markdown())}
       />
     </div>

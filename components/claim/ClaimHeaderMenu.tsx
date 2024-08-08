@@ -1,4 +1,8 @@
+import Link from "next/link";
+import React from "react";
+
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import * as Separator from "@/components/layout/separator";
 import * as ToastSender from "@/components/toast/ToastSender";
 
 import { ClaimObject } from "@/modules/claim/object/ClaimObject";
@@ -15,7 +19,13 @@ const itemClassName = `
 `;
 
 export const ClaimHeaderMenu = (props: Props) => {
-  const onClick = () => {
+  const addComment = () => {
+    if (props.claim.upside().hsitg === false) {
+      ToastSender.Info("You have no skin in the game to do that!");
+    }
+  };
+
+  const onSelect = () => {
     ToastSender.Info("It's comming just chill ok!");
   };
 
@@ -40,18 +50,40 @@ export const ClaimHeaderMenu = (props: Props) => {
           `}
           sideOffset={5}
         >
-          <DropdownMenu.Item className={itemClassName} onClick={onClick}>
+
+          {/*
+          TODO the page is not redirected to the comment editor if the first
+          vote has been created the first time on the same page. We need to
+          re-render this component somehow as soon as the first vote has been
+          cast on a claim.
+          */}
+          <DropdownMenu.Item className={itemClassName} onSelect={addComment}>
+            {props.claim.upside().hsitg === true ? (
+              <Link href={`/claim/${props.claim.id()}/comment`}>
+                Add Comment
+              </Link>
+            ) : (
+              <>
+                Add Comment
+              </>
+            )}
+          </DropdownMenu.Item>
+
+          <Separator.Horizontal margin="my-2" />
+
+          <DropdownMenu.Item className={itemClassName} onSelect={onSelect}>
             Adjourn
           </DropdownMenu.Item>
-          <DropdownMenu.Item className={itemClassName} onClick={onClick}>
+          <DropdownMenu.Item className={itemClassName} onSelect={onSelect}>
             Dispute
           </DropdownMenu.Item>
-          <DropdownMenu.Item className={itemClassName} onClick={onClick}>
+          <DropdownMenu.Item className={itemClassName} onSelect={onSelect}>
             Nullify
           </DropdownMenu.Item>
-          <DropdownMenu.Item className={itemClassName} onClick={onClick}>
+          <DropdownMenu.Item className={itemClassName} onSelect={onSelect}>
             Resolve
           </DropdownMenu.Item>
+
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>

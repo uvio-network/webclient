@@ -7,3 +7,15 @@ export interface UserSearchResponse {
   image: string;
   name: string;
 }
+
+export const EmptyUserSearchResponse = (): UserSearchResponse => {
+  return {
+    // intern
+    created: "",
+    id: "",
+
+    // public
+    image: "",
+    name: "",
+  };
+};

@@ -15,8 +15,18 @@ export const ClaimContainer = (props: Props) => {
         <ClaimContent claim={props.claim} />
       </div>
 
+      {props.claim.kind() === "comment" && (
+        <div className="mx-2 mt-2 px-2 pb-2 background-overlay rounded border border-color">
+          <ClaimContent
+            claim={props.claim.parent()!} // if kind is "comment" then parent() will never be undefined
+            embed={true}
+          />
+        </div>
+      )}
+
       <ClaimActions
         claim={props.claim.id()}
+        kind={props.claim.kind()}
         labels={props.claim.labels()}
         lifecycle={props.claim.lifecycle()}
         token={props.claim.token()}

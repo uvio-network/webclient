@@ -75,7 +75,7 @@ export const ClaimFooterCard = (props: Props) => {
               </div>
             )}
 
-            {stakeAgree === 0 && stakeDisagree === 0 && (
+            {props.upside.hsitg === false && (
               <div>
                 <Separator.Horizontal />
 
