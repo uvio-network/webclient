@@ -51,6 +51,15 @@ export const ClaimList = (props: Props) => {
     },
   });
 
+  // We search for posts in all kinds of variations in this component. For one,
+  // we want to always work with a list of posts, even if it is empty. So getLis
+  // does that for us. And then, we have to account for pages rendered with or
+  // without comments. If we are tasked to render a claim page, and the post to
+  // render is in fact a comment, then we remove the parent claim from the
+  // search response in order to only forward the post of kind "comment". Note
+  // that search queries are automatically extended at the moment in order to
+  // provide claims with comments and comments with their parent claims. This
+  // automatic extension is the reason for our filtering efforts here.
   const list = getLis(claims.data, votes.data, props.page || "");
 
   // We want to embed claims on comment posts on basically every page, except on
@@ -90,7 +99,7 @@ export const ClaimList = (props: Props) => {
 };
 
 const getLis = (cla: ClaimObject[] | undefined, vot: VoteObject[] | undefined, pag: string): ClaimObject[] => {
-  if (cla && pag) return selPos(cla, pag);
+  if (cla && pag) return selCom(cla, pag);
   if (cla && !vot) return cla;
   if (cla && vot) return mrgLis(cla, vot);
   return [];
@@ -123,7 +132,7 @@ const mrgLis = (cla: ClaimObject[], vot: VoteObject[]): ClaimObject[] => {
   return lis;
 };
 
-const selPos = (cla: ClaimObject[], pag: string): ClaimObject[] => {
+const selCom = (cla: ClaimObject[], pag: string): ClaimObject[] => {
   for (const x of cla) {
     if (x.kind() === "comment" && x.id() === pag) {
       return [x];
