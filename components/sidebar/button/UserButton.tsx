@@ -1,27 +1,23 @@
 import Link from "next/link";
 
-import * as ToastSender from "@/components/toast/ToastSender";
-
 import { AuthStore } from "@/components/auth/AuthStore";
 import { BaseButton } from "@/components/button/BaseButton";
 import { UserFullIcon } from "@/components/icon/UserFullIcon";
 import { useShallow } from "zustand/react/shallow";
 
 export const UserButton = () => {
-  const { name } = AuthStore(useShallow((state) => ({ name: state.auth.name })));
-
-  const onClick = () => {
-    ToastSender.Info("It's comming just chill ok!");
-  };
+  const { id, name } = AuthStore(useShallow((state) => ({
+    id: state.auth.id,
+    name: state.auth.name,
+  })));
 
   return (
     <>
       {name && (
-        <Link href="">
+        <Link href={"/user/" + id}>
           <BaseButton
             icon={<UserFullIcon />}
             text={name}
-            onClick={onClick}
           />
         </Link>
       )}

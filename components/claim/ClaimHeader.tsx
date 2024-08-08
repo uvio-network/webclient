@@ -39,8 +39,12 @@ export const ClaimHeader = (props: Props) => {
         <div className="flex h-6">
           <div className="my-auto text-gray-500 dark:text-gray-400 text-sm">
             {props.claim.created().format("Do MMM YYYY")}
-            {` - `}
-            {props.claim.expiry().format("Do MMM YYYY")}
+            {props.claim.kind() === "claim" && (
+              <>
+                {` - `}
+                {props.claim.expiry().format("Do MMM YYYY")}
+              </>
+            )}
           </div>
         </div>
       </div>

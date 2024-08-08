@@ -17,8 +17,8 @@ interface Props {
 export const ClaimActions = (props: Props) => {
   const [open, setOpen] = React.useState<string>("");
 
-  const isClaim = props.claim.kind() === "claim";
-  const isPage = usePathname() === "/claim/" + props.claim ? true : false;
+  const isClaim = props.claim.kind() === "claim" ? true : false;
+  const isPage = usePathname() === "/claim/" + props.claim.id() ? true : false;
 
   return (
     // This relative container is the anchor for elements inside of the

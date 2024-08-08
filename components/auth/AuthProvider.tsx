@@ -74,6 +74,7 @@ const fetchData = async (user: Privy.User, wallets: Privy.ConnectedWallet[]) => 
   }
 
   const auth = {
+    id: "",
     image: "",
     name: "",
     token: token,
@@ -83,6 +84,7 @@ const fetchData = async (user: Privy.User, wallets: Privy.ConnectedWallet[]) => 
 
   try {
     const [use] = await UserSearch(token, [{ id: "self" }]);
+    auth.id = use.id;
     auth.image = use.image;
     auth.name = use.name;
   } catch (err) {

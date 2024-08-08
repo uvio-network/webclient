@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { combine } from "zustand/middleware";
 
 export interface AuthMessage {
+  id: string;
   image: string;
   name: string;
   token: string;
@@ -20,6 +21,7 @@ export const AuthStore = create(
         set(() => {
           return {
             auth: {
+              id: "",
               image: "",
               name: "",
               token: "",
@@ -33,6 +35,16 @@ export const AuthStore = create(
         set(() => {
           return {
             auth: a,
+          };
+        });
+      },
+      updateId: (i: string) => {
+        set((state: { auth: AuthMessage }) => {
+          return {
+            auth: {
+              ...state.auth,
+              id: i,
+            }
           };
         });
       },

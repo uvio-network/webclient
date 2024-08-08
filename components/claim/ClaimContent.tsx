@@ -16,12 +16,12 @@ interface Props {
 
 export const ClaimContent = (props: Props) => {
   const router = useRouter();
-  const pathname = usePathname();
 
+  const isPage = usePathname() === "/claim/" + props.claim.id() ? true : false;
   const claimPage = "/claim/" + props.claim.id();
 
   const process = (txt: string): string => {
-    if (pathname === claimPage) {
+    if (isPage) {
       return txt;
     }
 
@@ -37,7 +37,13 @@ export const ClaimContent = (props: Props) => {
   const onClick = (e: React.MouseEvent) => {
     const t = e.target as HTMLElement;
 
+    // We do not want to interfere with any external link inside of the post's
+    // markdown.
     if (t.tagName === "A") return;
+
+    // We do not want to redirect the user again to the page they are already
+    // looking at.
+    if (isPage) return;
 
     if (e.metaKey || e.ctrlKey || props.editor === true) {
       window.open(claimPage, "_blank");

@@ -99,7 +99,7 @@ export const ClaimList = (props: Props) => {
 };
 
 const getLis = (cla: ClaimObject[] | undefined, vot: VoteObject[] | undefined, pag: string): ClaimObject[] => {
-  if (cla && pag) return selCom(cla, pag);
+  if (cla && pag) return ordPos(cla, pag);
   if (cla && !vot) return cla;
   if (cla && vot) return mrgLis(cla, vot);
   return [];
@@ -132,12 +132,32 @@ const mrgLis = (cla: ClaimObject[], vot: VoteObject[]): ClaimObject[] => {
   return lis;
 };
 
-const selCom = (cla: ClaimObject[], pag: string): ClaimObject[] => {
+// ordPos ensures the order of post objects according to the page we are
+// supposed to render.
+const ordPos = (cla: ClaimObject[], pag: string): ClaimObject[] => {
   for (const x of cla) {
     if (x.kind() === "comment" && x.id() === pag) {
       return [x];
     }
   }
 
-  return cla;
+  const lis: ClaimObject[] = [];
+  for (const x of cla) {
+    if (x.kind() === "claim" && x.id() === pag) {
+      lis.push(x);
+      break;
+    }
+  }
+
+  if (lis.length === 0) {
+    return cla;
+  }
+
+  for (const x of cla) {
+    if (lis[0].id() !== x.id()) {
+      lis.push(x);
+    }
+  }
+
+  return lis;
 };
