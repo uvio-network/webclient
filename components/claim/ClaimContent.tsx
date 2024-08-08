@@ -49,6 +49,7 @@ export const ClaimContent = (props: Props) => {
   return (
     <div className="" onClick={onClick}>
       <RenderMarkdown
+        editor={props.editor}
         embed={props.embed}
         markdown={process(props.claim.markdown())}
       />

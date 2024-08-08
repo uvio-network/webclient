@@ -5,6 +5,7 @@ import remarkGfm from "remark-gfm";
 import { Components } from "react-markdown";
 
 interface Props {
+  editor?: boolean;
   embed?: boolean;
   markdown: string;
 }
@@ -17,7 +18,7 @@ export const RenderMarkdown = (props: Props) => {
         w-full
         ${props.embed === true ? "text-sm" : "text-base"}
       `}
-      components={components(props.embed || false)}
+      components={components(props.editor || false, props.embed || false)}
       remarkPlugins={[remarkGfm]}
       skipHtml={true}
     >
@@ -42,7 +43,7 @@ const allowedElements = [
 // timeline. When emb is true, which is the case when we render embedded claims,
 // then the font sizes we render are one step smaller. Those embedded claims are
 // how we display comments, in retweet style.
-const components = (emb: boolean): Components => {
+const components = (edi: boolean, emb: boolean): Components => {
   return {
     h1(props) {
       return <h1
@@ -90,7 +91,7 @@ const components = (emb: boolean): Components => {
         className={`
           text-blue-400
         `}
-        target={props.href?.startsWith("/claim/") && emb !== true ? "" : "_blank"}
+        target={props.href?.startsWith("/claim/") && edi === false ? "" : "_blank"}
         {...getRst(props)}
       />;
     },

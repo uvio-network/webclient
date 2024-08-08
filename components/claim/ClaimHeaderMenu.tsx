@@ -51,25 +51,23 @@ export const ClaimHeaderMenu = (props: Props) => {
           sideOffset={5}
         >
 
-          {/*
-          TODO the page is not redirected to the comment editor if the first
-          vote has been created the first time on the same page. We need to
-          re-render this component somehow as soon as the first vote has been
-          cast on a claim.
-          */}
-          <DropdownMenu.Item className={itemClassName} onSelect={addComment}>
-            {props.claim.upside().hsitg === true ? (
-              <Link href={`/claim/${props.claim.id()}/comment`}>
-                Add Comment
-              </Link>
-            ) : (
-              <>
-                Add Comment
-              </>
-            )}
-          </DropdownMenu.Item>
+          {props.claim.kind() === "claim" && (
+            <>
+              <DropdownMenu.Item className={itemClassName} onSelect={addComment}>
+                {props.claim.upside().hsitg === true ? (
+                  <Link href={`/claim/${props.claim.id()}/comment`}>
+                    Add Comment
+                  </Link>
+                ) : (
+                  <>
+                    Add Comment
+                  </>
+                )}
+              </DropdownMenu.Item>
 
-          <Separator.Horizontal margin="my-2" />
+              <Separator.Horizontal margin="my-2" />
+            </>
+          )}
 
           <DropdownMenu.Item className={itemClassName} onSelect={onSelect}>
             Adjourn
