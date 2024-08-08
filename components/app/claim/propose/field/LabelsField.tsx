@@ -9,7 +9,6 @@ export const LabelsField = () => {
     <input
       className="block w-full bg-white dark:bg-black outline-none"
       defaultValue={editor.labels}
-      name="labels"
       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
         editor.updateLabels(e.currentTarget.value);
       }}

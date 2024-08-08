@@ -15,7 +15,6 @@ export const ExpiryField = () => {
       <input
         defaultValue={editor.expiry}
         className="block mr-2 w-full bg-white dark:bg-black outline-none"
-        name="expiry"
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           editor.updateExpiry(e.currentTarget.value);
         }}
