@@ -14,7 +14,7 @@ import { useShallow } from "zustand/react/shallow";
 import { VoteObject } from "@/modules/vote/object/VoteObject";
 
 interface Props {
-  page?: boolean;
+  page?: string;
   query: string[];
   request: PostSearchRequest[];
 }
@@ -51,7 +51,22 @@ export const ClaimList = (props: Props) => {
     },
   });
 
-  const list = getLis(claims.data, votes.data, props.page || false);
+  // We search for posts in all kinds of variations in this component. For one,
+  // we want to always work with a list of posts, even if it is empty. So getLis
+  // does that for us. And then, we have to account for pages rendered with or
+  // without comments. If we are tasked to render a claim page, and the post to
+  // render is in fact a comment, then we remove the parent claim from the
+  // search response in order to only forward the post of kind "comment". Note
+  // that search queries are automatically extended at the moment in order to
+  // provide claims with comments and comments with their parent claims. This
+  // automatic extension is the reason for our filtering efforts here.
+  const list = getLis(claims.data, votes.data, props.page || "");
+
+  // We want to embed claims on comment posts on basically every page, except on
+  // the claim page where we show claims and their comments underneath. So if we
+  // render the claim page, then negate the condition below and use the result
+  // as boolean flag to embed claims everywhere else but here.
+  const embed = !(list.length >= 1 && list[0].id() === props.page && list[0].kind() === "claim");
 
   return (
     <div>
@@ -63,7 +78,10 @@ export const ClaimList = (props: Props) => {
 
       {list.map((x: ClaimObject, i: number) => (
         <div key={x.id()}>
-          <ClaimContainer claim={x} />
+          <ClaimContainer
+            claim={x}
+            embed={embed}
+          />
 
           {/*
           Show a vertical separator between claims and make sure that the last
@@ -80,18 +98,8 @@ export const ClaimList = (props: Props) => {
   );
 };
 
-const fltCla = (cla: ClaimObject[]): ClaimObject[] => {
-  for (const x of cla) {
-    if (x.kind() === "comment") {
-      return [x];
-    }
-  }
-
-  return cla;
-};
-
-const getLis = (cla: ClaimObject[] | undefined, vot: VoteObject[] | undefined, pag: boolean): ClaimObject[] => {
-  if (pag && cla && cla.length == 2) return fltCla(cla);
+const getLis = (cla: ClaimObject[] | undefined, vot: VoteObject[] | undefined, pag: string): ClaimObject[] => {
+  if (cla && pag) return selCom(cla, pag);
   if (cla && !vot) return cla;
   if (cla && vot) return mrgLis(cla, vot);
   return [];
@@ -122,4 +130,14 @@ const mrgLis = (cla: ClaimObject[], vot: VoteObject[]): ClaimObject[] => {
   }
 
   return lis;
+};
+
+const selCom = (cla: ClaimObject[], pag: string): ClaimObject[] => {
+  for (const x of cla) {
+    if (x.kind() === "comment" && x.id() === pag) {
+      return [x];
+    }
+  }
+
+  return cla;
 };

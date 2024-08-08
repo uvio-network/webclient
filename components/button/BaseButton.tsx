@@ -5,7 +5,7 @@ interface Props {
   font?: string;
   hover?: string;
   onClick?: (eve: React.MouseEvent<HTMLButtonElement>) => void;
-  position?: string;
+  position?: string; // text position, either left or right from the icon
   icon: React.ReactElement;
   text?: string;
 }
