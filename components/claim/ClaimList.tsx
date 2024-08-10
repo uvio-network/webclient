@@ -60,7 +60,7 @@ export const ClaimList = (props: Props) => {
   // that search queries are automatically extended at the moment in order to
   // provide claims with comments and comments with their parent claims. This
   // automatic extension is the reason for our filtering efforts here.
-  const list = getLis(claims.data, votes.data, props.page || "");
+  const list = getLis(claims.data || [], votes.data || [], props.page || "");
 
   // We want to embed claims on comment posts on basically every page, except on
   // the claim page where we show claims and their comments underneath. So if we
@@ -98,16 +98,19 @@ export const ClaimList = (props: Props) => {
   );
 };
 
-const getLis = (cla: ClaimObject[] | undefined, vot: VoteObject[] | undefined, pag: string): ClaimObject[] => {
-  if (cla && pag) return ordPos(cla, pag);
-  if (cla && !vot) return cla;
-  if (cla && vot) return mrgLis(cla, vot);
-  return [];
+const getLis = (cla: ClaimObject[], vot: VoteObject[], pag: string): ClaimObject[] => {
+  cla = ordPos(cla, pag);
+  cla = mrgLis(cla, vot);
+  return cla;
 };
 
 // mrgLis produces a new array of updated claim objects according to the
 // matching vote objects as provided.
 const mrgLis = (cla: ClaimObject[], vot: VoteObject[]): ClaimObject[] => {
+  if (!vot || vot.length === 0) {
+    return cla;
+  }
+
   const map: Map<string, VoteObject[]> = new Map();
 
   for (const x of vot) {
@@ -135,6 +138,10 @@ const mrgLis = (cla: ClaimObject[], vot: VoteObject[]): ClaimObject[] => {
 // ordPos ensures the order of post objects according to the page we are
 // supposed to render.
 const ordPos = (cla: ClaimObject[], pag: string): ClaimObject[] => {
+  if (!pag || pag === "") {
+    return cla;
+  }
+
   for (const x of cla) {
     if (x.kind() === "comment" && x.id() === pag) {
       return [x];
@@ -147,10 +154,6 @@ const ordPos = (cla: ClaimObject[], pag: string): ClaimObject[] => {
       lis.push(x);
       break;
     }
-  }
-
-  if (lis.length === 0) {
-    return cla;
   }
 
   for (const x of cla) {

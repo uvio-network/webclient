@@ -4,6 +4,7 @@ import * as HoverCard from "@radix-ui/react-hover-card";
 import * as Separator from "@/components/layout/separator";
 
 import { ClaimObject } from "@/modules/claim/object/ClaimObject";
+import { EffectButton } from "@/components/button/EffectButton";
 
 interface Props {
   claim: ClaimObject;
@@ -27,10 +28,14 @@ export const ClaimFooterCard = (props: Props) => {
       closeDelay={500}
       openDelay={250}
     >
-      <HoverCard.Trigger asChild>
-        <div className="p-2 text-gray-400 dark:text-gray-500 underline underline-offset-4 decoration-dashed cursor-default">
-          {`${probability} %`}
-        </div>
+      <HoverCard.Trigger className="text-gray-400 dark:text-gray-500">
+        <EffectButton
+          value={probability}
+        >
+          <div className="underline underline-offset-4 decoration-dashed cursor-default">
+            {`${probability} %`}
+          </div>
+        </EffectButton>
       </HoverCard.Trigger>
       <HoverCard.Portal>
         <HoverCard.Content

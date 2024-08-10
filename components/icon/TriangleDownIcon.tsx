@@ -2,7 +2,6 @@ import { BaseIcon } from "@/components/icon/BaseIcon";
 
 interface Props {
   className?: string;
-  colour?: string;
   size?: string;
 }
 
@@ -11,7 +10,6 @@ export const TriangleDownIcon = (props: Props) => {
   return (
     <BaseIcon
       className={props.className}
-      colour={props.colour}
       size={props.size}
       viewBox="0 -960 960 960"
     >

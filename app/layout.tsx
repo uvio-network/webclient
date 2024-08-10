@@ -1,5 +1,6 @@
 "use client";
 
+import "@/app/effects.css";
 import "@/app/globals.css";
 
 import { AppProvider } from "@/components/app/AppProvider";
