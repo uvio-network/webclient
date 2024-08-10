@@ -9,7 +9,7 @@ interface Props {
   [key: string]: any;
 }
 
-export const EffectButton = React.forwardRef<HTMLDivElement, Props>((props: Props, ref) => {
+export const EffectButton = React.forwardRef<HTMLDivElement, Props>(function EffectButton(props: Props, ref) {
   const [className, setClassName] = React.useState<string>(defaultClass);
   const [currentValue, setCurrentValue] = React.useState<string>(props.value);
 
