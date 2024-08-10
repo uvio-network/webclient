@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import * as ToastSender from "@/components/toast/ToastSender";
@@ -26,7 +27,12 @@ export const ClaimHeader = (props: Props) => {
       >
         {image !== "" && (
           <Link href={"/user/" + props.claim.owner().id()}>
-            <img src={image} />
+            <Image
+              alt={props.claim.owner().name()}
+              src={image}
+              width={48}
+              height={48}
+            />
           </Link>
         )}
       </div>

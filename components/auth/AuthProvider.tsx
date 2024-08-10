@@ -8,10 +8,10 @@ import { UserCreate } from "@/modules/api/user/create/Create";
 import { UserSearch } from "@/modules/api/user/search/Search";
 
 export const AuthProvider = () => {
+  const [login, setLogin] = React.useState<boolean>(false);
+
   const { user } = Privy.usePrivy();
   const { wallets, ready } = Privy.useWallets();
-
-  const [login, setLogin] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     if (login && ready && user) {
@@ -41,10 +41,8 @@ export const AuthProvider = () => {
     // Every time the user's access token is refreshed we update our internal
     // auth store.
     onAccessTokenGranted: (accessToken: string) => {
-      if (AuthStore.getState().auth.valid) {
-        AuthStore.getState().updateToken(accessToken);
-        console.log("useToken.onAccessTokenGranted");
-      }
+      AuthStore.getState().updateToken(accessToken);
+      console.log("useToken.onAccessTokenGranted");
     },
     // If the user's access token was revoked, we delete our internally tracked
     // state as well.
@@ -62,36 +60,46 @@ export const AuthProvider = () => {
 const fetchData = async (user: Privy.User, wallets: Privy.ConnectedWallet[]) => {
   console.log("AuthProvider.fetchData");
 
-  const token = await Privy.getAccessToken();
-  if (!token) {
-    return ToastSender.Error("Haha, and you thought this would be easy!?");
-  }
-
   try {
-    await UserCreate(token, [{ image: "", name: truncateEthAddress(wallets[0]?.address) }]);
+    const token = await Privy.getAccessToken();
+    if (!token) {
+      return ToastSender.Error("Your access token could not be validated.");
+    }
+
+    // TODO setup smart account client
+
+    // TODO get smart account address
+
+    // TODO put smart wallet in its own Zustand Store
+
+    const req = {
+      image: "",
+      name: truncateEthAddress(wallets[0]?.address),
+      // TODO store the user's wallet config somehow
+      //
+      //     signer - the embedded privy wallet
+      //     contract - the smart account address
+      //     index - the smart account index
+      //
+    };
+
+    const [cre] = await UserCreate(token, [req]);
+    const [sea] = await UserSearch(token, [{ id: cre.id }]);
+
+    const auth = {
+      id: sea.id,
+      image: sea.image,
+      name: sea.name,
+      token: token,
+      valid: true,
+      wallet: user?.wallet?.address || "",
+    };
+
+    {
+      AuthStore.getState().update(auth);
+    }
   } catch (err) {
-    return ToastSender.Error("Haha, and you thought this would be easy!?");
-  }
-
-  const auth = {
-    id: "",
-    image: "",
-    name: "",
-    token: token,
-    valid: true,
-    wallet: user?.wallet?.address || "",
-  };
-
-  try {
-    const [use] = await UserSearch(token, [{ id: "self" }]);
-    auth.id = use.id;
-    auth.image = use.image;
-    auth.name = use.name;
-  } catch (err) {
-    return ToastSender.Error("Haha, and you thought this would be easy!?");
-  }
-
-  {
-    AuthStore.getState().update(auth);
+    console.error(err);
+    ToastSender.Error(err instanceof Error ? err.message : String(err));
   }
 };

@@ -18,6 +18,9 @@ export const ClaimFooter = (props: Props) => {
   const stakeAgree = isComment && props.claim.votes().agreement !== 0 ? true : false;
   const stakeDisagree = isComment && props.claim.votes().disagreement !== 0 ? true : false;
 
+  const textAgree = props.claim.votes().agreement.toFixed(2) + " " + token;
+  const textDisagree = props.claim.votes().disagreement.toFixed(2) + " " + token;
+
   return (
     <div className="flex mt-2 px-2">
       <div className="flex-1 w-full">
@@ -25,19 +28,21 @@ export const ClaimFooter = (props: Props) => {
           <div className="grid place-content-start">
             {isClaim && (
               <BaseButton
+                effect={true}
                 font="font-normal"
                 icon={<TriangleUpIcon className="mb-[1px]" />}
                 position="right"
-                text={`${props.claim.votes().agreement.toFixed(2)} ${token}`}
+                text={textAgree}
               />
             )}
 
             {stakeAgree && (
               <NoButton
+                effect={true}
                 font="font-normal"
                 icon={<TriangleUpIcon className="mb-[1px]" />}
                 position="right"
-                text={`${props.claim.votes().agreement.toFixed(2)} ${token}`}
+                text={textAgree}
               />
             )}
           </div>
@@ -57,19 +62,21 @@ export const ClaimFooter = (props: Props) => {
           <div className="grid place-content-end">
             {isClaim && (
               <BaseButton
+                effect={true}
                 font="font-normal"
                 icon={<TriangleDownIcon className="mb-[1px]" />}
                 position="left"
-                text={`${props.claim.votes().disagreement.toFixed(2)} ${token}`}
+                text={textDisagree}
               />
             )}
 
             {stakeDisagree && (
               <NoButton
+                effect={true}
                 font="font-normal"
                 icon={<TriangleDownIcon className="mb-[1px]" />}
                 position="left"
-                text={`${props.claim.votes().disagreement.toFixed(2)} ${token}`}
+                text={textDisagree}
               />
             )}
           </div>

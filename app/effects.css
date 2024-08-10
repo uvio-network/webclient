@@ -1,0 +1,37 @@
+.dark .color-effect {
+  /* animate the font color over 1 second, and repeat the animation twice */
+  animation: darkFontColorAnimation 250ms 2;
+}
+
+@keyframes darkFontColorAnimation {
+  0% {
+    color: inherit;
+  }
+
+  50% {
+    color: white;
+  }
+
+  100% {
+    color: inherit;
+  }
+}
+
+.light .color-effect {
+  /* animate the font color over 1 second, and repeat the animation twice */
+  animation: lightFontColorAnimation 250ms 2;
+}
+
+@keyframes lightFontColorAnimation {
+  0% {
+    color: inherit;
+  }
+
+  50% {
+    color: black;
+  }
+
+  100% {
+    color: inherit;
+  }
+}
