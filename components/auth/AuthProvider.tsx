@@ -6,12 +6,12 @@ import { AuthStore } from "@/components/auth/AuthStore";
 import { BundlerURL } from "@/modules/biconomy/BundlerURL";
 import { ChainConfig } from "@/modules/chain/ChainConfig";
 import { createSmartAccountClient } from "@biconomy/account";
+import { NetworkConfig } from "@/modules/chain/NetworkConfig";
 import { SupportedSigner } from "@biconomy/account";
 import { truncateEthAddress } from "@/modules/wallet/WalletAddress";
 import { UserCreate } from "@/modules/api/user/create/Create";
 import { UserSearch } from "@/modules/api/user/search/Search";
 import { WalletStore } from "@/modules/wallet/WalletStore";
-import { NetworkConfig } from "@/modules/chain/NetworkConfig";
 
 export const AuthProvider = () => {
   const [login, setLogin] = React.useState<boolean>(false);
@@ -55,6 +55,7 @@ export const AuthProvider = () => {
     // state as well.
     onAccessTokenRemoved: () => {
       AuthStore.getState().delete();
+      WalletStore.getState().delete();
       console.log("useToken.onAccessTokenRemoved");
     },
   });

@@ -6,11 +6,12 @@ import * as Separator from "@/components/layout/separator";
 import { AppLogo } from "@/components/app/AppLogo";
 import { AuthButton } from "@/components/sidebar/button/AuthButton";
 import { BarsLeftIcon } from "@/components/icon/BarsLeftIcon";
-import { ControlButton } from "@/components/sidebar/button/ControlButton";
+import { BaseButton } from "@/components/button/BaseButton";
 import { ProposeButton } from "@/components/sidebar/button/ProposeButton";
 import { SocialButton } from "@/components/sidebar/button/SocialButton";
 import { ThemeButton } from "@/components/sidebar/button/ThemeButton";
 import { UserButton } from "@/components/sidebar/button/UserButton";
+import { WalletButton } from "@/components/sidebar/button/WalletButton";
 
 export const Sidebar = () => {
   const [show, setShow] = React.useState<boolean>(false);
@@ -64,6 +65,7 @@ export const Sidebar = () => {
         <Separator.Horizontal />
 
         <UserButton />
+        <WalletButton />
         <ThemeButton />
         {/* settings */}
         <AuthButton />
@@ -74,12 +76,12 @@ export const Sidebar = () => {
       </div>
 
       {/* This is the button that controls the visibility of the sidebar. */}
-      <ControlButton
-        className="mx-2 my-4 sm:m-4"
-        onClick={tglShow}
-      >
-        <BarsLeftIcon />
-      </ControlButton>
+      <div className="mx-2 my-4 sm:m-4">
+        <BaseButton
+          onClick={tglShow}
+          icon={<BarsLeftIcon />}
+        />
+      </div>
     </div>
   );
 };

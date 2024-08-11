@@ -1,8 +1,8 @@
 import Link from "next/link";
 
+import { AccountIcon } from "@/components/icon/AccountIcon";
 import { AuthStore } from "@/components/auth/AuthStore";
 import { BaseButton } from "@/components/button/BaseButton";
-import { UserFullIcon } from "@/components/icon/UserFullIcon";
 import { useShallow } from "zustand/react/shallow";
 
 export const UserButton = () => {
@@ -16,7 +16,7 @@ export const UserButton = () => {
       {name && (
         <Link href={"/user/" + id}>
           <BaseButton
-            icon={<UserFullIcon />}
+            icon={<AccountIcon />}
             text={name}
           />
         </Link>

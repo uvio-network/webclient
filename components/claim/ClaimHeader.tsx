@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import * as ToastSender from "@/components/toast/ToastSender";
 
+import { BaseButton } from "@/components/button/BaseButton";
 import { ClaimHeaderMenu } from "@/components/claim/ClaimHeaderMenu";
 import { ClaimObject } from "@/modules/claim/object/ClaimObject";
 import { StarLineIcon } from "@/components/icon/StarLineIcon";
@@ -59,9 +60,12 @@ export const ClaimHeader = (props: Props) => {
           <ClaimHeaderMenu claim={props.claim} />
         </div>
         <div className="h-6">
-          <button type="button" onClick={onClick}>
-            <StarLineIcon size="w-6 h-6" />
-          </button>
+          <BaseButton
+            background="none"
+            onClick={onClick}
+            padding="p-0"
+            icon={<StarLineIcon size="w-6 h-6" />}
+          />
         </div>
       </div>
     </div>

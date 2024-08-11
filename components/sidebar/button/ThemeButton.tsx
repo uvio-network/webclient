@@ -1,9 +1,9 @@
 import * as React from "react";
 
 import { BaseButton } from "@/components/button/BaseButton";
-import { ContrastIcon } from "@/components/icon/ContrastIcon";
-import { MoonLineIcon } from "@/components/icon/MoonLineIcon";
-import { SunLineIcon } from "@/components/icon/SunLineIcon";
+import { ThemeDarkIcon } from "@/components/icon/ThemeDarkIcon";
+import { ThemeLightIcon } from "@/components/icon/ThemeLightIcon";
+import { ThemeSystemIcon } from "@/components/icon/ThemeSystemIcon";
 
 const thmKey = "uvio.network/theme";
 
@@ -94,7 +94,7 @@ export const ThemeButton = () => {
             localStorage.setItem(thmKey, thmSys);
             setThem(thmSys);
           }}
-          icon={<ContrastIcon />}
+          icon={<ThemeSystemIcon />}
           text="System Theme"
         />
       )}
@@ -105,7 +105,7 @@ export const ThemeButton = () => {
             localStorage.setItem(thmKey, thmLgt);
             setThem(thmLgt);
           }}
-          icon={<SunLineIcon />}
+          icon={<ThemeLightIcon />}
           text="Lights On"
         />
       )}
@@ -116,7 +116,7 @@ export const ThemeButton = () => {
             localStorage.setItem(thmKey, thmDrk);
             setThem(thmDrk);
           }}
-          icon={<MoonLineIcon />}
+          icon={<ThemeDarkIcon />}
           text="Dark Mode"
         />
       )}

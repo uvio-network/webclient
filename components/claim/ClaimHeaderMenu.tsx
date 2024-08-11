@@ -5,6 +5,7 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Separator from "@/components/layout/separator";
 import * as ToastSender from "@/components/toast/ToastSender";
 
+import { BaseButton } from "@/components/button/BaseButton";
 import { ClaimObject } from "@/modules/claim/object/ClaimObject";
 import { MenuHorizontalIcon } from "@/components/icon/MenuHorizontalIcon";
 
@@ -31,10 +32,12 @@ export const ClaimHeaderMenu = (props: Props) => {
 
   return (
     <DropdownMenu.Root>
-      <DropdownMenu.Trigger asChild>
-        <button aria-label="Claim Actions">
-          <MenuHorizontalIcon size="w-6 h-6" />
-        </button>
+      <DropdownMenu.Trigger>
+        <BaseButton
+          background="none"
+          padding="p-0"
+          icon={<MenuHorizontalIcon size="w-6 h-6" />}
+        />
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Portal>
