@@ -74,7 +74,6 @@ export const AuthStore = create(
             auth: {
               ...state.auth,
               token: t,
-              valid: t !== "",
             }
           };
         });

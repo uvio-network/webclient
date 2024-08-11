@@ -3,9 +3,15 @@ import * as React from "react";
 import * as ToastSender from "@/components/toast/ToastSender";
 
 import { AuthStore } from "@/components/auth/AuthStore";
+import { BundlerURL } from "@/modules/biconomy/BundlerURL";
+import { ChainConfig } from "@/modules/chain/ChainConfig";
+import { createSmartAccountClient } from "@biconomy/account";
+import { SupportedSigner } from "@biconomy/account";
 import { truncateEthAddress } from "@/modules/wallet/WalletAddress";
 import { UserCreate } from "@/modules/api/user/create/Create";
 import { UserSearch } from "@/modules/api/user/search/Search";
+import { WalletStore } from "@/modules/wallet/WalletStore";
+import { NetworkConfig } from "@/modules/chain/NetworkConfig";
 
 export const AuthProvider = () => {
   const [login, setLogin] = React.useState<boolean>(false);
@@ -34,6 +40,7 @@ export const AuthProvider = () => {
   Privy.useLogin({
     onComplete: () => {
       setLogin(true);
+      console.log("useLogin.onComplete");
     },
   });
 
@@ -66,40 +73,63 @@ const fetchData = async (user: Privy.User, wallets: Privy.ConnectedWallet[]) => 
       return ToastSender.Error("Your access token could not be validated.");
     }
 
-    // TODO setup smart account client
+    {
+      await newContract(wallets[0], ChainConfig[0]);
+      await newUser(wallets[0], token);
+    }
+  } catch (err) {
+    console.error(err);
+    ToastSender.Error(err instanceof Error ? err.message : String(err));
+  }
+};
 
-    // TODO get smart account address
+const newContract = async (wallet: Privy.ConnectedWallet, network: NetworkConfig, index: number = 0) => {
+  const contract = await createSmartAccountClient({
+    signer: await newSigner(wallet, network),
+    biconomyPaymasterApiKey: network.biconomyPaymasterApiKey,
+    bundlerUrl: BundlerURL(String(network.id)),
+    rpcUrl: network.rpcEndpoints[0],
+    chainId: network.id,
+    index: index,
+  });
 
-    // TODO put smart wallet in its own Zustand Store
+  WalletStore.getState().update({
+    address: await contract.getAccountAddress(),
+    contract: contract,
+    index: index,
+    signer: wallet.address,
+  });
+};
 
-    const req = {
-      image: "",
-      name: truncateEthAddress(wallets[0]?.address),
-      // TODO store the user's wallet config somehow
-      //
-      //     signer - the embedded privy wallet
-      //     contract - the smart account address
-      //     index - the smart account index
-      //
-    };
+const newSigner = async (wallet: Privy.ConnectedWallet, network: NetworkConfig): Promise<SupportedSigner> => {
+  await wallet.switchChain(network.id);
+  const provider = await wallet.getEthersProvider();
+  return provider.getSigner();
+};
 
-    const [cre] = await UserCreate(token, [req]);
-    const [sea] = await UserSearch(token, [{ id: cre.id }]);
+const newUser = async (wallet: Privy.ConnectedWallet, token: string) => {
+  const req = {
+    image: "",
+    name: truncateEthAddress(wallet.address),
+    // TODO store the user's wallet config somehow
+    //
+    //     signer - the embedded privy wallet
+    //     contract - the smart account address
+    //     index - the smart account index
+    //
+  };
 
-    const auth = {
+  const [cre] = await UserCreate(token, [req]);
+  const [sea] = await UserSearch(token, [{ id: cre.id }]);
+
+  {
+    AuthStore.getState().update({
       id: sea.id,
       image: sea.image,
       name: sea.name,
       token: token,
       valid: true,
-      wallet: user?.wallet?.address || "",
-    };
-
-    {
-      AuthStore.getState().update(auth);
-    }
-  } catch (err) {
-    console.error(err);
-    ToastSender.Error(err instanceof Error ? err.message : String(err));
+      wallet: wallet.address,
+    });
   }
 };
