@@ -9,13 +9,13 @@ export interface ClaimVotes {
   probability: number;
 }
 
-// CreateClaimVotes takes the apischema formatted vote summary for the given
-// claim and returns an object of relevant voting information in structured
-// form. The received format is "agreement,disagreement,minimum,creator".
+// NewClaimVotes takes the apischema formatted vote summary for the given claim
+// and returns an object of relevant voting information in structured form. The
+// received format is "agreement,disagreement,minimum,creator".
 //
 //     "15.273,2.773,0.5,1.5"
 //
-export const CreateClaimVotes = (pos: PostSearchResponse): ClaimVotes => {
+export const NewClaimVotes = (pos: PostSearchResponse): ClaimVotes => {
   const num = SplitList(pos.votes).map((x: string) => {
     return parseFloat(x);
   });

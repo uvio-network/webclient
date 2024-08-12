@@ -3,7 +3,7 @@ import * as ToastSender from "@/components/toast/ToastSender";
 import { VoteObject } from "@/modules/vote/VoteObject";
 import { VoteSearch } from "@/modules/api/vote/search/Search";
 
-export const CreateVoteList = async (tok: string, cla: string[]): Promise<VoteObject[]> => {
+export const NewVoteList = async (tok: string, cla: string[]): Promise<VoteObject[]> => {
   const lis: VoteObject[] = [];
 
   try {

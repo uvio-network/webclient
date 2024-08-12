@@ -8,7 +8,7 @@ import { UniqueOwners } from "@/modules/api/post/search/Response";
 import { UserSearchResponse } from "@/modules/api/user/search/Response";
 import { UserSearch } from "@/modules/api/user/search/Search";
 
-export const CreateClaimList = async (req: PostSearchRequest[]): Promise<ClaimObject[]> => {
+export const NewClaimList = async (req: PostSearchRequest[]): Promise<ClaimObject[]> => {
   const lis: ClaimObject[] = [];
 
   try {

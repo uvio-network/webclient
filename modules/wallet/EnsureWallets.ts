@@ -1,33 +1,27 @@
 import * as Privy from "@privy-io/react-auth";
 
 import { BiconomySmartAccountV2 } from "@biconomy/account";
+import { NewPublicClient } from "@/modules/chain/PublicClient";
 import { UserStore } from "@/modules/user/UserStore";
 import { WalletCreate } from "@/modules/api/wallet/create/Create";
 import { WalletCreateRequest } from "@/modules/api/wallet/create/Request";
 import { WalletObject } from "@/modules/wallet/WalletObject";
 import { WalletSearch } from "@/modules/api/wallet/search/Search";
-import { WalletSearchResponse } from "../api/wallet/search/Response";
+import { WalletSearchResponse } from "@/modules/api/wallet/search/Response";
 import { WalletStore } from "@/modules/wallet/WalletStore";
 
-// TODO this should fetch wallet objects for the user or create new ones
 export const EnsureWallets = async (con: BiconomySmartAccountV2, sig: Privy.ConnectedWallet, tok: string) => {
-  const user = UserStore.getState();
+  const user = UserStore.getState().user;
   const wallet = WalletStore.getState();
 
-  const sea = ensureWallets(con, sig, tok);
+  const sea = await ensureWallets(con, sig, tok);
 
-  // TODO create WalletList
-
-  // update the wallet store
-  // {
-  //   WalletStore.getState().update({
-  //     id: sea.id,
-  //     image: sea.image,
-  //     name: sea.name,
-  //     token: token,
-  //     valid: true,
-  //   });
-  // }
+  wallet.update({
+    contract: new WalletObject(searchWallet("contract", sea)!, con, undefined, user.object!),
+    public: NewPublicClient(),
+    ready: true,
+    signer: new WalletObject(searchWallet("signer", sea)!, undefined, sig, user.object!),
+  });
 };
 
 export const ensureWallets = async (con: BiconomySmartAccountV2, sig: Privy.ConnectedWallet, tok: string): Promise<WalletSearchResponse[]> => {
@@ -69,4 +63,8 @@ const createWallet = (add: string, kin: string, pro: string, des: string): Walle
 
 const existsWallet = (add: string, kin: string, res: WalletSearchResponse[]): boolean => {
   return res.some((x) => x.address === add && x.kind === kin);
+};
+
+const searchWallet = (kin: string, res: WalletSearchResponse[]): WalletSearchResponse | undefined => {
+  return res.find((x) => x.active === "true" && x.kind === kin);
 };

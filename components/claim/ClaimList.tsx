@@ -4,8 +4,9 @@ import React from "react";
 
 import { ClaimContainer } from "@/components/claim/ClaimContainer";
 import { ClaimObject } from "@/modules/claim/ClaimObject";
-import { ClaimIDs, CreateClaimList } from "@/modules/claim/ClaimList";
-import { CreateVoteList } from "@/modules/vote/VoteList";
+import { ClaimIDs } from "@/modules/claim/ClaimList";
+import { NewClaimList } from "@/modules/claim/ClaimList";
+import { NewVoteList } from "@/modules/vote/VoteList";
 import { PostSearchRequest } from "@/modules/api/post/search/Request";
 import { QueryStore } from "@/modules/query/QueryStore";
 import { useQuery } from "@tanstack/react-query";
@@ -28,18 +29,18 @@ export const ClaimList = (props: Props) => {
   })));
 
   const claims = useQuery({
-    queryKey: [...props.query, "CreateClaimList"],
+    queryKey: [...props.query, "NewClaimList"],
     queryFn: async () => {
-      return await CreateClaimList(props.request);
+      return await NewClaimList(props.request);
     },
   })
 
   // Fetching the votes of the authenticated user is conditional and depends on
   // the auth token, and the result of the claims query above.
   const votes = useQuery({
-    queryKey: [...props.query, "CreateVoteList"],
+    queryKey: [...props.query, "NewVoteList"],
     queryFn: async () => {
-      return await CreateVoteList(token, ClaimIDs(claims.data || []));
+      return await NewVoteList(token, ClaimIDs(claims.data || []));
     },
     enabled: valid && !claims.isPending && claims.data?.length !== 0 ? true : false,
   })

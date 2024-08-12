@@ -23,9 +23,9 @@ export interface ClaimUpside {
   stake: number[];
 }
 
-// CreateClaimUpside returns the callers upside if that very user did in fact
+// NewClaimUpside returns the callers upside if that very user did in fact
 // participate in the given market.
-export const CreateClaimUpside = (sum: ClaimVotes, res: VoteObject[]): ClaimUpside => {
+export const NewClaimUpside = (sum: ClaimVotes, res: VoteObject[]): ClaimUpside => {
   const ups = {
     hsitg: false,
     stake: [0, 0],
