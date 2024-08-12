@@ -26,19 +26,6 @@ export const Markets = [
   },
   {
     "type": "function",
-    "name": "MIN_STAKE_FREEZE_DURATION",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint40",
-        "internalType": "uint40"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
     "name": "PRECISION",
     "inputs": [],
     "outputs": [
@@ -478,7 +465,18 @@ export const Markets = [
         ]
       }
     ],
-    "outputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
     "stateMutability": "nonpayable"
   },
   {
@@ -529,7 +527,7 @@ export const Markets = [
     ],
     "outputs": [
       {
-        "name": "",
+        "name": "_timeWeightedAmount",
         "type": "uint256",
         "internalType": "uint256"
       }
@@ -719,12 +717,6 @@ export const Markets = [
         "internalType": "uint256"
       },
       {
-        "name": "fee",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
         "name": "earned",
         "type": "uint256",
         "indexed": false,
@@ -789,6 +781,37 @@ export const Markets = [
     "inputs": [
       {
         "name": "marketId",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "Fee",
+    "inputs": [
+      {
+        "name": "fee",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "feeToProposer",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "marketId",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "claimId",
         "type": "uint256",
         "indexed": false,
         "internalType": "uint256"
