@@ -3,11 +3,8 @@ import * as React from "react";
 import * as ToastSender from "@/components/toast/ToastSender";
 
 import { AuthStore } from "@/components/auth/AuthStore";
-import { BundlerURL } from "@/modules/biconomy/BundlerURL";
 import { ChainConfig } from "@/modules/chain/ChainConfig";
-import { createSmartAccountClient } from "@biconomy/account";
-import { NetworkConfig } from "@/modules/chain/NetworkConfig";
-import { SupportedSigner } from "@biconomy/account";
+import { NewWalletContract } from "@/modules/wallet/WalletContract";
 import { truncateEthAddress } from "@/modules/wallet/WalletAddress";
 import { UserCreate } from "@/modules/api/user/create/Create";
 import { UserSearch } from "@/modules/api/user/search/Search";
@@ -19,8 +16,15 @@ export const AuthProvider = () => {
   const { user } = Privy.usePrivy();
   const { wallets, ready } = Privy.useWallets();
 
+  // The user may have all kinds of wallets connected using all kinds of apps
+  // and browser extensions. We need to find the one that got embedded by Privy
+  // and use that as signer for the user's smart account that we want to setup.
+  const embedded = wallets.find((x) => {
+    return x.connectorType === "embedded" && x.walletClientType === "privy";
+  });
+
   React.useEffect(() => {
-    if (login && ready && user) {
+    if (embedded && login && ready && user) {
       // We have to reset our login flag because consecutive logins require to
       // be waited for each. So if have a login once, but a user logs out and
       // logs in again, then we have to make sure that we are waiting for the
@@ -30,9 +34,9 @@ export const AuthProvider = () => {
 
       // Finally process all external API calls and all data collected up to
       // this point in order to update our internal user store.
-      fetchData(user, wallets);
+      fetchData(user, embedded);
     }
-  }, [user, login, ready, wallets]);
+  }, [embedded, login, ready, user]);
 
   // Note that we need to use this login hook for all wallets top be available
   // on signup and login. Only if we set login to true we can proceed to fetch
@@ -65,7 +69,7 @@ export const AuthProvider = () => {
   );
 };
 
-const fetchData = async (user: Privy.User, wallets: Privy.ConnectedWallet[]) => {
+const fetchData = async (user: Privy.User, wallet: Privy.ConnectedWallet) => {
   console.log("AuthProvider.fetchData");
 
   try {
@@ -75,8 +79,11 @@ const fetchData = async (user: Privy.User, wallets: Privy.ConnectedWallet[]) => 
     }
 
     {
-      await newContract(wallets[0], ChainConfig[0]);
-      await newUser(wallets[0], token);
+      // TODO this should be NewWallet
+      // TODO this should use the ChainStore internally
+      // TODO this should fetch wallet objects for the user or create new ones
+      await NewWalletContract(wallet, ChainConfig[0]);
+      await newUser(wallet, token);
     }
   } catch (err) {
     console.error(err);
@@ -84,40 +91,10 @@ const fetchData = async (user: Privy.User, wallets: Privy.ConnectedWallet[]) => 
   }
 };
 
-const newContract = async (wallet: Privy.ConnectedWallet, network: NetworkConfig, index: number = 0) => {
-  const contract = await createSmartAccountClient({
-    signer: await newSigner(wallet, network),
-    biconomyPaymasterApiKey: network.biconomyPaymasterApiKey,
-    bundlerUrl: BundlerURL(String(network.id)),
-    rpcUrl: network.rpcEndpoints[0],
-    chainId: network.id,
-    index: index,
-  });
-
-  WalletStore.getState().update({
-    address: await contract.getAccountAddress(),
-    contract: contract,
-    index: index,
-    signer: wallet.address,
-  });
-};
-
-const newSigner = async (wallet: Privy.ConnectedWallet, network: NetworkConfig): Promise<SupportedSigner> => {
-  await wallet.switchChain(network.id);
-  const provider = await wallet.getEthersProvider();
-  return provider.getSigner();
-};
-
 const newUser = async (wallet: Privy.ConnectedWallet, token: string) => {
   const req = {
     image: "",
     name: truncateEthAddress(wallet.address),
-    // TODO store the user's wallet config somehow
-    //
-    //     signer - the embedded privy wallet
-    //     contract - the smart account address
-    //     index - the smart account index
-    //
   };
 
   const [cre] = await UserCreate(token, [req]);
