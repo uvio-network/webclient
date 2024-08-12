@@ -6,18 +6,17 @@ import { UserStore } from "@/modules/user/UserStore";
 import { useShallow } from "zustand/react/shallow";
 
 export const UserButton = () => {
-  const { id, name } = UserStore(useShallow((state) => ({
-    id: state.user.id,
-    name: state.user.name,
+  const { object } = UserStore(useShallow((state) => ({
+    object: state.user.object,
   })));
 
   return (
     <>
-      {name && (
-        <Link href={"/user/" + id}>
+      {object && (
+        <Link href={"/user/" + object.id()}>
           <BaseButton
             icon={<AccountIcon />}
-            text={name}
+            text={object.name()}
           />
         </Link>
       )}

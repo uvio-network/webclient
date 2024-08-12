@@ -1,4 +1,5 @@
 import { truncateEthAddress } from "@/modules/wallet/WalletAddress";
+import { UserObject } from "@/modules/user/UserObject";
 import { UserCreate } from "@/modules/api/user/create/Create";
 import { UserSearch } from "@/modules/api/user/search/Search";
 import { UserStore } from "@/modules/user/UserStore";
@@ -19,12 +20,9 @@ export const EnsureUser = async (address: string, token: string) => {
   const [cre] = await UserCreate(token, [req]);
   const [sea] = await UserSearch(token, [{ id: cre.id }]);
 
-  // TODO make this store a user object
   {
     UserStore.getState().update({
-      id: sea.id,
-      image: sea.image,
-      name: sea.name,
+      object: new UserObject(sea),
       token: token,
       valid: true,
     });

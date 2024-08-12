@@ -1,10 +1,9 @@
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
+import { UserObject } from "@/modules/user/UserObject";
 
 export interface UserMessage {
-  id: string;
-  image: string;
-  name: string;
+  object: UserObject | undefined;
   token: string;
   valid: boolean;
 };
@@ -19,9 +18,7 @@ export const UserStore = create(
         set(() => {
           return {
             user: {
-              id: "",
-              image: "",
-              name: "",
+              object: undefined,
               token: "",
               valid: false,
             },
@@ -35,32 +32,12 @@ export const UserStore = create(
           };
         });
       },
-      updateId: (i: string) => {
+      updateObject: (o: UserObject) => {
         set((state: { user: UserMessage }) => {
           return {
             user: {
               ...state.user,
-              id: i,
-            }
-          };
-        });
-      },
-      updateImage: (i: string) => {
-        set((state: { user: UserMessage }) => {
-          return {
-            user: {
-              ...state.user,
-              image: i,
-            }
-          };
-        });
-      },
-      updateName: (n: string) => {
-        set((state: { user: UserMessage }) => {
-          return {
-            user: {
-              ...state.user,
-              name: n,
+              object: o,
             }
           };
         });
