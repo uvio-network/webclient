@@ -60,7 +60,6 @@ export class WalletObject {
     return this.wallet.active.toLowerCase() === "true";
   }
 
-
   address(): string {
     return this.wallet.address;
   }

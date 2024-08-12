@@ -1,5 +1,6 @@
+import { Chain } from "viem";
 import { ChainStore } from "@/modules/chain/ChainStore";
-import { Chain, createPublicClient } from "viem";
+import { createPublicClient } from "viem";
 import { http } from "viem";
 import { PublicClient } from "viem";
 
