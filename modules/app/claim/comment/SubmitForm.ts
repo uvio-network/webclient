@@ -1,16 +1,16 @@
 import * as ToastSender from "@/components/toast/ToastSender";
 
-import { AuthMessage } from "@/components/auth/AuthStore";
-import { AuthStore } from "@/components/auth/AuthStore";
 import { EditorMessage } from "@/components/app/claim/comment/editor/EditorStore";
 import { EditorStore } from "@/components/app/claim/comment/editor/EditorStore";
 import { PostCreate } from "@/modules/api/post/create/Create";
 import { PostCreateRequest } from "@/modules/api/post/create/Request";
 import { PostCreateResponse } from "@/modules/api/post/create/Response";
+import { UserMessage } from "@/modules/user/UserStore";
+import { UserStore } from "@/modules/user/UserStore";
 
 // SubmitForm validates user input and then performs the comment creation.
 export const SubmitForm = async (suc: (cla: string, com: string) => void) => {
-  const { auth } = AuthStore.getState();
+  const user = UserStore.getState().user;
   const editor = EditorStore.getState();
 
   {
@@ -25,7 +25,7 @@ export const SubmitForm = async (suc: (cla: string, com: string) => void) => {
     }
   }
 
-  const com = await posCre(auth, editor);
+  const com = await posCre(user, editor);
 
   {
     ToastSender.Success("Best comment ever, mi amor!");
@@ -36,7 +36,7 @@ export const SubmitForm = async (suc: (cla: string, com: string) => void) => {
   // TODO prevent duplicated submits
 };
 
-const posCre = async (aut: AuthMessage, edi: EditorMessage): Promise<PostCreateResponse> => {
+const posCre = async (use: UserMessage, edi: EditorMessage): Promise<PostCreateResponse> => {
   const req: PostCreateRequest = {
     expiry: "",
     kind: "comment",
@@ -48,7 +48,7 @@ const posCre = async (aut: AuthMessage, edi: EditorMessage): Promise<PostCreateR
   };
 
   try {
-    const [res] = await PostCreate(aut.token, [req]);
+    const [res] = await PostCreate(use.token, [req]);
     return res;
   } catch (err) {
     console.error(err);

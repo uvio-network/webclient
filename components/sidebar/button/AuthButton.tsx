@@ -1,13 +1,15 @@
 import * as Privy from "@privy-io/react-auth";
 
-import { AuthStore } from "@/components/auth/AuthStore";
 import { BaseButton } from "@/components/button/BaseButton";
 import { LoginIcon } from "@/components/icon/LoginIcon";
 import { LogoutIcon } from "@/components/icon/LogoutIcon";
+import { UserStore } from "@/modules/user/UserStore";
 import { useShallow } from "zustand/react/shallow";
 
 export const AuthButton = () => {
-  const { valid } = AuthStore(useShallow((state) => ({ valid: state.auth.valid })));
+  const { valid } = UserStore(useShallow((state) => ({
+    valid: state.user.valid,
+  })));
 
   const { login, logout } = Privy.usePrivy();
 

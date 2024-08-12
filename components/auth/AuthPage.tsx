@@ -2,11 +2,13 @@
 
 import * as React from "react";
 
-import { AuthStore } from "@/components/auth/AuthStore";
+import { UserStore } from "@/modules/user/UserStore";
 import { useShallow } from "zustand/react/shallow";
 
 export const AuthPage = ({ children }: { children: React.ReactNode }) => {
-  const { valid } = AuthStore(useShallow((state) => ({ valid: state.auth.valid })));
+  const { valid } = UserStore(useShallow((state) => ({
+    valid: state.user.valid,
+  })));
 
   if (!valid) return;
 

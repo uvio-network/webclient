@@ -4,13 +4,15 @@ import Link from "next/link";
 
 import * as ToastSender from "@/components/toast/ToastSender";
 
-import { AuthStore } from "@/components/auth/AuthStore";
 import { BaseButton } from "@/components/button/BaseButton";
 import { AddSquareIcon } from "@/components/icon/AddSquareIcon";
+import { UserStore } from "@/modules/user/UserStore";
 import { useShallow } from "zustand/react/shallow";
 
 export const ProposeButton = () => {
-  const { valid } = AuthStore(useShallow((state) => ({ valid: state.auth.valid })));
+  const { valid } = UserStore(useShallow((state) => ({
+    valid: state.user.valid,
+  })));
 
   const onClick = (e: React.MouseEvent) => {
     if (!valid) {
