@@ -1,5 +1,5 @@
 import { ChainStore } from "@/modules/chain/ChainStore";
-import { createPublicClient } from "viem";
+import { Chain, createPublicClient } from "viem";
 import { http } from "viem";
 import { PublicClient } from "viem";
 
@@ -11,7 +11,7 @@ export const NewPublicClient = (): PublicClient => {
     batch: {
       multicall: true,
     },
-    chain: active,
+    chain: active as Chain,
     transport: http(active.rpcEndpoints[0]),
   });
 };
