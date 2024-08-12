@@ -1,8 +1,10 @@
 import moment from "moment";
 
-import { ClaimUpside, CreateClaimUpside } from "@/modules/claim/ClaimUpside";
-import { ClaimVotes, CreateClaimVotes } from "@/modules/claim/ClaimVotes";
+import { ClaimUpside } from "@/modules/claim/ClaimUpside";
+import { ClaimVotes } from "@/modules/claim/ClaimVotes";
 import { EmptyUserSearchResponse } from "@/modules/api/user/search/Response";
+import { NewClaimUpside } from "@/modules/claim/ClaimUpside";
+import { NewClaimVotes } from "@/modules/claim/ClaimVotes";
 import { PostSearchResponse } from "@/modules/api/post/search/Response";
 import { SplitList } from "@/modules/string/SplitList";
 import { UserObject } from "@/modules/user/UserObject";
@@ -32,8 +34,8 @@ export class ClaimObject {
     {
       this.claimOwner = new UserObject(user);
       this.claimParent = prnt ? new ClaimObject(prnt, EmptyUserSearchResponse(), undefined, []) : undefined;
-      this.claimVotes = CreateClaimVotes(post);
-      this.claimUpside = CreateClaimUpside(this.claimVotes, vote.map((x) => (new VoteObject(x))));
+      this.claimVotes = NewClaimVotes(post);
+      this.claimUpside = NewClaimUpside(this.claimVotes, vote.map((x) => (new VoteObject(x))));
     }
   }
 

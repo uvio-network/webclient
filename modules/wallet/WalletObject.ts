@@ -3,24 +3,28 @@ import moment from "moment";
 import * as Privy from "@privy-io/react-auth";
 
 import { BiconomySmartAccountV2 } from "@biconomy/account";
+import { ChainStore } from "@/modules/chain/ChainStore";
 import { UserObject } from "@/modules/user/UserObject";
-import { UserSearchResponse } from "@/modules/api/user/search/Response";
 import { WalletSearchResponse } from "@/modules/api/wallet/search/Response";
+import { WalletStore } from "@/modules/wallet/WalletStore";
+import { NewWalletContract } from "./WalletContract";
 
 export class WalletObject {
-  private user: UserSearchResponse;
   private wallet: WalletSearchResponse;
 
+  private walletContract: BiconomySmartAccountV2 | undefined;
+  private walletSigner: Privy.ConnectedWallet | undefined;
   private walletOwner: UserObject;
 
-  constructor(wallet: WalletSearchResponse, user: UserSearchResponse) {
+  constructor(wal: WalletSearchResponse, con: BiconomySmartAccountV2 | undefined, sig: Privy.ConnectedWallet | undefined, use: UserObject) {
     {
-      this.user = user;
-      this.wallet = wallet;
+      this.wallet = wal;
     }
 
     {
-      this.walletOwner = new UserObject(user);
+      this.walletContract = con;
+      this.walletSigner = sig;
+      this.walletOwner = use;
     }
   }
 
@@ -30,10 +34,6 @@ export class WalletObject {
 
   getWallet(): WalletSearchResponse {
     return this.wallet;
-  }
-
-  getUser(): UserSearchResponse {
-    return this.user;
   }
 
   //
@@ -65,7 +65,7 @@ export class WalletObject {
   // user onchain.
   contract(): BiconomySmartAccountV2 | undefined {
     if (this.kind() === "contract") {
-      return undefined; // TODO
+      return this.walletContract;
     }
 
     return undefined;
@@ -89,9 +89,32 @@ export class WalletObject {
   // or by extension a Trezor.
   signer(): Privy.ConnectedWallet | undefined {
     if (this.kind() === "signer") {
-      return undefined; // TODO
+      return this.walletSigner;
     }
 
     return undefined;
+  }
+
+  //
+  // symbol
+  //
+
+  // refresh must be called when the user selects another chain. If refresh is
+  // not called upon a chain switch, then the underlying wallets will not
+  // reflect the user's preference of a chain switch.
+  async refresh() {
+    const chain = ChainStore.getState();
+    const wallet = WalletStore.getState().wallet;
+
+    const active = chain.getActive();
+    const signer = wallet.signer?.signer();
+
+    if (this.walletContract && signer) {
+      this.walletContract = await NewWalletContract(signer);
+    }
+
+    if (this.walletSigner) {
+      this.walletSigner.switchChain(active.id);
+    }
   }
 }

@@ -4,7 +4,6 @@ import { CurrencyDollarIcon } from "@/components/icon/CurrencyDollarIcon";
 import { CurrentPulseIcon } from "@/components/icon/CurrentPulseIcon";
 import { Markets } from "@/modules/abi/Markets";
 import { WalletStore } from "@/modules/wallet/WalletStore";
-import { NewPublicClient } from "@/modules/chain/PublicClient";
 
 import { Address } from "viem";
 import { BiconomySmartAccountV2, Transaction } from "@biconomy/account";
@@ -19,21 +18,19 @@ import { InfoCircleIcon } from "@/components/icon/InfoCircleIcon";
 export const WalletButton = () => {
   const { wallet } = WalletStore();
 
-  const client = NewPublicClient();
-
   return (
     <>
       {wallet.ready && (
         <>
           <BaseButton
             icon={<CurrentPulseIcon />}
-            onClick={() => readMarkets(client)}
+            onClick={() => readMarkets(wallet.public!)}
             text={"00,00"}
           />
 
           <BaseButton
             icon={<CurrencyDollarIcon />}
-            onClick={() => readUVX(client)}
+            onClick={() => readUVX(wallet.public!)}
             text={"00,00"}
           />
 

@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
+import { NewPublicClient } from "@/modules/chain/PublicClient";
 import { PublicClient } from "viem";
 import { WalletObject } from "@/modules/wallet/WalletObject";
 
@@ -28,7 +29,7 @@ export const WalletStore = create(
     {
       wallet: {} as WalletMessage,
     },
-    (set) => ({
+    (set, get) => ({
       delete: () => {
         set(() => {
           return {
@@ -37,6 +38,24 @@ export const WalletStore = create(
               public: undefined,
               ready: false,
               signer: undefined,
+            },
+          };
+        });
+      },
+      refresh: () => {
+        set(() => {
+          const con = get().wallet.contract;
+          const sig = get().wallet.signer;
+
+          con?.refresh();
+          sig?.refresh();
+
+          return {
+            wallet: {
+              contract: con,
+              public: NewPublicClient(),
+              ready: true,
+              signer: sig,
             },
           };
         });
