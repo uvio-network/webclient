@@ -60,6 +60,11 @@ export class WalletObject {
     return this.wallet.active.toLowerCase() === "true";
   }
 
+
+  address(): string {
+    return this.wallet.address;
+  }
+
   // contract returns a smart account instance as controlled by the configured
   // signer. This smart account is the smart contract wallet representing the
   // user onchain.

@@ -3,7 +3,6 @@ export const ApiServerRpcSendJSON: boolean = (process.env.NEXT_PUBLIC_APISERVER_
 
 export const ArbitrumSepoliaAlchemyRpcEndpoint: string = process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_ALCHEMY_RPC_ENDPOINT || ""
 export const ArbitrumSepoliaBiconomyPaymasterApiKey: string = process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_BICONOMY_PAYMASTER_API_KEY || ""
-export const ArbitrumSepoliaUvioMarketsContract: string = process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_UVIO_MARKETS_CONTRACT || ""
 
 export const DefaultChainId: number = Number(process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID) || 421614
 

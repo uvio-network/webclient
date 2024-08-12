@@ -1,20 +1,20 @@
 import { ChainConfig } from "@/modules/chain/ChainConfig";
+import { ChainWhitelist } from "@/modules/chain/ChainWhitelist";
 import { combine } from "zustand/middleware";
 import { create } from "zustand";
 import { DefaultChainId } from "@/modules/config";
-import { NetworkConfig } from "@/modules/chain/NetworkConfig";
 
 export interface ChainMessage {
   // active is the chain ID being used right now.
   active: number;
   // chains is the map of all selectable chains.
-  chains: Map<number, NetworkConfig>;
+  chains: Map<number, ChainConfig>;
 };
 
 const newChainMessage = (): ChainMessage => {
-  const m: Map<number, NetworkConfig> = new Map();
+  const m: Map<number, ChainConfig> = new Map();
 
-  for (const x of ChainConfig) {
+  for (const x of ChainWhitelist) {
     m.set(x.id, x);
   }
 
@@ -40,14 +40,14 @@ export const ChainStore = create(
           };
         });
       },
-      getActive: (): NetworkConfig => {
+      getActive: (): ChainConfig => {
         const state = get();
         return state.chain.chains.get(state.chain.active)!;
       },
-      getAll: (): NetworkConfig[] => {
+      getAll: (): ChainConfig[] => {
         return Array.from(get().chain.chains.values());
       },
-      update: (c: NetworkConfig) => {
+      update: (c: ChainConfig) => {
         set((state: { chain: ChainMessage }) => {
           const m = new Map(state.chain.chains);
           m.set(c.id, c);
