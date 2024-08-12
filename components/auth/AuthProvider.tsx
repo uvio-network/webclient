@@ -3,11 +3,9 @@ import * as React from "react";
 import * as ToastSender from "@/components/toast/ToastSender";
 
 import { AuthStore } from "@/components/auth/AuthStore";
-import { ChainConfig } from "@/modules/chain/ChainConfig";
+import { EnsureUser } from "@/modules/user/object/EnsureUser";
+import { EnsureWallets } from "@/modules/wallet/EnsureWallets";
 import { NewWalletContract } from "@/modules/wallet/WalletContract";
-import { truncateEthAddress } from "@/modules/wallet/WalletAddress";
-import { UserCreate } from "@/modules/api/user/create/Create";
-import { UserSearch } from "@/modules/api/user/search/Search";
 import { WalletStore } from "@/modules/wallet/WalletStore";
 
 export const AuthProvider = () => {
@@ -69,7 +67,7 @@ export const AuthProvider = () => {
   );
 };
 
-const fetchData = async (user: Privy.User, wallet: Privy.ConnectedWallet) => {
+const fetchData = async (user: Privy.User, signer: Privy.ConnectedWallet) => {
   console.log("AuthProvider.fetchData");
 
   try {
@@ -78,36 +76,18 @@ const fetchData = async (user: Privy.User, wallet: Privy.ConnectedWallet) => {
       return ToastSender.Error("Your access token could not be validated.");
     }
 
+    const contract = await NewWalletContract(signer);
+    const address = await contract.getAddress();
+
+    // Ensure the user object first, and then ensure the user's wallet objects.
+    // This order of operations is important, because ensuring the user's
+    // wallets depends on the user object being properly prepared and available.
     {
-      // TODO this should be NewWallet
-      // TODO this should use the ChainStore internally
-      // TODO this should fetch wallet objects for the user or create new ones
-      await NewWalletContract(wallet, ChainConfig[0]);
-      await newUser(wallet, token);
+      await EnsureUser(address, token);
+      await EnsureWallets(contract, signer, token);
     }
   } catch (err) {
     console.error(err);
     ToastSender.Error(err instanceof Error ? err.message : String(err));
-  }
-};
-
-const newUser = async (wallet: Privy.ConnectedWallet, token: string) => {
-  const req = {
-    image: "",
-    name: truncateEthAddress(wallet.address),
-  };
-
-  const [cre] = await UserCreate(token, [req]);
-  const [sea] = await UserSearch(token, [{ id: cre.id }]);
-
-  {
-    AuthStore.getState().update({
-      id: sea.id,
-      image: sea.image,
-      name: sea.name,
-      token: token,
-      valid: true,
-      wallet: wallet.address,
-    });
   }
 };

@@ -1,18 +1,29 @@
+import { ArbitrumSepoliaUvioMarketsContract } from "@/modules/config";
 import { BaseButton } from "@/components/button/BaseButton";
 import { CurrencyDollarIcon } from "@/components/icon/CurrencyDollarIcon";
 import { CurrentPulseIcon } from "@/components/icon/CurrentPulseIcon";
-import { WalletStore } from "@/modules/wallet/WalletStore";
-import { ArbitrumSepoliaUvioMarketsContract } from "@/modules/config";
 import { Markets } from "@/modules/abi/Markets";
+import { WalletStore } from "@/modules/wallet/WalletStore";
+import { NewPublicClient } from "@/modules/chain/PublicClient";
+
+import { Address } from "viem";
+import { BiconomySmartAccountV2, Transaction } from "@biconomy/account";
+import { encodeFunctionData } from "viem";
+import { getContract } from "viem";
+import { PublicClient } from "viem";
+import { parseUnits } from "viem";
+import { PaymasterMode } from "@biconomy/account";
+import { UVX } from "@/modules/abi/UVX";
+import { InfoCircleIcon } from "@/components/icon/InfoCircleIcon";
 
 export const WalletButton = () => {
   const { wallet } = WalletStore();
 
-  const client = newPublicClient();
+  const client = NewPublicClient();
 
   return (
     <>
-      {wallet.address && wallet.contract && (
+      {wallet.ready && (
         <>
           <BaseButton
             icon={<CurrentPulseIcon />}
@@ -28,7 +39,7 @@ export const WalletButton = () => {
 
           <BaseButton
             icon={<InfoCircleIcon />}
-            onClick={() => depositMarkets(wallet.contract!)}
+            onClick={() => depositMarkets(wallet.contract!.contract()!)}
             text={"Deposit"}
           />
         </>
@@ -37,33 +48,10 @@ export const WalletButton = () => {
   );
 };
 
-import { Address } from "viem";
-import { BiconomySmartAccountV2, Transaction } from "@biconomy/account";
-import { ChainConfig } from "@/modules/chain/ChainConfig";
-import { createPublicClient } from "viem";
-import { encodeFunctionData } from "viem";
-import { getContract } from "viem";
-import { http } from "viem";
-import { PublicClient } from "viem";
-import { parseUnits } from "viem";
-import { PaymasterMode } from "@biconomy/account";
-import { UVX } from "@/modules/abi/UVX";
-import { InfoCircleIcon } from "@/components/icon/InfoCircleIcon";
-
 const contract = "0x0fc545Cded57eFEEE0ab398a978590AA7F7A3b56" as Address; // smart account
 const markets = ArbitrumSepoliaUvioMarketsContract as Address; // Markets contract
 const token = "0x626D4ec870Bf00D03718E5F3b98D7C0b249D5883" as Address; // UVX contract
 const signer = "0x2AA81DDd6611A954Dae9901774FA52b6FABEa0e7" as Address; // embedded wallet
-
-const newPublicClient = (): PublicClient => {
-  return createPublicClient({
-    batch: {
-      multicall: true,
-    },
-    chain: ChainConfig[0],
-    transport: http(ChainConfig[0].rpcEndpoints[0]),
-  });
-};
 
 const newApprove = (): Transaction => {
   const amount = parseUnits("10", 18);

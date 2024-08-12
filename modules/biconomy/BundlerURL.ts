@@ -6,6 +6,6 @@
 //     inp[1] the Biconomy API key for the environment being used
 //     out[1] the formatted bundler URL for the Biconomy provider
 //
-export const NewBundlerURL = (cid: string, key: string = "nJPK7B3ru.dd7f7861-190d-41bd-af80-6877f74b8f44"): string => {
+export const NewBundlerURL = (cid: number, key: string = "nJPK7B3ru.dd7f7861-190d-41bd-af80-6877f74b8f44"): string => {
   return `https://bundler.biconomy.io/api/v2/${cid}/${key}`;
 };
