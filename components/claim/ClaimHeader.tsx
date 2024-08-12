@@ -5,7 +5,7 @@ import * as ToastSender from "@/components/toast/ToastSender";
 
 import { BaseButton } from "@/components/button/BaseButton";
 import { ClaimHeaderMenu } from "@/components/claim/ClaimHeaderMenu";
-import { ClaimObject } from "@/modules/claim/object/ClaimObject";
+import { ClaimObject } from "@/modules/claim/ClaimObject";
 import { StarLineIcon } from "@/components/icon/StarLineIcon";
 
 interface Props {

@@ -1,13 +1,13 @@
 import moment from "moment";
 
-import { ClaimUpside, CreateClaimUpside } from "@/modules/claim/object/ClaimUpside";
-import { ClaimVotes, CreateClaimVotes } from "@/modules/claim/object/ClaimVotes";
+import { ClaimUpside, CreateClaimUpside } from "@/modules/claim/ClaimUpside";
+import { ClaimVotes, CreateClaimVotes } from "@/modules/claim/ClaimVotes";
 import { EmptyUserSearchResponse } from "@/modules/api/user/search/Response";
 import { PostSearchResponse } from "@/modules/api/post/search/Response";
 import { SplitList } from "@/modules/string/SplitList";
-import { UserObject } from "@/modules/user/object/UserObject";
+import { UserObject } from "@/modules/user/UserObject";
 import { UserSearchResponse } from "@/modules/api/user/search/Response";
-import { VoteObject } from "@/modules/vote/object/VoteObject";
+import { VoteObject } from "@/modules/vote/VoteObject";
 import { VoteSearchResponse } from "@/modules/api/vote/search/Response";
 
 export class ClaimObject {

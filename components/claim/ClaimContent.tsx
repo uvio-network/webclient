@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-import { ClaimObject } from "@/modules/claim/object/ClaimObject";
+import { ClaimObject } from "@/modules/claim/ClaimObject";
 import { RenderMarkdown } from "@/components/markdown/RenderMarkdown";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";

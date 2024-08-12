@@ -1,5 +1,5 @@
-import { ClaimVotes } from "@/modules/claim/object/ClaimVotes";
-import { VoteObject } from "@/modules/vote/object/VoteObject";
+import { ClaimVotes } from "@/modules/claim/ClaimVotes";
+import { VoteObject } from "@/modules/vote/VoteObject";
 
 const agreement = 0;
 const disagreement = 1;

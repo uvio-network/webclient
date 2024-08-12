@@ -3,7 +3,7 @@
 import * as HoverCard from "@radix-ui/react-hover-card";
 import * as Separator from "@/components/layout/separator";
 
-import { ClaimObject } from "@/modules/claim/object/ClaimObject";
+import { ClaimObject } from "@/modules/claim/ClaimObject";
 import { EffectButton } from "@/components/button/EffectButton";
 
 interface Props {

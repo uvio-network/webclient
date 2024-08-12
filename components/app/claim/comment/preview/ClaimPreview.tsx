@@ -1,5 +1,5 @@
 import { ClaimContent } from "@/components/claim/ClaimContent";
-import { ClaimObject } from "@/modules/claim/object/ClaimObject";
+import { ClaimObject } from "@/modules/claim/ClaimObject";
 
 interface Props {
   claim: ClaimObject;
