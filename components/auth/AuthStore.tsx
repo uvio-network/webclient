@@ -7,7 +7,6 @@ export interface AuthMessage {
   name: string;
   token: string;
   valid: boolean;
-  wallet: string;
 };
 
 // TODO rename to UserStore
@@ -26,7 +25,6 @@ export const AuthStore = create(
               name: "",
               token: "",
               valid: false,
-              wallet: "",
             },
           };
         });
@@ -74,16 +72,6 @@ export const AuthStore = create(
             auth: {
               ...state.auth,
               token: t,
-            }
-          };
-        });
-      },
-      updateWallet: (w: string) => {
-        set((state: { auth: AuthMessage }) => {
-          return {
-            auth: {
-              ...state.auth,
-              wallet: w,
             }
           };
         });
