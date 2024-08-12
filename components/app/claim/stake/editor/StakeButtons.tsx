@@ -1,7 +1,7 @@
 import * as ToastSender from "@/components/toast/ToastSender";
 
-import { AuthStore } from "@/components/auth/AuthStore";
 import { EditorStore } from "@/components/app/claim/stake/editor/EditorStore";
+import { UserStore } from "@/modules/user/UserStore";
 import { useShallow } from "zustand/react/shallow";
 
 const agreement = "agreement";
@@ -12,7 +12,9 @@ interface Props {
 }
 
 export const StakeButtons = (props: Props) => {
-  const { valid } = AuthStore(useShallow((state) => ({ valid: state.auth.valid })));
+  const { valid } = UserStore(useShallow((state) => ({
+    valid: state.user.valid,
+  })));
 
   const editor = EditorStore.getState();
 

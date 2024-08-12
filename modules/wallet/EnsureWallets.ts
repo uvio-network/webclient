@@ -1,7 +1,7 @@
 import * as Privy from "@privy-io/react-auth";
 
-import { AuthStore } from "@/components/auth/AuthStore";
 import { BiconomySmartAccountV2 } from "@biconomy/account";
+import { UserStore } from "@/modules/user/UserStore";
 import { WalletCreate } from "@/modules/api/wallet/create/Create";
 import { WalletCreateRequest } from "@/modules/api/wallet/create/Request";
 import { WalletObject } from "@/modules/wallet/WalletObject";
@@ -11,7 +11,7 @@ import { WalletStore } from "@/modules/wallet/WalletStore";
 
 // TODO this should fetch wallet objects for the user or create new ones
 export const EnsureWallets = async (con: BiconomySmartAccountV2, sig: Privy.ConnectedWallet, tok: string) => {
-  const auth = AuthStore.getState();
+  const user = UserStore.getState();
   const wallet = WalletStore.getState();
 
   const sea = ensureWallets(con, sig, tok);

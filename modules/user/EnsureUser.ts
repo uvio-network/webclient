@@ -1,7 +1,7 @@
-import { AuthStore } from "@/components/auth/AuthStore";
 import { truncateEthAddress } from "@/modules/wallet/WalletAddress";
 import { UserCreate } from "@/modules/api/user/create/Create";
 import { UserSearch } from "@/modules/api/user/search/Search";
+import { UserStore } from "@/modules/user/UserStore";
 
 // EnsureUser creates a new user object in the apiserver if none exists already.
 // If a user object does already exist for the given access token, then
@@ -21,7 +21,7 @@ export const EnsureUser = async (address: string, token: string) => {
 
   // TODO make this store a user object
   {
-    AuthStore.getState().update({
+    UserStore.getState().update({
       id: sea.id,
       image: sea.image,
       name: sea.name,

@@ -1,14 +1,14 @@
 import Link from "next/link";
 
 import { AccountIcon } from "@/components/icon/AccountIcon";
-import { AuthStore } from "@/components/auth/AuthStore";
 import { BaseButton } from "@/components/button/BaseButton";
+import { UserStore } from "@/modules/user/UserStore";
 import { useShallow } from "zustand/react/shallow";
 
 export const UserButton = () => {
-  const { id, name } = AuthStore(useShallow((state) => ({
-    id: state.auth.id,
-    name: state.auth.name,
+  const { id, name } = UserStore(useShallow((state) => ({
+    id: state.user.id,
+    name: state.user.name,
   })));
 
   return (

@@ -2,8 +2,6 @@ import moment from "moment";
 
 import * as ToastSender from "@/components/toast/ToastSender";
 
-import { AuthMessage } from "@/components/auth/AuthStore";
-import { AuthStore } from "@/components/auth/AuthStore";
 import { EditorMessage } from "@/components/app/claim/propose/editor/EditorStore";
 import { EditorStore } from "@/components/app/claim/propose/editor/EditorStore";
 import { HasDuplicate } from "@/modules/string/HasDuplicate";
@@ -12,13 +10,15 @@ import { PostCreateRequest } from "@/modules/api/post/create/Request";
 import { PostCreateResponse } from "@/modules/api/post/create/Response";
 import { SplitList } from "@/modules/string/SplitList";
 import { TimeFormat } from "@/modules/app/claim/propose/TimeFormat";
+import { UserMessage } from "@/modules/user/UserStore";
+import { UserStore } from "@/modules/user/UserStore";
 import { VoteCreate } from "@/modules/api/vote/create/Create";
 import { VoteCreateRequest } from "@/modules/api/vote/create/Request";
 import { VoteCreateResponse } from "@/modules/api/vote/create/Response";
 
 // SubmitForm validates user input and then performs the claim creation.
 export const SubmitForm = async (suc: (pos: string, vot: string) => void) => {
-  const { auth } = AuthStore.getState();
+  const user = UserStore.getState().user;
   const editor = EditorStore.getState();
 
   // Note that the order of the validation blocks below accomodates the user
@@ -83,8 +83,8 @@ export const SubmitForm = async (suc: (pos: string, vot: string) => void) => {
     }
   }
 
-  const pos = await posCre(auth, editor);
-  const vot = await votCre(auth, editor, pos);
+  const pos = await posCre(user, editor);
+  const vot = await votCre(user, editor, pos);
 
   {
     ToastSender.Success("Hooray, thy claim proposed milady!");
@@ -129,7 +129,7 @@ const inpTok = (inp: string): boolean => {
   return inp.endsWith("ETH") || inp.endsWith("USDC");
 };
 
-const posCre = async (aut: AuthMessage, edi: EditorMessage): Promise<PostCreateResponse> => {
+const posCre = async (use: UserMessage, edi: EditorMessage): Promise<PostCreateResponse> => {
   const req: PostCreateRequest = {
     expiry: moment(edi.expiry, TimeFormat, true).unix().toString(),
     kind: "claim",
@@ -141,7 +141,7 @@ const posCre = async (aut: AuthMessage, edi: EditorMessage): Promise<PostCreateR
   };
 
   try {
-    const [res] = await PostCreate(aut.token, [req]);
+    const [res] = await PostCreate(use.token, [req]);
     return res;
   } catch (err) {
     console.error(err);
@@ -150,7 +150,7 @@ const posCre = async (aut: AuthMessage, edi: EditorMessage): Promise<PostCreateR
   }
 }
 
-const votCre = async (aut: AuthMessage, edi: EditorMessage, pos: PostCreateResponse): Promise<VoteCreateResponse> => {
+const votCre = async (use: UserMessage, edi: EditorMessage, pos: PostCreateResponse): Promise<VoteCreateResponse> => {
   const req: VoteCreateRequest = {
     claim: pos.id,
     kind: "stake",
@@ -159,7 +159,7 @@ const votCre = async (aut: AuthMessage, edi: EditorMessage, pos: PostCreateRespo
   };
 
   try {
-    const [res] = await VoteCreate(aut.token, [req]);
+    const [res] = await VoteCreate(use.token, [req]);
     return res;
   } catch (err) {
     console.error(err);

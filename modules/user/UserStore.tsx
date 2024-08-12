@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
 
-export interface AuthMessage {
+export interface UserMessage {
   id: string;
   image: string;
   name: string;
@@ -9,17 +9,16 @@ export interface AuthMessage {
   valid: boolean;
 };
 
-// TODO rename to UserStore
-export const AuthStore = create(
+export const UserStore = create(
   combine(
     {
-      auth: {} as AuthMessage,
+      user: {} as UserMessage,
     },
     (set) => ({
       delete: () => {
         set(() => {
           return {
-            auth: {
+            user: {
               id: "",
               image: "",
               name: "",
@@ -29,48 +28,48 @@ export const AuthStore = create(
           };
         });
       },
-      update: (a: AuthMessage) => {
+      update: (u: UserMessage) => {
         set(() => {
           return {
-            auth: a,
+            user: u,
           };
         });
       },
       updateId: (i: string) => {
-        set((state: { auth: AuthMessage }) => {
+        set((state: { user: UserMessage }) => {
           return {
-            auth: {
-              ...state.auth,
+            user: {
+              ...state.user,
               id: i,
             }
           };
         });
       },
       updateImage: (i: string) => {
-        set((state: { auth: AuthMessage }) => {
+        set((state: { user: UserMessage }) => {
           return {
-            auth: {
-              ...state.auth,
+            user: {
+              ...state.user,
               image: i,
             }
           };
         });
       },
       updateName: (n: string) => {
-        set((state: { auth: AuthMessage }) => {
+        set((state: { user: UserMessage }) => {
           return {
-            auth: {
-              ...state.auth,
+            user: {
+              ...state.user,
               name: n,
             }
           };
         });
       },
       updateToken: (t: string) => {
-        set((state: { auth: AuthMessage }) => {
+        set((state: { user: UserMessage }) => {
           return {
-            auth: {
-              ...state.auth,
+            user: {
+              ...state.user,
               token: t,
             }
           };

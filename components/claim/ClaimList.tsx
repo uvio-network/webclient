@@ -2,7 +2,6 @@ import * as Separator from "@/components/layout/separator";
 
 import React from "react";
 
-import { AuthStore } from "@/components/auth/AuthStore";
 import { ClaimContainer } from "@/components/claim/ClaimContainer";
 import { ClaimObject } from "@/modules/claim/ClaimObject";
 import { ClaimIDs, CreateClaimList } from "@/modules/claim/ClaimList";
@@ -10,6 +9,7 @@ import { CreateVoteList } from "@/modules/vote/VoteList";
 import { PostSearchRequest } from "@/modules/api/post/search/Request";
 import { QueryStore } from "@/modules/query/QueryStore";
 import { useQuery } from "@tanstack/react-query";
+import { UserStore } from "@/modules/user/UserStore";
 import { useShallow } from "zustand/react/shallow";
 import { VoteObject } from "@/modules/vote/VoteObject";
 
@@ -22,9 +22,9 @@ interface Props {
 export const ClaimList = (props: Props) => {
   const query = QueryStore.getState();
 
-  const { token, valid } = AuthStore(useShallow((state) => ({
-    token: state.auth.token,
-    valid: state.auth.valid,
+  const { token, valid } = UserStore(useShallow((state) => ({
+    token: state.user.token,
+    valid: state.user.valid,
   })));
 
   const claims = useQuery({

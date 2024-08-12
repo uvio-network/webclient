@@ -2,10 +2,10 @@ import * as Privy from "@privy-io/react-auth";
 import * as React from "react";
 import * as ToastSender from "@/components/toast/ToastSender";
 
-import { AuthStore } from "@/components/auth/AuthStore";
 import { EnsureUser } from "@/modules/user/EnsureUser";
 import { EnsureWallets } from "@/modules/wallet/EnsureWallets";
 import { NewWalletContract } from "@/modules/wallet/WalletContract";
+import { UserStore } from "@/modules/user/UserStore";
 import { WalletStore } from "@/modules/wallet/WalletStore";
 
 export const AuthProvider = () => {
@@ -50,13 +50,13 @@ export const AuthProvider = () => {
     // Every time the user's access token is refreshed we update our internal
     // auth store.
     onAccessTokenGranted: (accessToken: string) => {
-      AuthStore.getState().updateToken(accessToken);
+      UserStore.getState().updateToken(accessToken);
       console.log("useToken.onAccessTokenGranted");
     },
     // If the user's access token was revoked, we delete our internally tracked
     // state as well.
     onAccessTokenRemoved: () => {
-      AuthStore.getState().delete();
+      UserStore.getState().delete();
       WalletStore.getState().delete();
       console.log("useToken.onAccessTokenRemoved");
     },

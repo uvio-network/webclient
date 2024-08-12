@@ -1,16 +1,16 @@
 import * as ToastSender from "@/components/toast/ToastSender";
 
-import { AuthMessage } from "@/components/auth/AuthStore";
-import { AuthStore } from "@/components/auth/AuthStore";
 import { EditorMessage } from "@/components/app/claim/stake/editor/EditorStore";
 import { EditorStore } from "@/components/app/claim/stake/editor/EditorStore";
+import { UserMessage } from "@/modules/user/UserStore";
+import { UserStore } from "@/modules/user/UserStore";
 import { VoteCreate } from "@/modules/api/vote/create/Create";
 import { VoteCreateRequest } from "@/modules/api/vote/create/Request";
 import { VoteCreateResponse } from "@/modules/api/vote/create/Response";
 
 // SubmitForm validates user input and then performs the vote creation.
 export const SubmitForm = async (suc: (vot: string) => void) => {
-  const { auth } = AuthStore.getState();
+  const user = UserStore.getState().user;
   const editor = EditorStore.getState();
 
   {
@@ -25,7 +25,7 @@ export const SubmitForm = async (suc: (vot: string) => void) => {
     }
   }
 
-  const vot = await votCre(auth, editor);
+  const vot = await votCre(user, editor);
 
   {
     ToastSender.Success("Certified, you staked the shit out of that reputation!");
@@ -49,7 +49,7 @@ const inpNum = (inp: string): boolean => {
   return regex.test(inp);
 };
 
-const votCre = async (aut: AuthMessage, edi: EditorMessage): Promise<VoteCreateResponse> => {
+const votCre = async (use: UserMessage, edi: EditorMessage): Promise<VoteCreateResponse> => {
   const req: VoteCreateRequest = {
     claim: edi.claim,
     kind: "stake",
@@ -58,7 +58,7 @@ const votCre = async (aut: AuthMessage, edi: EditorMessage): Promise<VoteCreateR
   };
 
   try {
-    const [res] = await VoteCreate(aut.token, [req]);
+    const [res] = await VoteCreate(use.token, [req]);
     return res;
   } catch (err) {
     console.error(err);
