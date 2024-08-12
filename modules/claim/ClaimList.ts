@@ -1,6 +1,6 @@
 import * as ToastSender from "@/components/toast/ToastSender";
 
-import { ClaimObject } from "@/modules/claim/object/ClaimObject";
+import { ClaimObject } from "@/modules/claim/ClaimObject";
 import { PostSearch } from "@/modules/api/post/search/Search";
 import { PostSearchRequest } from "@/modules/api/post/search/Request";
 import { PostSearchResponse } from "@/modules/api/post/search/Response";

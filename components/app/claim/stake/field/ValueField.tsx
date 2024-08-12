@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { ClaimVotes } from "@/modules/claim/object/ClaimVotes";
+import { ClaimVotes } from "@/modules/claim/ClaimVotes";
 import { EditorStore } from "@/components/app/claim/stake/editor/EditorStore";
 
 interface Props {

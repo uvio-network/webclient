@@ -1,7 +1,7 @@
 import { BaseButton } from "@/components/button/BaseButton";
 import { NoButton } from "@/components/button/NoButton";
 import { ClaimFooterCard } from "@/components/claim/ClaimFooterCard";
-import { ClaimObject } from "@/modules/claim/object/ClaimObject";
+import { ClaimObject } from "@/modules/claim/ClaimObject";
 import { TriangleDownIcon } from "@/components/icon/TriangleDownIcon";
 import { TriangleUpIcon } from "@/components/icon/TriangleUpIcon";
 

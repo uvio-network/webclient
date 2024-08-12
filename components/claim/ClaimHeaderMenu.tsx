@@ -6,7 +6,7 @@ import * as Separator from "@/components/layout/separator";
 import * as ToastSender from "@/components/toast/ToastSender";
 
 import { BaseButton } from "@/components/button/BaseButton";
-import { ClaimObject } from "@/modules/claim/object/ClaimObject";
+import { ClaimObject } from "@/modules/claim/ClaimObject";
 import { MenuHorizontalIcon } from "@/components/icon/MenuHorizontalIcon";
 
 interface Props {

@@ -3,7 +3,7 @@ import * as React from "react";
 import * as ToastSender from "@/components/toast/ToastSender";
 
 import { AuthStore } from "@/components/auth/AuthStore";
-import { EnsureUser } from "@/modules/user/object/EnsureUser";
+import { EnsureUser } from "@/modules/user/EnsureUser";
 import { EnsureWallets } from "@/modules/wallet/EnsureWallets";
 import { NewWalletContract } from "@/modules/wallet/WalletContract";
 import { WalletStore } from "@/modules/wallet/WalletStore";

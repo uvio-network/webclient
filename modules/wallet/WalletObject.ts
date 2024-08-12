@@ -3,7 +3,7 @@ import moment from "moment";
 import * as Privy from "@privy-io/react-auth";
 
 import { BiconomySmartAccountV2 } from "@biconomy/account";
-import { UserObject } from "@/modules/user/object/UserObject";
+import { UserObject } from "@/modules/user/UserObject";
 import { UserSearchResponse } from "@/modules/api/user/search/Response";
 import { WalletSearchResponse } from "@/modules/api/wallet/search/Response";
 

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-import { ClaimObject } from "@/modules/claim/object/ClaimObject";
+import { ClaimObject } from "@/modules/claim/ClaimObject";
 import { EditorOverlay } from "@/components/app/claim/stake/editor/EditorOverlay";
 import { EditorStore } from "@/components/app/claim/stake/editor/EditorStore";
 import { QueryStore } from "@/modules/query/QueryStore";

@@ -3,7 +3,7 @@
 import { ClaimActions } from "@/components/claim/ClaimActions";
 import { ClaimContent } from "@/components/claim/ClaimContent";
 import { ClaimHeader } from "@/components/claim/ClaimHeader";
-import { ClaimObject } from "@/modules/claim/object/ClaimObject";
+import { ClaimObject } from "@/modules/claim/ClaimObject";
 
 interface Props {
   claim: ClaimObject;

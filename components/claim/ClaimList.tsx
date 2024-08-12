@@ -4,14 +4,14 @@ import React from "react";
 
 import { AuthStore } from "@/components/auth/AuthStore";
 import { ClaimContainer } from "@/components/claim/ClaimContainer";
-import { ClaimObject } from "@/modules/claim/object/ClaimObject";
-import { ClaimIDs, CreateClaimList } from "@/modules/claim/object/ClaimList";
-import { CreateVoteList } from "@/modules/vote/object/VoteList";
+import { ClaimObject } from "@/modules/claim/ClaimObject";
+import { ClaimIDs, CreateClaimList } from "@/modules/claim/ClaimList";
+import { CreateVoteList } from "@/modules/vote/VoteList";
 import { PostSearchRequest } from "@/modules/api/post/search/Request";
 import { QueryStore } from "@/modules/query/QueryStore";
 import { useQuery } from "@tanstack/react-query";
 import { useShallow } from "zustand/react/shallow";
-import { VoteObject } from "@/modules/vote/object/VoteObject";
+import { VoteObject } from "@/modules/vote/VoteObject";
 
 interface Props {
   page?: string;
