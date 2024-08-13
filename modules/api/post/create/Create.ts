@@ -9,10 +9,12 @@ export async function PostCreate(tok: string, req: PostCreateRequest[]): Promise
         object: req.map((x) => ({
           intern: {},
           public: {
+            chain: x.chain,
             expiry: x.expiry,
             kind: x.kind,
             labels: x.labels,
             lifecycle: x.lifecycle,
+            meta: x.meta,
             parent: x.parent,
             text: x.text,
             token: x.token,

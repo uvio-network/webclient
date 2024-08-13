@@ -16,7 +16,7 @@ export const ChainWhitelist: ChainConfig[] = [
       Config.ArbitrumSepoliaAlchemyRpcEndpoint,
     ],
     tokens: {
-      "UVX": { abi: ERC20, address: "0x626D4ec870Bf00D03718E5F3b98D7C0b249D5883", decimals: 18, precision: 2 },
+      "UVX": { abi: ERC20, address: "0xD0F77441B70c84aa3366a9F79F2fD16618739aB0", decimals: 18, precision: 2 },
       "WETH": { abi: ERC20, address: "0x980B62Da83eFf3D4576C647993b0c1D7faf17c73", decimals: 18, precision: 6 },
     },
   },
