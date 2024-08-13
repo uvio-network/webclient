@@ -1,5 +1,5 @@
 import { ChainStore } from "@/modules/chain/ChainStore";
-import { encodeFunctionData, TransactionReceipt } from "viem";
+import { encodeFunctionData } from "viem";
 import { isAddressEqual } from "viem";
 import { Log } from "viem";
 import { parseEventLogs } from "viem";
@@ -9,8 +9,7 @@ import { TokenConfig } from "@/modules/token/TokenConfig";
 import { Transaction } from "@biconomy/account";
 import { WalletMessage } from "@/modules/wallet/WalletStore";
 
-export const MarketsPropose = async (wallet: WalletMessage, input: { expiry: number, amount: number, token: TokenConfig }): Promise<{ tree: string, claim: string }> => {
-
+export const MarketsPropose = async (wallet: WalletMessage, input: { expiry: number, amount: number, token: TokenConfig }): Promise<{ tree: string, claim: string, hash: string }> => {
   const txn = [
     newApprove(wallet, input),
     newDeposit(wallet, input),
@@ -27,7 +26,7 @@ export const MarketsPropose = async (wallet: WalletMessage, input: { expiry: num
   console.log("MarketsPropose.transactionHash", receipt.transactionHash);
   console.log("MarketsPropose.success", success);
 
-  return newResponse(receipt.logs);
+  return newResponse(receipt.logs, receipt.transactionHash);
 };
 
 const newApprove = (wallet: WalletMessage, input: { expiry: number, amount: number, token: TokenConfig }): Transaction => {
@@ -98,7 +97,7 @@ const newPropose = (wallet: WalletMessage, input: { expiry: number, amount: numb
   };
 }
 
-const newResponse = (log: Log[]): { tree: string, claim: string } => {
+const newResponse = (log: Log[], has: string): { tree: string, claim: string, hash: string } => {
   const chain = ChainStore.getState().getActive();
   const markets = chain.contracts["Markets"];
 
@@ -115,5 +114,6 @@ const newResponse = (log: Log[]): { tree: string, claim: string } => {
   return {
     tree: logs[0].args.propose.marketId.toString(),
     claim: logs[0].args.claimId.toString(),
+    hash: has,
   };
 };

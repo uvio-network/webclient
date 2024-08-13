@@ -166,7 +166,7 @@ const newExp = (edi: EditorMessage): number => {
   return moment(edi.expiry, TimeFormat, true).unix();
 };
 
-const chnCre = async (wal: WalletMessage, inp: { amount: number, expiry: number, token: TokenConfig }): Promise<{ tree: string, claim: string }> => {
+const chnCre = async (wal: WalletMessage, inp: { amount: number, expiry: number, token: TokenConfig }): Promise<{ tree: string, claim: string, hash: string }> => {
   try {
     const res = await MarketsPropose(wal, inp);
     return res;
@@ -177,14 +177,14 @@ const chnCre = async (wal: WalletMessage, inp: { amount: number, expiry: number,
   }
 }
 
-const posCre = async (cid: number, use: UserMessage, edi: EditorMessage, chn: { tree: string, claim: string }): Promise<PostCreateResponse> => {
+const posCre = async (cid: number, use: UserMessage, edi: EditorMessage, chn: { tree: string, claim: string, hash: string }): Promise<PostCreateResponse> => {
   const req: PostCreateRequest = {
     chain: cid.toString(),
     expiry: moment(edi.expiry, TimeFormat, true).unix().toString(),
     kind: "claim",
     labels: SplitList(edi.labels).join(","),
     lifecycle: "propose",
-    meta: chn.tree + "," + chn.claim,
+    meta: chn.tree + "," + chn.claim + "," + chn.hash,
     parent: "",
     text: edi.markdown,
     token: edi.stake.split(" ")[1],

@@ -24,7 +24,7 @@ export const WalletButton = () => {
     if (wallet.contract) {
       TokenStore.getState().update(wallet, chain.tokens);
     }
-  }, [wallet.contract]);
+  }, [wallet, wallet.contract, chain.tokens]);
 
   return (
     <>
