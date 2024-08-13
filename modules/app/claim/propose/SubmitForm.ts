@@ -6,17 +6,22 @@ import { ChainStore } from "@/modules/chain/ChainStore";
 import { EditorMessage } from "@/components/app/claim/propose/editor/EditorStore";
 import { EditorStore } from "@/components/app/claim/propose/editor/EditorStore";
 import { HasDuplicate } from "@/modules/string/HasDuplicate";
+import { MarketsPropose } from "@/modules/transaction/MarketsPropose";
 import { PostCreate } from "@/modules/api/post/create/Create";
 import { PostCreateRequest } from "@/modules/api/post/create/Request";
 import { PostCreateResponse } from "@/modules/api/post/create/Response";
 import { SplitList } from "@/modules/string/SplitList";
 import { TimeFormat } from "@/modules/app/claim/propose/TimeFormat";
+import { TokenConfig } from "@/modules/token/TokenConfig";
+import { TokenMessage } from "@/modules/token/TokenStore";
+import { TokenStore } from "@/modules/token/TokenStore";
 import { UserMessage } from "@/modules/user/UserStore";
 import { UserStore } from "@/modules/user/UserStore";
 import { VoteCreate } from "@/modules/api/vote/create/Create";
 import { VoteCreateRequest } from "@/modules/api/vote/create/Request";
 import { VoteCreateResponse } from "@/modules/api/vote/create/Response";
-import { TokenMessage, TokenStore } from "@/modules/token/TokenStore";
+import { WalletMessage } from "@/modules/wallet/WalletStore";
+import { WalletStore } from "@/modules/wallet/WalletStore";
 
 // SubmitForm validates user input and then performs the claim creation.
 export const SubmitForm = async (suc: (pos: string, vot: string) => void) => {
@@ -24,6 +29,7 @@ export const SubmitForm = async (suc: (pos: string, vot: string) => void) => {
   const editor = EditorStore.getState();
   const token = TokenStore.getState().token;
   const user = UserStore.getState().user;
+  const { wallet } = WalletStore.getState();
 
   // Note that the order of the validation blocks below accomodates the user
   // experience when validating user input in the claim editor. The order of the
@@ -74,10 +80,8 @@ export const SubmitForm = async (suc: (pos: string, vot: string) => void) => {
 
   {
     const spl = editor.stake.split(" ");
-
     const num = spl[0];
     const sym = spl[1];
-
     const lis = Object.keys(chain.tokens);
 
     if (!editor.stake || editor.stake === "") {
@@ -97,8 +101,19 @@ export const SubmitForm = async (suc: (pos: string, vot: string) => void) => {
     }
   }
 
-  const pos = await posCre(user, editor);
-  const vot = await votCre(user, editor, pos);
+  {
+    ToastSender.Info("Alrighty pumpkin, let's see if you got all the marbles.");
+  }
+
+  const inp = {
+    amount: newAmo(editor),
+    expiry: newExp(editor),
+    token: chain.tokens[editor.stake.split(" ")[1]],
+  };
+
+  const chn = await chnCre(wallet, inp);
+  const pos = await posCre(chain.id, user, editor, chn);
+  const vot = await votCre(chain.id, user, editor, pos);
 
   {
     ToastSender.Success("Hooray, thy claim proposed milady!");
@@ -143,12 +158,33 @@ const inpSym = (sym: string, lis: string[]): boolean => {
   return lis.some((x) => x === sym);
 };
 
-const posCre = async (use: UserMessage, edi: EditorMessage): Promise<PostCreateResponse> => {
+const newAmo = (edi: EditorMessage): number => {
+  return parseFloat(edi.stake.split(" ")[0]);
+};
+
+const newExp = (edi: EditorMessage): number => {
+  return moment(edi.expiry, TimeFormat, true).unix();
+};
+
+const chnCre = async (wal: WalletMessage, inp: { amount: number, expiry: number, token: TokenConfig }): Promise<{ tree: string, claim: string, hash: string }> => {
+  try {
+    const res = await MarketsPropose(wal, inp);
+    return res;
+  } catch (err) {
+    console.error(err);
+    ToastSender.Error(err instanceof Error ? err.message : String(err));
+    return Promise.reject(err);
+  }
+}
+
+const posCre = async (cid: number, use: UserMessage, edi: EditorMessage, chn: { tree: string, claim: string, hash: string }): Promise<PostCreateResponse> => {
   const req: PostCreateRequest = {
+    chain: cid.toString(),
     expiry: moment(edi.expiry, TimeFormat, true).unix().toString(),
     kind: "claim",
     labels: SplitList(edi.labels).join(","),
     lifecycle: "propose",
+    meta: chn.tree + "," + chn.claim + "," + chn.hash,
     parent: "",
     text: edi.markdown,
     token: edi.stake.split(" ")[1],
@@ -164,12 +200,12 @@ const posCre = async (use: UserMessage, edi: EditorMessage): Promise<PostCreateR
   }
 }
 
-const votCre = async (use: UserMessage, edi: EditorMessage, pos: PostCreateResponse): Promise<VoteCreateResponse> => {
+const votCre = async (cid: number, use: UserMessage, edi: EditorMessage, pos: PostCreateResponse): Promise<VoteCreateResponse> => {
   const req: VoteCreateRequest = {
     claim: pos.id,
     kind: "stake",
     option: "true",
-    value: edi.stake.split(" ")[0],
+    value: newAmo(edi).toString(),
   };
 
   try {

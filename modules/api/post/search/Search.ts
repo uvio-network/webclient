@@ -35,10 +35,12 @@ export async function PostSearch(tok: string, req: PostSearchRequest[]): Promise
       tree: x.intern?.tree || "",
 
       //public
+      chain: x.public?.chain || "",
       expiry: x.public?.expiry || "",
       kind: x.public?.kind || "",
       labels: x.public?.labels || "",
       lifecycle: x.public?.lifecycle || "",
+      meta: x.public?.meta || "",
       parent: x.public?.parent || "",
       text: x.public?.text || "",
       token: x.public?.token || "",
