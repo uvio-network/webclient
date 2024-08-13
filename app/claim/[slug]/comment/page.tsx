@@ -4,11 +4,11 @@ import * as React from "react";
 
 import { ClaimObject } from "@/modules/claim/ClaimObject";
 import { ClaimPreview } from "@/components/app/claim/comment/preview/ClaimPreview";
-import { EditorButton } from "@/components/app/claim/comment/editor/EditorButton";
 import { EditorStore } from "@/components/app/claim/comment/editor/EditorStore";
 import { EmptyUserSearchResponse } from "@/modules/api/user/search/Response";
 import { MarkdownField } from "@/components/app/claim/comment/field/MarkdownField";
 import { MarkdownPreview } from "@/components/app/claim/comment/preview/MarkdownPreview";
+import { PageButton } from "@/components/page/PageButton";
 import { PostSearch } from "@/modules/api/post/search/Search";
 import { SubmitButton } from "@/components/app/claim/comment/editor/SubmitButton";
 import { useQuery } from "@tanstack/react-query";
@@ -50,13 +50,13 @@ export default function Page({ params }: { params: { slug: string } }) {
       {claim.data && (
         <>
           <div className="flex mb-6 w-full items-center">
-            <EditorButton
+            <PageButton
               active={edit}
               onClick={() => setEdit((old) => !old)}
               text="Write"
             />
 
-            <EditorButton
+            <PageButton
               active={!edit}
               onClick={() => setEdit((old) => !old)}
               text="Preview"
