@@ -19,13 +19,13 @@ export default function Page() {
       <div className="flex mb-6 w-full items-center">
         <PageButton
           active={edit}
-          onClick={() => setEdit((old) => !old)}
+          onClick={() => setEdit(true)}
           text="Write"
         />
 
         <PageButton
           active={!edit}
-          onClick={() => setEdit((old) => !old)}
+          onClick={() => setEdit(false)}
           text="Preview"
         />
       </div>
