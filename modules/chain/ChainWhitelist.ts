@@ -10,7 +10,7 @@ export const ChainWhitelist: ChainConfig[] = [
     ...arbitrumSepolia,
     biconomyPaymasterApiKey: Config.ArbitrumSepoliaBiconomyPaymasterApiKey,
     contracts: {
-      "Markets": { abi: Markets, address: "0xDd737dADA46F3A111074dCE29B9430a7EA000092" },
+      "Markets": { abi: Markets, address: "0xBa230f4Bf34E48D04e65dE9a0F6Fe5EcDAa0c17A" },
     },
     rpcEndpoints: [
       Config.ArbitrumSepoliaAlchemyRpcEndpoint,
