@@ -3,7 +3,7 @@ import * as React from "react";
 interface Props {
   children: React.ReactNode;
   className?: string;
-  disabled?: boolean;
+  hover?: boolean;
   onClick?: () => void;
   overwrite?: boolean;
   size?: string;
@@ -14,12 +14,13 @@ interface Props {
 export const BaseIcon = (props: Props) => {
   const defaultClassName = `
     ${props.size ? props.size : "w-5 h-5"}
-    ${props.disabled ? "opacity-80" : "group-hover:text-black dark:group-hover:text-white"}
-  `;
+    ${props.className && props.className !== "" ? props.className : ""}
+    ${props.hover === true ? "group-hover:text-black dark:group-hover:text-white" : ""}
+  `.trim();
 
   return (
     <svg
-      className={props.overwrite ? props.className : defaultClassName + props.className}
+      className={props.overwrite === true ? props.className : defaultClassName}
       fill="none"
       onClick={props.onClick}
       strokeWidth={props.strokeWidth ? props.strokeWidth : "1"}

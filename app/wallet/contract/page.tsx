@@ -12,32 +12,40 @@ import { OpenLinkIcon } from "@/components/icon/OpenLinkIcon";
 import { PageButton } from "@/components/page/PageButton";
 import { RefreshIcon } from "@/components/icon/RefreshIcon";
 import { TokenConfig } from "@/modules/token/TokenConfig";
+import { TokenStore } from "@/modules/token/TokenStore";
 import { WalletStore } from "@/modules/wallet/WalletStore";
 
 export default function Page() {
   const [deposit, setDeposit] = React.useState<boolean>(true);
+  const [refresh, setRefresh] = React.useState<boolean>(true);
+
+  const { token } = TokenStore();
+  const { wallet } = WalletStore();
 
   const chain = ChainStore.getState().getActive();
-  const { wallet } = WalletStore();
 
   const onClick = () => {
     ToastSender.Info("It's comming just chill ok!");
   };
 
-  const balance = 0;
+  React.useEffect(() => {
+    if (wallet.contract) {
+      TokenStore.getState().update(wallet, chain.tokens);
+    }
+  }, [refresh, wallet.contract]);
 
   return (
     <>
       <div className="flex mb-6 w-full items-center">
         <PageButton
           active={deposit}
-          onClick={() => setDeposit((old) => !old)}
+          onClick={() => setDeposit(true)}
           text="Deposit"
         />
 
         <PageButton
           active={!deposit}
-          // onClick={() => setDeposit((old) => !old)}
+          // onClick={() => setDeposit(false)}
           onClick={onClick}
           text="Withdraw"
         />
@@ -50,10 +58,10 @@ export default function Page() {
           </div>
 
           <div className="flex my-4 p-4 bg-gray-50 dark:bg-gray-900 rounded">
-            <div className="w-full text-gray-500 dark:text-gray-400 font-mono">
+            <div className="w-full text-gray-500 dark:text-gray-400 font-mono overflow-auto">
               {wallet.contract?.address()}
             </div>
-            <div className="my-auto mr-2">
+            <div className="my-auto mx-2">
               <BaseButton
                 background="none"
                 onClick={onClick}
@@ -85,12 +93,17 @@ export default function Page() {
                   {key}
                 </div>
                 <div className="w-full">
-                  {balance.toFixed(6)}
+                  {wallet.contract && (
+                    <>
+                      {token[key]}
+                    </>
+                  )}
                 </div>
                 <div className="my-auto mr-2">
                   <BaseButton
                     background="none"
-                    onClick={onClick}
+                    onClick={() => setRefresh((old) => !old)}
+                    confirm={true}
                     padding="p-0"
                     icon={<RefreshIcon />}
                   />

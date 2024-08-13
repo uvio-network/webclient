@@ -1,4 +1,6 @@
+import { Address } from "viem";
+
 export interface ContractConfig {
   abi: any;
-  address: string;
+  address: Address;
 };

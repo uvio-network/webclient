@@ -22,9 +22,8 @@ export const EffectButton = React.forwardRef<HTMLDivElement, Props>(function Eff
         setCurrentValue(props.value);
       }
 
-      const timeout = setTimeout(() => {
+      setTimeout(() => {
         setClassName(defaultClass);
-        clearTimeout(timeout);
       }, 1000)
     }
   }, [props.value, className, currentValue, setClassName, setCurrentValue]);

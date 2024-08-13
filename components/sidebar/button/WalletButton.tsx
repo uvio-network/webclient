@@ -124,21 +124,3 @@ const readDeposit = async (token: TokenConfig) => {
 
   console.log("READ DEPOSIT", userBalance);
 };
-
-const readBalance = async (token: TokenConfig) => {
-  const wallet = WalletStore.getState().wallet;
-
-  const con = getContract({
-    abi: token.abi,
-    address: token.address as Address,
-    client: wallet.public!,
-  })
-
-  const [balance] = await Promise.all([
-    con.read.balanceOf([
-      wallet.contract?.address(),
-    ]),
-  ])
-
-  console.log("READ BALANCE", balance);
-};

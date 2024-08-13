@@ -1,5 +1,7 @@
+import { Address } from "viem";
+
 export interface TokenConfig {
   abi: any;
-  address: string;
+  address: Address;
   decimals: number;
 };
