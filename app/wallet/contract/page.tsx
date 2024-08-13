@@ -106,6 +106,7 @@ export default function Page() {
                     confirm={true}
                     padding="p-0"
                     icon={<RefreshIcon />}
+                    timeout={10}
                   />
                 </div>
                 <div className="my-auto">

@@ -15,10 +15,12 @@ interface Props {
   position?: string; // text position, either left or right from the icon
   icon: React.ReactElement;
   text?: string;
+  timeout?: number;
 }
 
 export const BaseButton = React.forwardRef<HTMLDivElement, Props>(function BaseButton(props: Props, ref) {
   const [click, setClick] = React.useState<boolean>(false);
+  const [disabled, setDisabled] = React.useState<boolean>(false);
 
   const onClick = (eve: React.MouseEvent<HTMLDivElement>) => {
     if (props.confirm === true) {
@@ -29,6 +31,14 @@ export const BaseButton = React.forwardRef<HTMLDivElement, Props>(function BaseB
       setTimeout(() => {
         setClick(false);
       }, 3 * 1000);
+    }
+
+    if (props.timeout && props.timeout >= 0) {
+      setDisabled(true);
+
+      setTimeout(() => {
+        setDisabled(false);
+      }, props.timeout * 1000);
     }
 
     if (props.onClick) {
@@ -63,13 +73,14 @@ export const BaseButton = React.forwardRef<HTMLDivElement, Props>(function BaseB
   return (
     <div
       className={`
-        flex w-full h-fit rounded outline-none cursor-pointer group
+        flex w-full h-fit rounded outline-none group
         text-sm sm:text-base text-gray-400 dark:text-gray-500 whitespace-nowrap
+        ${disabled ? "cursor-default" : "cursor-pointer "}
         ${props.font ? props.font : "font-medium"}
-        ${props.hover ? props.hover : props.confirm === true && click ? "" : "hover:text-black dark:hover:text-white"}
+        ${props.hover ? props.hover : ((props.confirm === true && click) || disabled) ? "" : "hover:text-black dark:hover:text-white"}
         ${props.background ? props.background : "hover:bg-gray-200 dark:hover:bg-gray-700"}
       `}
-      onClick={onClick}
+      onClick={disabled ? undefined : onClick}
       ref={ref}
     >
       {props.effect === true && props.text ? (
