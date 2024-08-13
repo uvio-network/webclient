@@ -17,7 +17,6 @@ import { WalletStore } from "@/modules/wallet/WalletStore";
 
 export default function Page() {
   const [deposit, setDeposit] = React.useState<boolean>(true);
-  const [refresh, setRefresh] = React.useState<boolean>(true);
 
   const { token } = TokenStore();
   const { wallet } = WalletStore();
@@ -27,12 +26,6 @@ export default function Page() {
   const onClick = () => {
     ToastSender.Info("It's comming just chill ok!");
   };
-
-  React.useEffect(() => {
-    if (wallet.contract) {
-      TokenStore.getState().update(wallet, chain.tokens);
-    }
-  }, [refresh, wallet.contract]);
 
   return (
     <>
@@ -102,7 +95,11 @@ export default function Page() {
                 <div className="my-auto mr-2">
                   <BaseButton
                     background="none"
-                    onClick={() => setRefresh((old) => !old)}
+                    onClick={() => {
+                      if (wallet.contract) {
+                        TokenStore.getState().update(wallet, chain.tokens);
+                      }
+                    }}
                     confirm={true}
                     padding="p-0"
                     icon={<RefreshIcon />}
