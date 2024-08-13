@@ -1,4 +1,4 @@
-import * as Separator from "@/components/app/claim/propose/editor/separator";
+import * as Separator from "@/components/page/separator";
 
 interface Props {
   active: boolean;
@@ -6,7 +6,7 @@ interface Props {
   text: string;
 }
 
-export const EditorButton = (props: Props) => {
+export const PageButton = (props: Props) => {
   return (
     <button
       className={`
