@@ -2,6 +2,7 @@ import moment from "moment";
 
 import * as ToastSender from "@/components/toast/ToastSender";
 
+import { ChainStore } from "@/modules/chain/ChainStore";
 import { EditorMessage } from "@/components/app/claim/propose/editor/EditorStore";
 import { EditorStore } from "@/components/app/claim/propose/editor/EditorStore";
 import { HasDuplicate } from "@/modules/string/HasDuplicate";
@@ -15,11 +16,14 @@ import { UserStore } from "@/modules/user/UserStore";
 import { VoteCreate } from "@/modules/api/vote/create/Create";
 import { VoteCreateRequest } from "@/modules/api/vote/create/Request";
 import { VoteCreateResponse } from "@/modules/api/vote/create/Response";
+import { TokenMessage, TokenStore } from "@/modules/token/TokenStore";
 
 // SubmitForm validates user input and then performs the claim creation.
 export const SubmitForm = async (suc: (pos: string, vot: string) => void) => {
-  const user = UserStore.getState().user;
+  const chain = ChainStore.getState().getActive();
   const editor = EditorStore.getState();
+  const token = TokenStore.getState().token;
+  const user = UserStore.getState().user;
 
   // Note that the order of the validation blocks below accomodates the user
   // experience when validating user input in the claim editor. The order of the
@@ -69,17 +73,27 @@ export const SubmitForm = async (suc: (pos: string, vot: string) => void) => {
   }
 
   {
+    const spl = editor.stake.split(" ");
+
+    const num = spl[0];
+    const sym = spl[1];
+
+    const lis = Object.keys(chain.tokens);
+
     if (!editor.stake || editor.stake === "") {
-      return ToastSender.Error("The staking value for your claim must not be empty.");
+      return ToastSender.Error("You must stake reputation with your claim.");
     }
     if (!inpPrt(editor.stake)) {
-      return ToastSender.Error("The format for staked reputation must be [number token].");
+      return ToastSender.Error("Your staked reputation must be in teh format [number token].");
     }
-    if (!inpNum(editor.stake)) {
-      return ToastSender.Error("The amount of staked reputation must be a positive number.");
+    if (!inpNum(num)) {
+      return ToastSender.Error("The amount of your stake must be a positive number.");
     }
-    if (!inpTok(editor.stake)) {
-      return ToastSender.Error("The amount of staked reputation must be denominated in a whitelisted token.");
+    if (!inpSym(sym, lis)) {
+      return ToastSender.Error(`You can only stake one of the whitelisted tokens: ${lis}.`);
+    }
+    if (!inpBal(num, sym, token)) {
+      return ToastSender.Error(`You do not seem to have enough tokens to stake ${num} ${sym}.`);
     }
   }
 
@@ -95,6 +109,13 @@ export const SubmitForm = async (suc: (pos: string, vot: string) => void) => {
   // TODO prevent duplicated submits
 };
 
+const inpBal = (num: string, sym: string, tok: TokenMessage): boolean => {
+  const des = parseFloat(num);
+  const cur = parseFloat(tok[sym]);
+
+  return cur >= des;
+};
+
 // inpPrt returns true if the given input is a two part string separated by a
 // single whitespace. We use this to ensure we get user input like shown below.
 //
@@ -104,29 +125,22 @@ const inpPrt = (inp: string): boolean => {
   return inp.split(" ").length === 2;
 };
 
-const regex = /^\d+(\.\d+)? \S+$/;
-
-// inpNum returns true if the given input string has a numerical prefix. This
-// prefix might be an integer or floating point number.
+// inpNum returns true if the given input string is an integer or floating point
+// number.
 //
 //     5
 //     0.003
 //
-const inpNum = (inp: string): boolean => {
-  if (!inp || inp === "") return false;
-  return regex.test(inp);
+const inpNum = (num: string): boolean => {
+  if (num === "") return false;
+  return parseFloat(num) > 0;
 };
 
-// inpTok returns true if the given input string has one of the following
-// suffixes. Those ticker symbols define our token whitelist for proposing
-// claims.
-//
-//     ETH
-//     USDC
-//
-const inpTok = (inp: string): boolean => {
-  if (!inp || inp === "") return false;
-  return inp.endsWith("ETH") || inp.endsWith("USDC");
+// inpSym returns true if the given input string has one of the whitelisted
+// tokens as suffixe.
+const inpSym = (sym: string, lis: string[]): boolean => {
+  if (sym === "") return false;
+  return lis.some((x) => x === sym);
 };
 
 const posCre = async (use: UserMessage, edi: EditorMessage): Promise<PostCreateResponse> => {

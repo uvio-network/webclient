@@ -13,7 +13,7 @@ export const StakeField = () => {
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
           editor.updateStake(e.currentTarget.value);
         }}
-        placeholder="0.003 ETH"
+        placeholder="10 UVX"
         type="text"
       />
     </div>

@@ -19,5 +19,5 @@ export const TokenBalance = async (wallet: WalletMessage, token: TokenConfig): P
   ]);
 
   // Return a properly formatted floating point number as string.
-  return parseFloat(formatUnits(BigInt(String(bal)), token.decimals)).toFixed(6);
+  return parseFloat(formatUnits(BigInt(String(bal)), token.decimals)).toFixed(token.precision);
 };

@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import * as React from "react";
 import * as ToastSender from "@/components/toast/ToastSender";
 
 import { BaseButton } from "@/components/button/BaseButton";
@@ -15,13 +16,23 @@ import { getContract } from "viem";
 import { parseUnits } from "viem";
 import { PaymasterMode } from "@biconomy/account";
 import { TokenConfig } from "@/modules/token/TokenConfig";
+import { TokenStore } from "@/modules/token/TokenStore";
 
 export const WalletButton = () => {
+  const { token } = TokenStore();
   const { wallet } = WalletStore();
+
+  const chain = ChainStore.getState().getActive();
 
   const onClick = () => {
     ToastSender.Info("It's comming just chill ok!");
   };
+
+  React.useEffect(() => {
+    if (wallet.contract) {
+      TokenStore.getState().update(wallet, chain.tokens);
+    }
+  }, [wallet.contract]);
 
   return (
     <>
@@ -30,13 +41,13 @@ export const WalletButton = () => {
           <BaseButton
             icon={<CurrentPulseIcon />}
             onClick={onClick}
-            text={"00,00"}
+            text={"00.00"}
           />
 
           <Link href={"/wallet/contract"}>
             <BaseButton
               icon={<CurrencyDollarIcon />}
-              text={"00,00"}
+              text={token["UVX"] || "00.00"}
             />
           </Link>
         </>
