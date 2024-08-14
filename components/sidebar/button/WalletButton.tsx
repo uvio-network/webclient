@@ -1,24 +1,25 @@
 import Link from "next/link";
 
 import * as React from "react";
-import * as ToastSender from "@/components/toast/ToastSender";
 
 import { BaseButton } from "@/components/button/BaseButton";
 import { ChainStore } from "@/modules/chain/ChainStore";
 import { CurrencyDollarIcon } from "@/components/icon/CurrencyDollarIcon";
 import { CurrentPulseIcon } from "@/components/icon/CurrentPulseIcon";
 import { TokenStore } from "@/modules/token/TokenStore";
+import { UserStore } from "@/modules/user/UserStore";
+import { useShallow } from "zustand/react/shallow";
 import { WalletStore } from "@/modules/wallet/WalletStore";
 
 export const WalletButton = () => {
   const { token } = TokenStore();
   const { wallet } = WalletStore();
 
-  const chain = ChainStore.getState().getActive();
+  const { object } = UserStore(useShallow((state) => ({
+    object: state.user.object,
+  })));
 
-  const onClick = () => {
-    ToastSender.Info("It's comming just chill ok!");
-  };
+  const chain = ChainStore.getState().getActive();
 
   React.useEffect(() => {
     if (wallet.contract) {
@@ -28,21 +29,22 @@ export const WalletButton = () => {
 
   return (
     <>
-      {wallet.ready && (
-        <>
+      {object && (
+        <Link href={"/user/" + object.id() + "/activity"}>
           <BaseButton
             icon={<CurrentPulseIcon />}
-            onClick={onClick}
             text={"00.00"}
           />
+        </Link>
+      )}
 
-          <Link href={"/wallet/contract"}>
-            <BaseButton
-              icon={<CurrencyDollarIcon />}
-              text={token["UVX"] || "00.00"}
-            />
-          </Link>
-        </>
+      {token["UVX"] && (
+        <Link href={"/wallet/contract"}>
+          <BaseButton
+            icon={<CurrencyDollarIcon />}
+            text={token["UVX"]}
+          />
+        </Link>
       )}
     </>
   );
