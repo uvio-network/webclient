@@ -10,4 +10,5 @@ export interface PostSearchRequest {
   // symbol
   list?: string;
   time?: string;
+  vote?: string;
 }

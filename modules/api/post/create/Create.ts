@@ -11,6 +11,7 @@ export async function PostCreate(tok: string, req: PostCreateRequest[]): Promise
           public: {
             chain: x.chain,
             expiry: x.expiry,
+            hash: x.hash,
             kind: x.kind,
             labels: x.labels,
             lifecycle: x.lifecycle,

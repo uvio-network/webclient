@@ -51,8 +51,12 @@ const inpNum = (inp: string): boolean => {
 
 const votCre = async (use: UserMessage, edi: EditorMessage): Promise<VoteCreateResponse> => {
   const req: VoteCreateRequest = {
+    chain: "",
     claim: edi.claim,
+    hash: "",
     kind: "stake",
+    lifecycle: "",
+    meta: "",
     option: edi.option,
     value: edi.value,
   };

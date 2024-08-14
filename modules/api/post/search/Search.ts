@@ -19,6 +19,7 @@ export async function PostSearch(tok: string, req: PostSearchRequest[]): Promise
           symbol: {
             list: x.list || "",
             time: x.time || "",
+            vote: x.vote || "",
           },
         })),
       },
@@ -37,6 +38,7 @@ export async function PostSearch(tok: string, req: PostSearchRequest[]): Promise
       //public
       chain: x.public?.chain || "",
       expiry: x.public?.expiry || "",
+      hash: x.public?.hash || "",
       kind: x.public?.kind || "",
       labels: x.public?.labels || "",
       lifecycle: x.public?.lifecycle || "",

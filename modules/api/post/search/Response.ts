@@ -8,6 +8,7 @@ export interface PostSearchResponse {
   // public
   chain: string;
   expiry: string;
+  hash: string;
   kind: string;
   labels: string;
   lifecycle: string;
