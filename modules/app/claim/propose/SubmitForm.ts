@@ -104,7 +104,6 @@ export const SubmitForm = async (suc: (pos: string, vot: string) => void) => {
     ToastSender.Info("Alrighty pumpkin, let's see if you got all the marbles.");
   }
 
-
   let ctx: ProposeContext = {
     amount: newAmo(editor),
     auth: user.token,
