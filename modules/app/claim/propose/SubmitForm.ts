@@ -5,21 +5,20 @@ import * as ToastSender from "@/components/toast/ToastSender";
 import { ChainStore } from "@/modules/chain/ChainStore";
 import { EditorMessage } from "@/components/app/claim/propose/editor/EditorStore";
 import { EditorStore } from "@/components/app/claim/propose/editor/EditorStore";
+import { EmptyPostCreateResponse } from "@/modules/api/post/create/Response";
+import { EmptyVoteCreateResponse } from "@/modules/api/vote/create/Response";
 import { HasDuplicate } from "@/modules/string/HasDuplicate";
 import { MarketsPropose } from "@/modules/transaction/MarketsPropose";
 import { PostCreate } from "@/modules/api/post/create/Create";
 import { PostCreateRequest } from "@/modules/api/post/create/Request";
-import { PostCreateResponse } from "@/modules/api/post/create/Response";
+import { ProposeContext } from "@/modules/context/ProposeContext";
 import { SplitList } from "@/modules/string/SplitList";
 import { TimeFormat } from "@/modules/app/claim/propose/TimeFormat";
-import { TokenConfig } from "@/modules/token/TokenConfig";
 import { TokenMessage } from "@/modules/token/TokenStore";
 import { TokenStore } from "@/modules/token/TokenStore";
-import { UserMessage } from "@/modules/user/UserStore";
 import { UserStore } from "@/modules/user/UserStore";
 import { VoteCreate } from "@/modules/api/vote/create/Create";
 import { VoteCreateRequest } from "@/modules/api/vote/create/Request";
-import { VoteCreateResponse } from "@/modules/api/vote/create/Response";
 import { WalletMessage } from "@/modules/wallet/WalletStore";
 import { WalletStore } from "@/modules/wallet/WalletStore";
 
@@ -105,20 +104,30 @@ export const SubmitForm = async (suc: (pos: string, vot: string) => void) => {
     ToastSender.Info("Alrighty pumpkin, let's see if you got all the marbles.");
   }
 
-  const inp = {
+
+  let ctx: ProposeContext = {
     amount: newAmo(editor),
+    auth: user.token,
+    chain: chain.id.toString(),
+    claim: "", // filled on the fly
     expiry: newExp(editor),
+    hash: "", // filled on the fly
+    post: EmptyPostCreateResponse(),
     token: chain.tokens[editor.stake.split(" ")[1]],
+    tree: "", // filled on the fly
+    vote: EmptyVoteCreateResponse(),
   };
 
-  const chn = await chnCre(wallet, inp);
-  const pos = await posCre(chain.id, user, editor, chn);
-  const vot = await votCre(chain.id, user, editor, pos);
+  {
+    ctx = await chnCre(ctx, wallet);
+    ctx = await posCre(ctx, editor);
+    ctx = await votCre(ctx, editor);
+  }
 
   {
     ToastSender.Success("Hooray, thy claim proposed milady!");
     editor.delete();
-    suc(pos.id, vot.id);
+    suc(ctx.post.id, ctx.vote.id);
   }
 
   // TODO prevent duplicated submits
@@ -166,9 +175,9 @@ const newExp = (edi: EditorMessage): number => {
   return moment(edi.expiry, TimeFormat, true).unix();
 };
 
-const chnCre = async (wal: WalletMessage, inp: { amount: number, expiry: number, token: TokenConfig }): Promise<{ tree: string, claim: string, hash: string }> => {
+const chnCre = async (ctx: ProposeContext, wal: WalletMessage): Promise<ProposeContext> => {
   try {
-    const res = await MarketsPropose(wal, inp);
+    const res = await MarketsPropose(ctx, wal);
     return res;
   } catch (err) {
     console.error(err);
@@ -177,22 +186,24 @@ const chnCre = async (wal: WalletMessage, inp: { amount: number, expiry: number,
   }
 }
 
-const posCre = async (cid: number, use: UserMessage, edi: EditorMessage, chn: { tree: string, claim: string, hash: string }): Promise<PostCreateResponse> => {
+const posCre = async (ctx: ProposeContext, edi: EditorMessage): Promise<ProposeContext> => {
   const req: PostCreateRequest = {
-    chain: cid.toString(),
-    expiry: moment(edi.expiry, TimeFormat, true).unix().toString(),
+    chain: ctx.chain,
+    hash: ctx.hash,
+    expiry: ctx.expiry.toString(),
     kind: "claim",
     labels: SplitList(edi.labels).join(","),
-    lifecycle: "propose",
-    meta: chn.tree + "," + chn.claim + "," + chn.hash,
+    lifecycle: "",
+    meta: ctx.tree + "," + ctx.claim,
     parent: "",
     text: edi.markdown,
     token: edi.stake.split(" ")[1],
   };
 
   try {
-    const [res] = await PostCreate(use.token, [req]);
-    return res;
+    const [res] = await PostCreate(ctx.auth, [req]);
+    ctx.post = res;
+    return ctx;
   } catch (err) {
     console.error(err);
     ToastSender.Error(err instanceof Error ? err.message : String(err));
@@ -200,17 +211,22 @@ const posCre = async (cid: number, use: UserMessage, edi: EditorMessage, chn: { 
   }
 }
 
-const votCre = async (cid: number, use: UserMessage, edi: EditorMessage, pos: PostCreateResponse): Promise<VoteCreateResponse> => {
+const votCre = async (ctx: ProposeContext, edi: EditorMessage): Promise<ProposeContext> => {
   const req: VoteCreateRequest = {
-    claim: pos.id,
+    chain: ctx.chain,
+    hash: ctx.hash,
+    claim: ctx.post.id,
     kind: "stake",
+    lifecycle: "",
+    meta: "",
     option: "true",
     value: newAmo(edi).toString(),
   };
 
   try {
-    const [res] = await VoteCreate(use.token, [req]);
-    return res;
+    const [res] = await VoteCreate(ctx.auth, [req]);
+    ctx.vote = res;
+    return ctx;
   } catch (err) {
     console.error(err);
     ToastSender.Error(err instanceof Error ? err.message : String(err));

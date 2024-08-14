@@ -2,6 +2,7 @@ export interface PostCreateRequest {
   // public
   chain: string;
   expiry: string;
+  hash: string;
   kind: string;
   labels: string;
   lifecycle: string;

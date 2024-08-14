@@ -5,50 +5,54 @@ import { Log } from "viem";
 import { parseEventLogs } from "viem";
 import { parseUnits } from "viem";
 import { PaymasterMode } from "@biconomy/account";
-import { TokenConfig } from "@/modules/token/TokenConfig";
+import { ProposeContext } from "@/modules/context/ProposeContext";
 import { Transaction } from "@biconomy/account";
 import { WalletMessage } from "@/modules/wallet/WalletStore";
 
-export const MarketsPropose = async (wallet: WalletMessage, input: { expiry: number, amount: number, token: TokenConfig }): Promise<{ tree: string, claim: string, hash: string }> => {
+export const MarketsPropose = async (ctx: ProposeContext, wal: WalletMessage): Promise<ProposeContext> => {
   const txn = [
-    newApprove(wallet, input),
-    newDeposit(wallet, input),
-    newPropose(wallet, input),
+    newApprove(ctx, wal),
+    newDeposit(ctx, wal),
+    newPropose(ctx, wal),
   ];
 
   const opt = {
     paymasterServiceData: { mode: PaymasterMode.SPONSORED },
   }
 
-  const { reason, receipt, success } = await (await wallet.contract!.contract()!.sendTransaction(txn, opt)).wait();
+  const { reason, receipt, success } = await (await wal.contract!.contract()!.sendTransaction(txn, opt)).wait();
 
   console.log("MarketsPropose.reason", `"${reason}"`);
   console.log("MarketsPropose.transactionHash", receipt.transactionHash);
   console.log("MarketsPropose.success", success);
 
-  return newResponse(receipt.logs, receipt.transactionHash);
+  {
+    ctx.hash = receipt.transactionHash;
+  }
+
+  return newResponse(ctx, receipt.logs);
 };
 
-const newApprove = (wallet: WalletMessage, input: { expiry: number, amount: number, token: TokenConfig }): Transaction => {
+const newApprove = (ctx: ProposeContext, wal: WalletMessage): Transaction => {
   const chain = ChainStore.getState().getActive();
   const markets = chain.contracts["Markets"];
 
   const encodedCall = encodeFunctionData({
-    abi: input.token.abi,
+    abi: ctx.token.abi,
     functionName: "approve",
     args: [
       markets.address,
-      parseUnits(String(input.amount), input.token.decimals),
+      parseUnits(String(ctx.amount), ctx.token.decimals),
     ],
   });
 
   return {
-    to: input.token.address,
+    to: ctx.token.address,
     data: encodedCall,
   };
 }
 
-const newDeposit = (wallet: WalletMessage, input: { expiry: number, amount: number, token: TokenConfig }): Transaction => {
+const newDeposit = (ctx: ProposeContext, wal: WalletMessage): Transaction => {
   const chain = ChainStore.getState().getActive();
   const markets = chain.contracts["Markets"];
 
@@ -56,9 +60,9 @@ const newDeposit = (wallet: WalletMessage, input: { expiry: number, amount: numb
     abi: markets.abi,
     functionName: "deposit",
     args: [
-      parseUnits(String(input.amount), input.token.decimals),
-      input.token.address,
-      wallet.contract!.address(),
+      parseUnits(String(ctx.amount), ctx.token.decimals),
+      ctx.token.address,
+      wal.contract!.address(),
     ],
   });
 
@@ -68,7 +72,7 @@ const newDeposit = (wallet: WalletMessage, input: { expiry: number, amount: numb
   };
 }
 
-const newPropose = (wallet: WalletMessage, input: { expiry: number, amount: number, token: TokenConfig }): Transaction => {
+const newPropose = (ctx: ProposeContext, wal: WalletMessage): Transaction => {
   const chain = ChainStore.getState().getActive();
   const markets = chain.contracts["Markets"];
 
@@ -80,10 +84,10 @@ const newPropose = (wallet: WalletMessage, input: { expiry: number, amount: numb
         "", // metadataURI, we have none right now
         0, // treeId, we get the new tree ID in teh response
         0, // nullifyMarketId, we are not nullifying here
-        parseUnits(String(input.amount), input.token.decimals), // amount, the amount we deposited
-        input.token.address, // asset, the token selected by the user
-        input.expiry, // expiry, unix timestamp in seconds
-        input.expiry, // expiry, unix timestamp in seconds
+        parseUnits(String(ctx.amount), ctx.token.decimals), // amount, the amount we deposited
+        ctx.token.address, // asset, the token selected by the user
+        ctx.expiry, // expiry, unix timestamp in seconds
+        ctx.expiry, // expiry, unix timestamp in seconds
         true, // option, agree or disagree with the claim
         false, // dispute, we are not disputing here
         [0, 0], // no time weighted staking share
@@ -97,7 +101,7 @@ const newPropose = (wallet: WalletMessage, input: { expiry: number, amount: numb
   };
 }
 
-const newResponse = (log: Log[], has: string): { tree: string, claim: string, hash: string } => {
+const newResponse = (ctx: ProposeContext, log: Log[]): ProposeContext => {
   const chain = ChainStore.getState().getActive();
   const markets = chain.contracts["Markets"];
 
@@ -111,9 +115,10 @@ const newResponse = (log: Log[], has: string): { tree: string, claim: string, ha
     logs: filtered,
   })
 
-  return {
-    tree: logs[0].args.propose.marketId.toString(),
-    claim: logs[0].args.claimId.toString(),
-    hash: has,
-  };
+  {
+    ctx.tree = logs[0].args.propose.marketId.toString();
+    ctx.claim = logs[0].args.claimId.toString();
+  }
+
+  return ctx;
 };

@@ -28,8 +28,12 @@ export async function VoteSearch(tok: string, req: VoteSearchRequest[]): Promise
       owner: x.intern?.owner || "",
 
       //public
+      chain: x.public?.chain || "",
       claim: x.public?.claim || "",
+      hash: x.public?.hash || "",
       kind: x.public?.kind || "",
+      lifecycle: x.public?.lifecycle || "",
+      meta: x.public?.meta || "",
       option: x.public?.option || "",
       value: x.public?.value || "",
     }));
