@@ -19,6 +19,7 @@ export const ClaimActions = (props: Props) => {
 
   const isClaim = props.claim.kind() === "claim" ? true : false;
   const isPage = usePathname() === "/claim/" + props.claim.id() ? true : false;
+  const isPending = props.claim.lifecycle() === "pending";
 
   return (
     // This relative container is the anchor for elements inside of the
@@ -57,7 +58,7 @@ export const ClaimActions = (props: Props) => {
         </div>
       )}
 
-      {isClaim && isPage && (
+      {isClaim && isPage && !isPending && (
         <ClaimButtons
           claim={props.claim}
           open={open}

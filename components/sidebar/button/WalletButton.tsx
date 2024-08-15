@@ -33,7 +33,7 @@ export const WalletButton = () => {
         <Link href={"/user/" + object.id() + "/activity"}>
           <BaseButton
             icon={<CurrentPulseIcon />}
-            text={"00.00"}
+            text={object.staked("UVX").toFixed(2)}
           />
         </Link>
       )}

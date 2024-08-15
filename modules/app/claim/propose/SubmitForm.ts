@@ -28,7 +28,7 @@ export const SubmitForm = async (suc: (pos: string, vot: string) => void) => {
   const editor = EditorStore.getState();
   const token = TokenStore.getState().token;
   const user = UserStore.getState().user;
-  const { wallet } = WalletStore.getState();
+  const wallet = WalletStore.getState().wallet;
 
   // Note that the order of the validation blocks below accomodates the user
   // experience when validating user input in the claim editor. The order of the

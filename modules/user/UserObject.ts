@@ -10,6 +10,18 @@ export class UserObject {
   }
 
   //
+  // extern
+  //
+
+  staked(tok: string): number {
+    for (const x of this.user.staked) {
+      if (x.token === tok) return parseFloat(x.balance);
+    }
+
+    return 0;
+  }
+
+  //
   // intern
   //
 

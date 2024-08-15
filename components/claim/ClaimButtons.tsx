@@ -53,6 +53,7 @@ export const ClaimButtons = (props: Props) => {
                 onSuccess={() => {
                   props.setOpen("");
                   query.claim.refresh();
+                  // TODO add vote amount to staked balance or fetch user object again
                 }}
               />
             </div>

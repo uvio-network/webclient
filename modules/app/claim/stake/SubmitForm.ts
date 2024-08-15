@@ -1,17 +1,23 @@
 import * as ToastSender from "@/components/toast/ToastSender";
 
+import { ChainStore } from "@/modules/chain/ChainStore";
 import { EditorMessage } from "@/components/app/claim/stake/editor/EditorStore";
 import { EditorStore } from "@/components/app/claim/stake/editor/EditorStore";
-import { UserMessage } from "@/modules/user/UserStore";
+import { EmptyVoteCreateResponse } from "@/modules/api/vote/create/Response";
+import { StakeContext } from "@/modules/context/StakeContext";
 import { UserStore } from "@/modules/user/UserStore";
 import { VoteCreate } from "@/modules/api/vote/create/Create";
 import { VoteCreateRequest } from "@/modules/api/vote/create/Request";
-import { VoteCreateResponse } from "@/modules/api/vote/create/Response";
+import { WalletMessage } from "@/modules/wallet/WalletStore";
+import { WalletStore } from "@/modules/wallet/WalletStore";
+import { MarketsStake } from "@/modules/transaction/MarketsStake";
 
 // SubmitForm validates user input and then performs the vote creation.
 export const SubmitForm = async (suc: (vot: string) => void) => {
+  const chain = ChainStore.getState().getActive();
   const user = UserStore.getState().user;
   const editor = EditorStore.getState();
+  const wallet = WalletStore.getState().wallet;
 
   {
     if (!editor.value || editor.value === "") {
@@ -25,12 +31,29 @@ export const SubmitForm = async (suc: (vot: string) => void) => {
     }
   }
 
-  const vot = await votCre(user, editor);
+  {
+    ToastSender.Info("Alrighty pumpkin, let's see if you got all the marbles.");
+  }
+
+  let ctx: StakeContext = {
+    amount: parseFloat(editor.value),
+    auth: user.token,
+    chain: chain.id.toString(),
+    claim: editor.claim,
+    hash: "", // filled on the fly
+    token: chain.tokens[editor.token],
+    vote: EmptyVoteCreateResponse(),
+  };
+
+  {
+    ctx = await chnCre(ctx, wallet);
+    ctx = await votCre(ctx, editor);
+  }
 
   {
     ToastSender.Success("Certified, you staked the shit out of that reputation!");
     editor.delete();
-    suc(vot.id);
+    suc(ctx.vote.id);
   }
 
   // TODO prevent duplicated submits
@@ -49,21 +72,33 @@ const inpNum = (inp: string): boolean => {
   return regex.test(inp);
 };
 
-const votCre = async (use: UserMessage, edi: EditorMessage): Promise<VoteCreateResponse> => {
+const chnCre = async (ctx: StakeContext, wal: WalletMessage): Promise<StakeContext> => {
+  try {
+    const res = await MarketsStake(ctx, wal);
+    return res;
+  } catch (err) {
+    console.error(err);
+    ToastSender.Error(err instanceof Error ? err.message : String(err));
+    return Promise.reject(err);
+  }
+}
+
+const votCre = async (ctx: StakeContext, edi: EditorMessage): Promise<StakeContext> => {
   const req: VoteCreateRequest = {
-    chain: "",
-    claim: edi.claim,
-    hash: "",
+    chain: ctx.chain,
+    claim: ctx.claim,
+    hash: ctx.hash,
     kind: "stake",
-    lifecycle: "",
+    lifecycle: "onchain",
     meta: "",
     option: edi.option,
     value: edi.value,
   };
 
   try {
-    const [res] = await VoteCreate(use.token, [req]);
-    return res;
+    const [res] = await VoteCreate(ctx.auth, [req]);
+    ctx.vote = res;
+    return ctx;
   } catch (err) {
     console.error(err);
     ToastSender.Error(err instanceof Error ? err.message : String(err));
