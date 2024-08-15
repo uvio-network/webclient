@@ -1,7 +1,7 @@
 import { SubmitForm } from "@/modules/app/claim/stake/SubmitForm";
 
 interface Props {
-  onSuccess: (vot: string) => void;
+  onSuccess: (vot: string, tok: string, amo: number) => void;
 }
 
 export const SubmitButton = (props: Props) => {

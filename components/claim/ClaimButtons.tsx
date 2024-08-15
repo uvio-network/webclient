@@ -8,6 +8,7 @@ import { EditorStore } from "@/components/app/claim/stake/editor/EditorStore";
 import { QueryStore } from "@/modules/query/QueryStore";
 import { StakeButtons } from "@/components/app/claim/stake/editor/StakeButtons";
 import { SubmitButton } from "@/components/app/claim/stake/editor/SubmitButton";
+import { TokenStore } from "@/modules/token/TokenStore";
 import { ValueField } from "@/components/app/claim/stake/field/ValueField";
 
 interface Props {
@@ -50,10 +51,10 @@ export const ClaimButtons = (props: Props) => {
 
             <div className="w-full ml-2">
               <SubmitButton
-                onSuccess={() => {
+                onSuccess={(vot: string, tok: string, amo: number) => {
                   props.setOpen("");
                   query.claim.refresh();
-                  // TODO add vote amount to staked balance or fetch user object again
+                  TokenStore.getState().updateAllocated(tok, amo);
                 }}
               />
             </div>
