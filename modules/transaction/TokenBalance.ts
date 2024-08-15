@@ -3,7 +3,7 @@ import { getContract } from "viem";
 import { TokenConfig } from "@/modules/token/TokenConfig";
 import { WalletMessage } from "@/modules/wallet/WalletStore";
 
-export const TokenBalance = async (wallet: WalletMessage, token: TokenConfig): Promise<string> => {
+export const TokenBalance = async (wallet: WalletMessage, token: TokenConfig): Promise<number> => {
   // Create an instance of the public token contract that we want to read from.
   const con = getContract({
     abi: token.abi,
@@ -18,6 +18,6 @@ export const TokenBalance = async (wallet: WalletMessage, token: TokenConfig): P
     ]),
   ]);
 
-  // Return a properly formatted floating point number as string.
-  return parseFloat(formatUnits(BigInt(String(bal)), token.decimals)).toFixed(token.precision);
+  // Return a properly formatted floating point number.
+  return parseFloat(formatUnits(BigInt(String(bal)), token.decimals));
 };

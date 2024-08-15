@@ -5,6 +5,8 @@ import { EditorMessage } from "@/components/app/claim/stake/editor/EditorStore";
 import { EditorStore } from "@/components/app/claim/stake/editor/EditorStore";
 import { EmptyVoteCreateResponse } from "@/modules/api/vote/create/Response";
 import { StakeContext } from "@/modules/context/StakeContext";
+import { TokenMessage } from "@/modules/token/TokenStore";
+import { TokenStore } from "@/modules/token/TokenStore";
 import { UserStore } from "@/modules/user/UserStore";
 import { VoteCreate } from "@/modules/api/vote/create/Create";
 import { VoteCreateRequest } from "@/modules/api/vote/create/Request";
@@ -13,10 +15,11 @@ import { WalletStore } from "@/modules/wallet/WalletStore";
 import { MarketsStake } from "@/modules/transaction/MarketsStake";
 
 // SubmitForm validates user input and then performs the vote creation.
-export const SubmitForm = async (suc: (vot: string) => void) => {
+export const SubmitForm = async (suc: (vot: string, tok: string, amo: number) => void) => {
   const chain = ChainStore.getState().getActive();
-  const user = UserStore.getState().user;
   const editor = EditorStore.getState();
+  const token = TokenStore.getState().available;
+  const user = UserStore.getState().user;
   const wallet = WalletStore.getState().wallet;
 
   {
@@ -28,6 +31,9 @@ export const SubmitForm = async (suc: (vot: string) => void) => {
     }
     if (parseFloat(editor.value) < editor.minimum) {
       return ToastSender.Error(`You must stake at least the minimum amount of ${editor.minimum} ${editor.token}.`);
+    }
+    if (!inpBal(editor.value, editor.token, token)) {
+      return ToastSender.Error(`You do not seem to have enough tokens to stake ${editor.value} ${editor.token}.`);
     }
   }
 
@@ -53,23 +59,28 @@ export const SubmitForm = async (suc: (vot: string) => void) => {
   {
     ToastSender.Success("Certified, you staked the shit out of that reputation!");
     editor.delete();
-    suc(ctx.vote.id);
+    suc(ctx.vote.id, editor.token, ctx.amount);
   }
 
   // TODO prevent duplicated submits
 };
 
-const regex = /^\d+(\.\d+)?/;
+const inpBal = (num: string, sym: string, tok: TokenMessage): boolean => {
+  const des = parseFloat(num);
+  const cur = tok[sym]?.balance || 0;
 
-// inpNum returns true if the given input string has a numerical prefix. This
-// prefix might be an integer or floating point number.
+  return cur >= des;
+};
+
+// inpNum returns true if the given input string is an integer or floating point
+// number.
 //
 //     5
 //     0.003
 //
-const inpNum = (inp: string): boolean => {
-  if (!inp || inp === "") return false;
-  return regex.test(inp);
+const inpNum = (num: string): boolean => {
+  if (num === "") return false;
+  return parseFloat(num) > 0;
 };
 
 const chnCre = async (ctx: StakeContext, wal: WalletMessage): Promise<StakeContext> => {

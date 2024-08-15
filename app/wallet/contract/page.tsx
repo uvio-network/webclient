@@ -18,7 +18,7 @@ import { WalletStore } from "@/modules/wallet/WalletStore";
 export default function Page() {
   const [deposit, setDeposit] = React.useState<boolean>(true);
 
-  const { token } = TokenStore();
+  const { available } = TokenStore();
   const { wallet } = WalletStore();
 
   const chain = ChainStore.getState().getActive();
@@ -86,9 +86,9 @@ export default function Page() {
                   {key}
                 </div>
                 <div className="w-full">
-                  {wallet.contract && (
+                  {available[key] && (
                     <>
-                      {token[key]}
+                      {available[key].balance.toFixed(available[key].precision)}
                     </>
                   )}
                 </div>
@@ -96,9 +96,7 @@ export default function Page() {
                   <BaseButton
                     background="none"
                     onClick={() => {
-                      if (wallet.contract) {
-                        TokenStore.getState().update(wallet, chain.tokens);
-                      }
+                      TokenStore.getState().updateAvailable();
                     }}
                     confirm={true}
                     padding="p-0"

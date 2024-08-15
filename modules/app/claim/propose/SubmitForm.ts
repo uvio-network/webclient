@@ -26,7 +26,7 @@ import { WalletStore } from "@/modules/wallet/WalletStore";
 export const SubmitForm = async (suc: (pos: string, vot: string) => void) => {
   const chain = ChainStore.getState().getActive();
   const editor = EditorStore.getState();
-  const token = TokenStore.getState().token;
+  const token = TokenStore.getState().available;
   const user = UserStore.getState().user;
   const wallet = WalletStore.getState().wallet;
 
@@ -134,7 +134,7 @@ export const SubmitForm = async (suc: (pos: string, vot: string) => void) => {
 
 const inpBal = (num: string, sym: string, tok: TokenMessage): boolean => {
   const des = parseFloat(num);
-  const cur = parseFloat(tok[sym]);
+  const cur = tok[sym]?.balance || 0;
 
   return cur >= des;
 };

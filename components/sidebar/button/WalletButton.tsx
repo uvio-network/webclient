@@ -3,7 +3,6 @@ import Link from "next/link";
 import * as React from "react";
 
 import { BaseButton } from "@/components/button/BaseButton";
-import { ChainStore } from "@/modules/chain/ChainStore";
 import { CurrencyDollarIcon } from "@/components/icon/CurrencyDollarIcon";
 import { CurrentPulseIcon } from "@/components/icon/CurrentPulseIcon";
 import { TokenStore } from "@/modules/token/TokenStore";
@@ -11,21 +10,22 @@ import { UserStore } from "@/modules/user/UserStore";
 import { useShallow } from "zustand/react/shallow";
 import { WalletStore } from "@/modules/wallet/WalletStore";
 
+// T is the currently hard coded default token.
+const T = "UVX";
+
 export const WalletButton = () => {
-  const { token } = TokenStore();
+  const { available } = TokenStore();
   const { wallet } = WalletStore();
 
   const { object } = UserStore(useShallow((state) => ({
     object: state.user.object,
   })));
 
-  const chain = ChainStore.getState().getActive();
-
   React.useEffect(() => {
     if (wallet.contract) {
-      TokenStore.getState().update(wallet, chain.tokens);
+      TokenStore.getState().updateAvailable();
     }
-  }, [wallet, wallet.contract, chain.tokens]);
+  }, [wallet, wallet.contract]);
 
   return (
     <>
@@ -33,16 +33,16 @@ export const WalletButton = () => {
         <Link href={"/user/" + object.id() + "/activity"}>
           <BaseButton
             icon={<CurrentPulseIcon />}
-            text={object.staked("UVX").toFixed(2)}
+            text={object.staked(T)}
           />
         </Link>
       )}
 
-      {token["UVX"] && (
+      {available[T] && (
         <Link href={"/wallet/contract"}>
           <BaseButton
             icon={<CurrencyDollarIcon />}
-            text={token["UVX"]}
+            text={available[T].balance.toFixed(available[T].precision)}
           />
         </Link>
       )}
