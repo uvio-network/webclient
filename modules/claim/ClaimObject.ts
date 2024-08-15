@@ -99,6 +99,10 @@ export class ClaimObject {
     return this.post.text;
   }
 
+  meta(): string[] {
+    return SplitList(this.post.meta);
+  }
+
   parent(): ClaimObject | undefined {
     return this.claimParent;
   }

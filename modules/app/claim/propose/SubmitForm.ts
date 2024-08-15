@@ -8,7 +8,7 @@ import { EditorStore } from "@/components/app/claim/propose/editor/EditorStore";
 import { EmptyPostCreateResponse } from "@/modules/api/post/create/Response";
 import { EmptyVoteCreateResponse } from "@/modules/api/vote/create/Response";
 import { HasDuplicate } from "@/modules/string/HasDuplicate";
-import { MarketsPropose } from "@/modules/transaction/MarketsPropose";
+import { MarketsPropose } from "@/modules/transaction/markets/MarketsPropose";
 import { PostCreate } from "@/modules/api/post/create/Create";
 import { PostCreateRequest } from "@/modules/api/post/create/Request";
 import { ProposeContext } from "@/modules/context/ProposeContext";
@@ -192,7 +192,7 @@ const posCre = async (ctx: ProposeContext, edi: EditorMessage): Promise<ProposeC
     expiry: ctx.expiry.toString(),
     kind: "claim",
     labels: SplitList(edi.labels).join(","),
-    lifecycle: "",
+    lifecycle: "propose",
     meta: ctx.tree + "," + ctx.claim,
     parent: "",
     text: edi.markdown,
@@ -213,10 +213,10 @@ const posCre = async (ctx: ProposeContext, edi: EditorMessage): Promise<ProposeC
 const votCre = async (ctx: ProposeContext, edi: EditorMessage): Promise<ProposeContext> => {
   const req: VoteCreateRequest = {
     chain: ctx.chain,
-    hash: ctx.hash,
     claim: ctx.post.id,
+    hash: ctx.hash,
     kind: "stake",
-    lifecycle: "",
+    lifecycle: "onchain",
     meta: "",
     option: "true",
     value: newAmo(edi).toString(),

@@ -4,7 +4,7 @@ import { getContract } from "viem";
 import { TokenConfig } from "@/modules/token/TokenConfig";
 import { WalletMessage } from "@/modules/wallet/WalletStore";
 
-export const MarketsBalance = async (wallet: WalletMessage, token: TokenConfig): Promise<string> => {
+export const MarketsBalance = async (wallet: WalletMessage, token: TokenConfig): Promise<number> => {
   const chain = ChainStore.getState().getActive();
   const markets = chain.contracts["Markets"];
 
@@ -24,5 +24,5 @@ export const MarketsBalance = async (wallet: WalletMessage, token: TokenConfig):
   ])
 
   // Return a properly formatted floating point number as string.
-  return parseFloat(formatUnits(BigInt(String(bal)), token.decimals)).toFixed(token.precision);
+  return parseFloat(formatUnits(BigInt(String(bal)), token.decimals));
 };

@@ -28,6 +28,7 @@ export const ClaimButtons = (props: Props) => {
       editor.updateClaim(props.claim.id())
       editor.updateMinimum(props.claim.votes().minimum)
       editor.updateToken(props.claim.token())
+      editor.updateTree(props.claim.meta()[0])
     }
   }, [props.claim, props.open, editor]);
 
