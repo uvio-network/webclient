@@ -55,6 +55,7 @@ export const ClaimButtons = (props: Props) => {
                   props.setOpen("");
                   query.claim.refresh();
                   TokenStore.getState().updateAllocated(tok, amo);
+                  TokenStore.getState().updateAvailable();
                 }}
               />
             </div>
