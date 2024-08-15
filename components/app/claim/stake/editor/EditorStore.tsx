@@ -4,8 +4,9 @@ import { combine } from "zustand/middleware";
 export interface EditorMessage {
   claim: string;
   minimum: number;
-  option: string;
+  option: boolean;
   token: string;
+  tree: string;
   value: string;
 };
 
@@ -18,7 +19,7 @@ export const EditorStore = create(
           return {
             claim: "",
             minimum: 0,
-            option: "",
+            option: false,
             token: "",
             value: "",
           };
@@ -44,7 +45,7 @@ export const EditorStore = create(
         set((state: EditorMessage) => {
           return {
             ...state,
-            option: o,
+            option: o.toLowerCase() === "true",
           };
         });
       },
@@ -53,6 +54,14 @@ export const EditorStore = create(
           return {
             ...state,
             token: t,
+          };
+        });
+      },
+      updateTree: (t: string) => {
+        set((state: EditorMessage) => {
+          return {
+            ...state,
+            tree: t,
           };
         });
       },

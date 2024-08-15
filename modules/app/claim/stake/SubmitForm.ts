@@ -12,7 +12,7 @@ import { VoteCreate } from "@/modules/api/vote/create/Create";
 import { VoteCreateRequest } from "@/modules/api/vote/create/Request";
 import { WalletMessage } from "@/modules/wallet/WalletStore";
 import { WalletStore } from "@/modules/wallet/WalletStore";
-import { MarketsStake } from "@/modules/transaction/MarketsStake";
+import { MarketsStake } from "@/modules/transaction/markets/MarketsStake";
 
 // SubmitForm validates user input and then performs the vote creation.
 export const SubmitForm = async (suc: (vot: string, tok: string, amo: number) => void) => {
@@ -47,7 +47,9 @@ export const SubmitForm = async (suc: (vot: string, tok: string, amo: number) =>
     chain: chain.id.toString(),
     claim: editor.claim,
     hash: "", // filled on the fly
+    option: editor.option,
     token: chain.tokens[editor.token],
+    tree: editor.tree,
     vote: EmptyVoteCreateResponse(),
   };
 
@@ -102,7 +104,7 @@ const votCre = async (ctx: StakeContext, edi: EditorMessage): Promise<StakeConte
     kind: "stake",
     lifecycle: "onchain",
     meta: "",
-    option: edi.option,
+    option: String(edi.option),
     value: edi.value,
   };
 

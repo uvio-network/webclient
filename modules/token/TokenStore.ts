@@ -1,7 +1,8 @@
 import { ChainStore } from "@/modules/chain/ChainStore";
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
-import { TokenBalance } from "@/modules/transaction/TokenBalance";
+import { MarketsBalance } from "@/modules/transaction/markets/MarketsBalance";
+import { TokenBalance } from "@/modules/transaction/token/TokenBalance";
 import { TokenConfig } from "@/modules/token/TokenConfig";
 import { WalletStore } from "@/modules/wallet/WalletStore";
 
@@ -44,11 +45,14 @@ export const TokenStore = create(
 
         await Promise.all(
           Object.entries(chn.tokens).map(async ([key, val]: [string, TokenConfig]) => {
-            const balance = await TokenBalance(wal, val);
+            const [mar, tok] = await Promise.all([
+              MarketsBalance(wal, val),
+              TokenBalance(wal, val),
+            ]);
 
             avl[key] = {
               ...val,
-              balance,
+              balance: mar + tok,
             };
           })
         );

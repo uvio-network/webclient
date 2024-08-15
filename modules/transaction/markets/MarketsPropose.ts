@@ -1,7 +1,8 @@
 import { ChainStore } from "@/modules/chain/ChainStore";
 import { encodeFunctionData } from "viem";
-import { isAddressEqual } from "viem";
 import { Log } from "viem";
+import { MarketsApprove } from "@/modules/transaction/markets/MarketsApprove";
+import { MarketsDeposit } from "@/modules/transaction/markets/MarketsDeposit";
 import { parseEventLogs } from "viem";
 import { parseUnits } from "viem";
 import { PaymasterMode } from "@biconomy/account";
@@ -11,16 +12,17 @@ import { WalletMessage } from "@/modules/wallet/WalletStore";
 
 export const MarketsPropose = async (ctx: ProposeContext, wal: WalletMessage): Promise<ProposeContext> => {
   const txn = [
-    newApprove(ctx, wal),
-    newDeposit(ctx, wal),
-    newPropose(ctx, wal),
+    MarketsApprove(ctx.amount, ctx.token),
+    MarketsDeposit(ctx.amount, ctx.token, wal),
+    newPropose(ctx),
   ];
 
   const opt = {
     paymasterServiceData: { mode: PaymasterMode.SPONSORED },
   }
 
-  const { reason, receipt, success } = await (await wal.contract!.contract()!.sendTransaction(txn, opt)).wait();
+  const res = await wal.contract!.contract()!.sendTransaction(txn, opt);
+  const { reason, receipt, success } = await res.wait();
 
   console.log("MarketsPropose.reason", `"${reason}"`);
   console.log("MarketsPropose.transactionHash", receipt.transactionHash);
@@ -33,46 +35,7 @@ export const MarketsPropose = async (ctx: ProposeContext, wal: WalletMessage): P
   return newResponse(ctx, receipt.logs);
 };
 
-const newApprove = (ctx: ProposeContext, wal: WalletMessage): Transaction => {
-  const chain = ChainStore.getState().getActive();
-  const markets = chain.contracts["Markets"];
-
-  const encodedCall = encodeFunctionData({
-    abi: ctx.token.abi,
-    functionName: "approve",
-    args: [
-      markets.address,
-      parseUnits(String(ctx.amount), ctx.token.decimals),
-    ],
-  });
-
-  return {
-    to: ctx.token.address,
-    data: encodedCall,
-  };
-}
-
-const newDeposit = (ctx: ProposeContext, wal: WalletMessage): Transaction => {
-  const chain = ChainStore.getState().getActive();
-  const markets = chain.contracts["Markets"];
-
-  const encodedCall = encodeFunctionData({
-    abi: markets.abi,
-    functionName: "deposit",
-    args: [
-      parseUnits(String(ctx.amount), ctx.token.decimals),
-      ctx.token.address,
-      wal.contract!.address(),
-    ],
-  });
-
-  return {
-    to: markets.address,
-    data: encodedCall,
-  };
-}
-
-const newPropose = (ctx: ProposeContext, wal: WalletMessage): Transaction => {
+const newPropose = (ctx: ProposeContext): Transaction => {
   const chain = ChainStore.getState().getActive();
   const markets = chain.contracts["Markets"];
 
@@ -105,14 +68,10 @@ const newResponse = (ctx: ProposeContext, log: Log[]): ProposeContext => {
   const chain = ChainStore.getState().getActive();
   const markets = chain.contracts["Markets"];
 
-  const filtered = log.filter((x: any) => {
-    return isAddressEqual(x.address, markets.address);
-  });
-
   const logs: any = parseEventLogs({
     abi: markets.abi,
     eventName: "Proposed",
-    logs: filtered,
+    logs: log,
   })
 
   {
