@@ -1,18 +1,15 @@
 import { SubmitForm } from "@/modules/app/claim/propose/SubmitForm";
-import { TokenStore } from "@/modules/token/TokenStore";
-import { useRouter } from "next/navigation";
 
-export const SubmitButton = () => {
-  const router = useRouter();
+interface Props {
+  onSuccess: (pos: string, vot: string, tok: string, amo: number) => void;
+}
 
+export const SubmitButton = (props: Props) => {
   return (
     <button
       className="flex-none px-1 bg-blue-500 text-white rounded"
       onClick={() => {
-        SubmitForm((pos: string) => {
-          TokenStore.getState().updateAvailable();
-          router.push(`/claim/${pos}`);
-        });
+        SubmitForm(props.onSuccess);
       }}
       type="button"
     >

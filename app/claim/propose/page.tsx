@@ -10,9 +10,13 @@ import { MarkdownPreview } from "@/components/app/claim/propose/preview/Markdown
 import { PageButton } from "@/components/page/PageButton";
 import { StakeField } from "@/components/app/claim/propose/field/StakeField";
 import { SubmitButton } from "@/components/app/claim/propose/editor/SubmitButton";
+import { TokenStore } from "@/modules/token/TokenStore";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
   const [edit, setEdit] = React.useState<boolean>(true);
+
+  const router = useRouter();
 
   return (
     <>
@@ -45,7 +49,13 @@ export default function Page() {
       <div className="flex">
         <ExpiryField />
         <StakeField />
-        <SubmitButton />
+        <SubmitButton
+          onSuccess={(pos: string, vot: string, tok: string, amo: number) => {
+            router.push(`/claim/${pos}`);
+            TokenStore.getState().updateAllocated(tok, amo);
+            TokenStore.getState().updateAvailable();
+          }}
+        />
       </div>
     </>
   );

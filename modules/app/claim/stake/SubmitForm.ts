@@ -57,7 +57,7 @@ export const SubmitForm = async (suc: (vot: string, tok: string, amo: number) =>
   }
 
   {
-    ToastSender.Success("Certified, you staked the shit out of that reputation!");
+    ToastSender.Success("Certified, you staked the shit out of that claim!");
     editor.delete();
     suc(ctx.vote.id, editor.token, ctx.amount);
   }

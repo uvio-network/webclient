@@ -23,7 +23,7 @@ import { WalletMessage } from "@/modules/wallet/WalletStore";
 import { WalletStore } from "@/modules/wallet/WalletStore";
 
 // SubmitForm validates user input and then performs the claim creation.
-export const SubmitForm = async (suc: (pos: string, vot: string) => void) => {
+export const SubmitForm = async (suc: (pos: string, vot: string, tok: string, amo: number) => void) => {
   const chain = ChainStore.getState().getActive();
   const editor = EditorStore.getState();
   const token = TokenStore.getState().available;
@@ -126,7 +126,7 @@ export const SubmitForm = async (suc: (pos: string, vot: string) => void) => {
   {
     ToastSender.Success("Hooray, thy claim proposed milady!");
     editor.delete();
-    suc(ctx.post.id, ctx.vote.id);
+    suc(ctx.post.id, ctx.vote.id, editor.stake.split(" ")[1], ctx.amount);
   }
 
   // TODO prevent duplicated submits
