@@ -77,10 +77,10 @@ export const SubmitForm = async (suc: (pos: string, vot: string, tok: string, am
     if (!editor.year || editor.year === "") {
       return ToastSender.Error("You must select a year for the claim expiry.");
     }
-    if (moment.unix(uni).isBefore(moment())) {
+    if (moment.unix(uni).isBefore(moment().utc())) {
       return ToastSender.Error("The selected expiry must not be in past.");
     }
-    if (moment.unix(uni).isBefore(moment().add(1, "day"))) {
+    if (moment.unix(uni).isBefore(moment().utc().add(1, "day"))) {
       return ToastSender.Error("The selected expiry must be at least 1 day in the future.");
     }
   }
