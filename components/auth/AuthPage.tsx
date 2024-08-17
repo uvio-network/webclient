@@ -10,8 +10,6 @@ export const AuthPage = ({ children }: { children: React.ReactNode }) => {
     valid: state.user.valid,
   })));
 
-  if (!valid) return;
-
   return (
     <>
       {valid ? (

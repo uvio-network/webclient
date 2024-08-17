@@ -68,13 +68,13 @@ export const SubmitForm = async (suc: (pos: string, vot: string, tok: string, am
   {
     const uni: number = newExp(editor)
 
-    if (editor.day === "") {
+    if (!editor.day || editor.day === "") {
       return ToastSender.Error("You must select a day for the claim expiry.");
     }
-    if (editor.month === "") {
+    if (!editor.month || editor.month === "") {
       return ToastSender.Error("You must select a month for the claim expiry.");
     }
-    if (editor.year === "") {
+    if (!editor.year || editor.year === "") {
       return ToastSender.Error("You must select a year for the claim expiry.");
     }
     if (moment.unix(uni).isBefore(moment())) {
