@@ -7,7 +7,7 @@ export const LabelsField = () => {
 
   return (
     <input
-      className="block w-full bg-white dark:bg-black outline-none"
+      className="block w-full mr-2 p-2 py-1 background placeholder outline-none"
       defaultValue={editor.labels}
       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
         editor.updateLabels(e.currentTarget.value);

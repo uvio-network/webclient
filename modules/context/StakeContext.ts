@@ -8,6 +8,7 @@ export interface StakeContext {
   claim: string;
   hash: string;
   option: boolean;
+  success: boolean;
   token: TokenConfig;
   tree: string;
   vote: VoteCreateResponse;

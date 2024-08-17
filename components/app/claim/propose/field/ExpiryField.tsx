@@ -1,26 +1,37 @@
 import moment from "moment";
 
-import * as React from "react";
-
 import { EditorStore } from "@/components/app/claim/propose/editor/EditorStore";
-import { TimeFormat } from "@/modules/app/claim/propose/TimeFormat";
-
-const defaultValue = moment(new Date()).add(1, "hour").startOf("hour").format(TimeFormat);
+import { SelectBox } from "@/components/select/SelectBox";
+import { Time } from "@/modules/time/Time";
 
 export const ExpiryField = () => {
   const editor = EditorStore.getState();
 
+  const time: Time = new Time(moment());
+
   return (
-    <div className="basis-3/4" >
-      <input
-        defaultValue={editor.expiry}
-        className="block mr-2 w-full bg-white dark:bg-black outline-none"
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          editor.updateExpiry(e.currentTarget.value);
-        }}
-        placeholder={defaultValue}
-        type="text"
-      />
+    <div className="grid grid-cols-12 gap-2">
+      <div className="col-span-3">
+        <SelectBox
+          onSelect={editor.updateDay}
+          selected={time.currentDay()}
+          values={time.allDays()}
+        />
+      </div>
+      <div className="col-span-3">
+        <SelectBox
+          onSelect={editor.updateMonth}
+          selected={time.currentMonth()}
+          values={time.allMonths()}
+        />
+      </div>
+      <div className="col-span-6">
+        <SelectBox
+          onSelect={editor.updateYear}
+          selected={time.currentYear()}
+          values={time.allYears()}
+        />
+      </div>
     </div>
   );
 };

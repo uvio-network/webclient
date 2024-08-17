@@ -13,7 +13,6 @@ import { PostCreate } from "@/modules/api/post/create/Create";
 import { PostCreateRequest } from "@/modules/api/post/create/Request";
 import { ProposeContext } from "@/modules/context/ProposeContext";
 import { SplitList } from "@/modules/string/SplitList";
-import { TimeFormat } from "@/modules/app/claim/propose/TimeFormat";
 import { TokenMessage } from "@/modules/token/TokenStore";
 import { TokenStore } from "@/modules/token/TokenStore";
 import { UserStore } from "@/modules/user/UserStore";
@@ -21,6 +20,7 @@ import { VoteCreate } from "@/modules/api/vote/create/Create";
 import { VoteCreateRequest } from "@/modules/api/vote/create/Request";
 import { WalletMessage } from "@/modules/wallet/WalletStore";
 import { WalletStore } from "@/modules/wallet/WalletStore";
+import { Unix } from "@/modules/time/Time";
 
 // SubmitForm validates user input and then performs the claim creation.
 export const SubmitForm = async (suc: (pos: string, vot: string, tok: string, amo: number) => void) => {
@@ -66,14 +66,22 @@ export const SubmitForm = async (suc: (pos: string, vot: string, tok: string, am
   }
 
   {
-    if (!editor.expiry || editor.expiry === "") {
-      return ToastSender.Error("The provided expiry must not be empty.");
+    const uni: number = newExp(editor)
+
+    if (!editor.day || editor.day === "") {
+      return ToastSender.Error("You must select a day for the claim expiry.");
     }
-    if (!moment(editor.expiry, TimeFormat, true).isValid()) {
-      return ToastSender.Error(`The provided expiry must be in the format ${TimeFormat}.`);
+    if (!editor.month || editor.month === "") {
+      return ToastSender.Error("You must select a month for the claim expiry.");
     }
-    if (moment(editor.expiry, TimeFormat).isBefore(moment())) {
-      return ToastSender.Error("The provided expiry must not be in past.");
+    if (!editor.year || editor.year === "") {
+      return ToastSender.Error("You must select a year for the claim expiry.");
+    }
+    if (moment.unix(uni).isBefore(moment().utc())) {
+      return ToastSender.Error("The selected expiry must not be in past.");
+    }
+    if (moment.unix(uni).isBefore(moment().utc().add(1, "day"))) {
+      return ToastSender.Error("The selected expiry must be at least 1 day in the future.");
     }
   }
 
@@ -112,6 +120,7 @@ export const SubmitForm = async (suc: (pos: string, vot: string, tok: string, am
     expiry: newExp(editor),
     hash: "", // filled on the fly
     post: EmptyPostCreateResponse(),
+    success: false,
     token: chain.tokens[editor.stake.split(" ")[1]],
     tree: "", // filled on the fly
     vote: EmptyVoteCreateResponse(),
@@ -171,7 +180,7 @@ const newAmo = (edi: EditorMessage): number => {
 };
 
 const newExp = (edi: EditorMessage): number => {
-  return moment(edi.expiry, TimeFormat, true).unix();
+  return Unix(`${edi.day} ${edi.month} ${edi.year}`);
 };
 
 const chnCre = async (ctx: ProposeContext, wal: WalletMessage): Promise<ProposeContext> => {

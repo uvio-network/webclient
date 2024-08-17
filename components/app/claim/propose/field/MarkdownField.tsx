@@ -7,7 +7,7 @@ export const MarkdownField = () => {
 
   return (
     <textarea
-      className="block w-full min-h-96 bg-white dark:bg-black outline-none"
+      className="block w-full min-h-96 background placeholder outline-none"
       defaultValue={editor.markdown}
       onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
         editor.updateMarkdown(e.currentTarget.value);

@@ -48,6 +48,7 @@ export const SubmitForm = async (suc: (vot: string, tok: string, amo: number) =>
     claim: editor.claim,
     hash: "", // filled on the fly
     option: editor.option,
+    success: false,
     token: chain.tokens[editor.token],
     tree: editor.tree,
     vote: EmptyVoteCreateResponse(),

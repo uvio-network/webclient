@@ -11,7 +11,7 @@ interface Props {
 
 export const LabelList = (props: Props) => {
   return (
-    <div className="flex">
+    <div className="flex py-1">
       <LifecycleLabel lifecycle={props.lifecycle} />
 
       {props.labels.map((x, i) => (

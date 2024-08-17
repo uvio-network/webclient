@@ -20,6 +20,16 @@
   color: black;
 }
 
+.dark .placeholder::placeholder {
+  /* text-gray-500 */
+  color: #6b7280;
+}
+
+.light .placeholder::placeholder {
+  /* text-gray-400  */
+  color: #9ca3af;
+}
+
 /* background */
 
 .dark .background {

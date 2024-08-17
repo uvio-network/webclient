@@ -7,7 +7,7 @@ interface Props {
 export const SubmitButton = (props: Props) => {
   return (
     <button
-      className="flex-none px-1 bg-blue-500 text-white rounded"
+      className="px-2 py-1 bg-blue-500 text-white rounded"
       onClick={() => {
         SubmitForm(props.onSuccess);
       }}

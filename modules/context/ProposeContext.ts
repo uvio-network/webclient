@@ -10,6 +10,7 @@ export interface ProposeContext {
   expiry: number;
   hash: string;
   post: PostCreateResponse;
+  success: boolean;
   token: TokenConfig;
   tree: string;
   vote: VoteCreateResponse;

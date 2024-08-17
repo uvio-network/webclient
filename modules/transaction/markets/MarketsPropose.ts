@@ -21,12 +21,22 @@ export const MarketsPropose = async (ctx: ProposeContext, wal: WalletMessage): P
     paymasterServiceData: { mode: PaymasterMode.SPONSORED },
   }
 
-  const res = await wal.contract!.contract()!.sendTransaction(txn, opt);
-  const { reason, receipt, success } = await res.wait();
+  console.log("MarketsPropose.ctx", ctx);
+  console.log("MarketsPropose.txn", txn);
 
-  console.log("MarketsPropose.reason", `"${reason}"`);
+  const res = await wal.contract!.contract()!.sendTransaction(txn, opt);
+  const { receipt, success } = await res.wait();
+
   console.log("MarketsPropose.transactionHash", receipt.transactionHash);
   console.log("MarketsPropose.success", success);
+
+  {
+    ctx.success = success.toLowerCase() === "true" ? true : false;
+  }
+
+  if (ctx.success === false || !receipt.logs) {
+    return ctx;
+  }
 
   {
     ctx.hash = receipt.transactionHash;

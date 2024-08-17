@@ -42,7 +42,7 @@ export const AuthProvider = () => {
   Privy.useLogin({
     onComplete: () => {
       setLogin(true);
-      console.log("useLogin.onComplete");
+      console.log("AuthProvider.onComplete");
     },
   });
 
@@ -51,14 +51,14 @@ export const AuthProvider = () => {
     // auth store.
     onAccessTokenGranted: (accessToken: string) => {
       UserStore.getState().updateToken(accessToken);
-      console.log("useToken.onAccessTokenGranted");
+      console.log("AuthProvider.onAccessTokenGranted");
     },
     // If the user's access token was revoked, we delete our internally tracked
     // state as well.
     onAccessTokenRemoved: () => {
       UserStore.getState().delete();
       WalletStore.getState().delete();
-      console.log("useToken.onAccessTokenRemoved");
+      console.log("AuthProvider.onAccessTokenRemoved");
     },
   });
 
