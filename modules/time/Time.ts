@@ -35,7 +35,7 @@ export class Time {
 };
 
 export const Unix = (str: string): number => {
-  const num: number = moment(str, "Do MMM YYYY", true).unix();
+  const num: number = moment(str, "Do MMM YYYY", true).utc().unix();
 
   if (isNaN(num)) {
     return 0;
