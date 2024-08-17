@@ -48,6 +48,11 @@ describe("Unix", () => {
     expect(uni).toEqual(0);
   });
 
+  test(`"  "`, () => {
+    const uni: number = Unix("  ");
+    expect(uni).toEqual(0);
+  });
+
   test("17th", () => {
     const uni: number = Unix("17th");
     expect(uni).toEqual(0);
@@ -80,6 +85,6 @@ describe("Unix", () => {
 
   test("17th Aug 2024", () => {
     const uni: number = Unix("17th Aug 2024");
-    expect(uni).toEqual(1723845600);
+    expect(uni).toEqual(1723852800);
   });
 });
