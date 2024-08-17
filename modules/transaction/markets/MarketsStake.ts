@@ -19,12 +19,22 @@ export const MarketsStake = async (ctx: StakeContext, wal: WalletMessage): Promi
     paymasterServiceData: { mode: PaymasterMode.SPONSORED },
   }
 
-  const res = await wal.contract!.contract()!.sendTransaction(txn, opt);
-  const { reason, receipt, success } = await res.wait();
+  console.log("MarketsStake.ctx", ctx);
+  console.log("MarketsStake.txn", txn);
 
-  console.log("MarketsStake.reason", `"${reason}"`);
+  const res = await wal.contract!.contract()!.sendTransaction(txn, opt);
+  const { receipt, success } = await res.wait();
+
   console.log("MarketsStake.transactionHash", receipt.transactionHash);
   console.log("MarketsStake.success", success);
+
+  {
+    ctx.success = success.toLowerCase() === "true" ? true : false;
+  }
+
+  if (ctx.success === false || !receipt.logs) {
+    return ctx;
+  }
 
   {
     ctx.hash = receipt.transactionHash;

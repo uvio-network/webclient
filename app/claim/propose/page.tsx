@@ -47,15 +47,21 @@ export default function Page() {
       )}
 
       <div className="flex">
-        <ExpiryField />
-        <StakeField />
-        <SubmitButton
-          onSuccess={(pos: string, vot: string, tok: string, amo: number) => {
-            router.push(`/claim/${pos}`);
-            TokenStore.getState().updateAllocated(tok, amo);
-            TokenStore.getState().updateAvailable();
-          }}
-        />
+        <div className="basis-3/4">
+          <ExpiryField />
+        </div>
+        <div className="basis-1/4">
+          <StakeField />
+        </div>
+        <div className="flex-none">
+          <SubmitButton
+            onSuccess={(pos: string, vot: string, tok: string, amo: number) => {
+              router.push(`/claim/${pos}`);
+              TokenStore.getState().updateAllocated(tok, amo);
+              TokenStore.getState().updateAvailable();
+            }}
+          />
+        </div>
       </div>
     </>
   );

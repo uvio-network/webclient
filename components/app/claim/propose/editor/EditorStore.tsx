@@ -2,10 +2,12 @@ import { create } from "zustand";
 import { combine } from "zustand/middleware";
 
 export interface EditorMessage {
-  expiry: string;
+  day: string;
   labels: string;
   markdown: string;
+  month: string;
   stake: string;
+  year: string;
 };
 
 export const EditorStore = create(
@@ -22,11 +24,11 @@ export const EditorStore = create(
           };
         });
       },
-      updateExpiry: (e: string) => {
+      updateDay: (d: string) => {
         set((state: EditorMessage) => {
           return {
             ...state,
-            expiry: e,
+            day: d,
           };
         });
       },
@@ -46,11 +48,27 @@ export const EditorStore = create(
           };
         });
       },
+      updateMonth: (m: string) => {
+        set((state: EditorMessage) => {
+          return {
+            ...state,
+            month: m,
+          };
+        });
+      },
       updateStake: (s: string) => {
         set((state: EditorMessage) => {
           return {
             ...state,
             stake: s,
+          };
+        });
+      },
+      updateYear: (y: string) => {
+        set((state: EditorMessage) => {
+          return {
+            ...state,
+            year: y,
           };
         });
       },
