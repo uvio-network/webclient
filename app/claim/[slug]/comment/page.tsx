@@ -10,6 +10,7 @@ import { MarkdownField } from "@/components/app/claim/comment/field/MarkdownFiel
 import { MarkdownPreview } from "@/components/app/claim/comment/preview/MarkdownPreview";
 import { PageButton } from "@/components/page/PageButton";
 import { PostSearch } from "@/modules/api/post/search/Search";
+import { QueryStore } from "@/modules/query/QueryStore";
 import { SubmitButton } from "@/components/app/claim/comment/editor/SubmitButton";
 import { useQuery } from "@tanstack/react-query";
 
@@ -17,8 +18,9 @@ export default function Page({ params }: { params: { slug: string } }) {
   const [edit, setEdit] = React.useState<boolean>(true);
 
   const editor = EditorStore.getState();
+  const query = QueryStore.getState().query;
 
-  const claim = useQuery({
+  const posts = useQuery({
     queryKey: ["claim", params.slug, "comment", "PostSearch"],
     queryFn: async () => {
       const pos = await PostSearch("", [{ id: params.slug }]);
@@ -33,7 +35,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         }
       }
     },
-  })
+  }, query.client)
 
   React.useEffect(() => {
     editor.updateClaim(params.slug)
@@ -41,13 +43,13 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   return (
     <>
-      {!claim.data && (
+      {!posts.data && (
         <>
           claim not found
         </>
       )}
 
-      {claim.data && (
+      {posts.data && (
         <>
           <div className="flex mb-6 w-full items-center">
             <PageButton
@@ -70,7 +72,7 @@ export default function Page({ params }: { params: { slug: string } }) {
           )}
 
           <ClaimPreview
-            claim={claim.data}
+            claim={posts.data}
           />
 
           <div className="grid place-content-end">

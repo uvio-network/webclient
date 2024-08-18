@@ -7,6 +7,7 @@ import { ClaimObject } from "@/modules/claim/ClaimObject";
 import { ClaimIDs } from "@/modules/claim/ClaimList";
 import { NewClaimList } from "@/modules/claim/ClaimList";
 import { NewVoteList } from "@/modules/vote/VoteList";
+import { LoadingStore } from "@/components/loading/LoadingStore";
 import { PostSearchRequest } from "@/modules/api/post/search/Request";
 import { QueryStore } from "@/modules/query/QueryStore";
 import { useQuery } from "@tanstack/react-query";
@@ -21,35 +22,33 @@ interface Props {
 }
 
 export const ClaimList = (props: Props) => {
-  const query = QueryStore.getState();
-
   const { token, valid } = UserStore(useShallow((state) => ({
     token: state.user.token,
     valid: state.user.valid,
   })));
 
-  const claims = useQuery({
+  const { query, updateClaim } = QueryStore.getState();
+
+  const posts = useQuery({
     queryKey: [...props.query, "NewClaimList"],
     queryFn: async () => {
       return await NewClaimList(props.request);
     },
-  })
+  }, query.client)
 
   // Fetching the votes of the authenticated user is conditional and depends on
   // the auth token, and the result of the claims query above.
   const votes = useQuery({
     queryKey: [...props.query, "NewVoteList"],
     queryFn: async () => {
-      return await NewVoteList(token, ClaimIDs(claims.data || []));
+      return await NewVoteList(token, ClaimIDs(posts.data || []));
     },
-    enabled: valid && !claims.isPending && claims.data?.length !== 0 ? true : false,
-  })
+    enabled: valid && !posts.isPending && posts.data?.length !== 0 ? true : false,
+  }, query.client)
 
-  query.updateClaim({
-    refresh: () => {
-      claims.refetch();
-      votes.refetch();
-    },
+  updateClaim(() => {
+    posts.refetch();
+    votes.refetch();
   });
 
   // We search for posts in all kinds of variations in this component. For one,
@@ -61,7 +60,7 @@ export const ClaimList = (props: Props) => {
   // that search queries are automatically extended at the moment in order to
   // provide claims with comments and comments with their parent claims. This
   // automatic extension is the reason for our filtering efforts here.
-  const list = getLis(claims.data || [], votes.data || [], props.page || "");
+  const list = getLis(posts.data || [], votes.data || [], props.page || "");
 
   // We want to embed claims on comment posts on basically every page, except on
   // the claim page where we show claims and their comments underneath. So if we
@@ -69,9 +68,21 @@ export const ClaimList = (props: Props) => {
   // as boolean flag to embed claims everywhere else but here.
   const embed = !(list.length >= 1 && list[0].id() === props.page && list[0].kind() === "claim");
 
+  {
+    const { loaded, loading } = LoadingStore();
+
+    React.useEffect(() => {
+      if (!posts.isPending) {
+        loaded();
+      }
+    }, [posts.isPending]);
+
+    if (loading) return <></>;
+  }
+
   return (
     <div>
-      {list.length === 0 && (
+      {list.length === 0 && !posts.isPending && (
         <>
           no claims found
         </>

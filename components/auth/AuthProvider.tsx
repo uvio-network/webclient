@@ -4,6 +4,7 @@ import * as ToastSender from "@/components/toast/ToastSender";
 
 import { EnsureUser } from "@/modules/user/EnsureUser";
 import { EnsureWallets } from "@/modules/wallet/EnsureWallets";
+import { LoadingStore } from "@/components/loading/LoadingStore";
 import { NewWalletContract } from "@/modules/wallet/WalletContract";
 import { Sleep } from "@/modules/sleep/Sleep";
 import { TokenStore } from "@/modules/token/TokenStore";
@@ -13,7 +14,7 @@ import { WalletStore } from "@/modules/wallet/WalletStore";
 export const AuthProvider = () => {
   const [login, setLogin] = React.useState<boolean>(false);
 
-  const { user } = Privy.usePrivy();
+  const { authenticated, user } = Privy.usePrivy();
   const { wallets, ready } = Privy.useWallets();
 
   // The user may have all kinds of wallets connected using all kinds of apps
@@ -41,6 +42,17 @@ export const AuthProvider = () => {
       mnt = false;
     };
   }, []);
+
+  // For every unauthenticated we have to acknowledge that the authorization
+  // process has been finished so that the intended interface can continue to
+  // render. So once we know the wallet interface is ready and that the user
+  // could not be authenticated in Pricy, we signal our own loading store to
+  // continue.
+  React.useEffect(() => {
+    if (!authenticated && ready) {
+      LoadingStore.getState().authorized();
+    }
+  }, [authenticated, ready]);
 
   React.useEffect(() => {
     if (embedded && login && ready && user) {
@@ -104,6 +116,10 @@ const setupAuth = async (user: Privy.User, signer: Privy.ConnectedWallet) => {
     {
       await EnsureUser(address, token);
       await EnsureWallets(contract, signer, token);
+    }
+
+    {
+      LoadingStore.getState().authorized();
       console.log("AuthProvider.setupAuth");
     }
   } catch (err) {

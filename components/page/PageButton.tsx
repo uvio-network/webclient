@@ -1,5 +1,7 @@
 import * as Separator from "@/components/page/separator";
 
+import { LoadingStore } from "@/components/loading/LoadingStore";
+
 interface Props {
   active: boolean;
   onClick: () => void;
@@ -7,6 +9,10 @@ interface Props {
 }
 
 export const PageButton = (props: Props) => {
+  const { loading } = LoadingStore();
+
+  if (loading) return <></>;
+
   return (
     <button
       className={`
