@@ -17,6 +17,15 @@ export const TokenStore = create(
       available: {} as TokenMessage,
     },
     (set, get) => ({
+      delete: () => {
+        set(() => {
+          return {
+            allocated: {},
+            available: {},
+          };
+        });
+      },
+
       updateAllocated: async (k: string, b: number) => {
         const chn = ChainStore.getState().getActive();
 

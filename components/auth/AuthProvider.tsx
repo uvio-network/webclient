@@ -5,6 +5,8 @@ import * as ToastSender from "@/components/toast/ToastSender";
 import { EnsureUser } from "@/modules/user/EnsureUser";
 import { EnsureWallets } from "@/modules/wallet/EnsureWallets";
 import { NewWalletContract } from "@/modules/wallet/WalletContract";
+import { Sleep } from "@/modules/sleep/Sleep";
+import { TokenStore } from "@/modules/token/TokenStore";
 import { UserStore } from "@/modules/user/UserStore";
 import { WalletStore } from "@/modules/wallet/WalletStore";
 
@@ -21,6 +23,25 @@ export const AuthProvider = () => {
     return x.connectorType === "embedded" && x.walletClientType === "privy";
   });
 
+  // Continuously check the user's access token in order to update it before it
+  // expires.
+  React.useEffect(() => {
+    let mnt = true;
+
+    const loop = async () => {
+      while (mnt) {
+        await updateToken();
+        await Sleep(60 * 1000);
+      }
+    };
+
+    loop();
+
+    return () => {
+      mnt = false;
+    };
+  }, []);
+
   React.useEffect(() => {
     if (embedded && login && ready && user) {
       // We have to reset our login flag because consecutive logins require to
@@ -32,7 +53,7 @@ export const AuthProvider = () => {
 
       // Finally process all external API calls and all data collected up to
       // this point in order to update our internal user store.
-      fetchData(user, embedded);
+      setupAuth(user, embedded);
     }
   }, [embedded, login, ready, user]);
 
@@ -42,7 +63,6 @@ export const AuthProvider = () => {
   Privy.useLogin({
     onComplete: () => {
       setLogin(true);
-      console.log("AuthProvider.onComplete");
     },
   });
 
@@ -56,6 +76,7 @@ export const AuthProvider = () => {
     // If the user's access token was revoked, we delete our internally tracked
     // state as well.
     onAccessTokenRemoved: () => {
+      TokenStore.getState().delete();
       UserStore.getState().delete();
       WalletStore.getState().delete();
       console.log("AuthProvider.onAccessTokenRemoved");
@@ -67,9 +88,7 @@ export const AuthProvider = () => {
   );
 };
 
-const fetchData = async (user: Privy.User, signer: Privy.ConnectedWallet) => {
-  console.log("AuthProvider.fetchData");
-
+const setupAuth = async (user: Privy.User, signer: Privy.ConnectedWallet) => {
   try {
     const token = await Privy.getAccessToken();
     if (!token) {
@@ -85,9 +104,20 @@ const fetchData = async (user: Privy.User, signer: Privy.ConnectedWallet) => {
     {
       await EnsureUser(address, token);
       await EnsureWallets(contract, signer, token);
+      console.log("AuthProvider.setupAuth");
     }
   } catch (err) {
     console.error(err);
     ToastSender.Error(err instanceof Error ? err.message : String(err));
+  }
+};
+
+const updateToken = async () => {
+  const des = await Privy.getAccessToken();
+  const cur = UserStore.getState().user.token;
+
+  if (des && des != cur) {
+    UserStore.getState().updateToken(des);
+    console.log("AuthProvider.updateToken");
   }
 };
