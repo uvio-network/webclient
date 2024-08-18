@@ -23,6 +23,8 @@ export const AuthProvider = () => {
     return x.connectorType === "embedded" && x.walletClientType === "privy";
   });
 
+  // Continuously check the user's access token in order to update it before it
+  // expires.
   React.useEffect(() => {
     let mnt = true;
 
