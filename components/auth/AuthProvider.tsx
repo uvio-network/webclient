@@ -5,10 +5,10 @@ import * as ToastSender from "@/components/toast/ToastSender";
 import { EnsureUser } from "@/modules/user/EnsureUser";
 import { EnsureWallets } from "@/modules/wallet/EnsureWallets";
 import { NewWalletContract } from "@/modules/wallet/WalletContract";
+import { Sleep } from "@/modules/sleep/Sleep";
 import { TokenStore } from "@/modules/token/TokenStore";
 import { UserStore } from "@/modules/user/UserStore";
 import { WalletStore } from "@/modules/wallet/WalletStore";
-import { Sleep } from "@/modules/sleep/Sleep";
 
 export const AuthProvider = () => {
   const [login, setLogin] = React.useState<boolean>(false);
