@@ -13,8 +13,10 @@ export const AuthPage = ({ children }: { children: React.ReactNode }) => {
   })));
 
   React.useEffect(() => {
-    loaded();
-  }, []);
+    if (!authorizing) {
+      loaded();
+    }
+  }, [authorizing]);
 
   if (loading || authorizing) return <></>;
 

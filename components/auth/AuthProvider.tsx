@@ -115,11 +115,11 @@ const setupAuth = async (user: Privy.User, signer: Privy.ConnectedWallet) => {
     // wallets depends on the user object being properly prepared and available.
     {
       await EnsureUser(address, token);
+      LoadingStore.getState().authorized();
       await EnsureWallets(contract, signer, token);
     }
 
     {
-      LoadingStore.getState().authorized();
       console.log("AuthProvider.setupAuth");
     }
   } catch (err) {
