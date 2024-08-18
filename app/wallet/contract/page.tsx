@@ -8,6 +8,7 @@ import * as ToastSender from "@/components/toast/ToastSender";
 import { BaseButton } from "@/components/button/BaseButton";
 import { ChainStore } from "@/modules/chain/ChainStore";
 import { CopyIcon } from "@/components/icon/CopyIcon";
+import { LoadingStore } from "@/components/loading/LoadingStore";
 import { OpenLinkIcon } from "@/components/icon/OpenLinkIcon";
 import { PageButton } from "@/components/page/PageButton";
 import { RefreshIcon } from "@/components/icon/RefreshIcon";
@@ -26,6 +27,16 @@ export default function Page() {
   const onClick = () => {
     ToastSender.Info("It's comming just chill ok!");
   };
+
+  {
+    const { loaded, loading } = LoadingStore();
+
+    React.useEffect(() => {
+      loaded();
+    }, []);
+
+    if (loading) return <></>;
+  }
 
   return (
     <>

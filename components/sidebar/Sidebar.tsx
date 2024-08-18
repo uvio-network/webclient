@@ -7,6 +7,7 @@ import { AppLogo } from "@/components/app/AppLogo";
 import { AuthButton } from "@/components/sidebar/button/AuthButton";
 import { BarsLeftIcon } from "@/components/icon/BarsLeftIcon";
 import { BaseButton } from "@/components/button/BaseButton";
+import { LoadingStore } from "@/components/loading/LoadingStore";
 import { ProposeButton } from "@/components/sidebar/button/ProposeButton";
 import { SocialButton } from "@/components/sidebar/button/SocialButton";
 import { ThemeButton } from "@/components/sidebar/button/ThemeButton";
@@ -42,6 +43,12 @@ export const Sidebar = () => {
       qry.removeEventListener("change", onChange);
     };
   }, []);
+
+  {
+    const { loading } = LoadingStore();
+
+    if (loading) return <></>;
+  }
 
   return (
     <div

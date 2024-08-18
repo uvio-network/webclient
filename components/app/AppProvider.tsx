@@ -30,8 +30,8 @@ export const AppProvider = () => {
           supportedChains: chain.getAll(),
         }}
       >
-        <Sidebar />
         <AuthProvider />
+        <Sidebar />
       </PrivyProvider >
 
       <ToastProvider />
