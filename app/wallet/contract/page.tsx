@@ -33,7 +33,7 @@ export default function Page() {
 
     React.useEffect(() => {
       loaded();
-    }, []);
+    });
 
     if (loading) return <></>;
   }
