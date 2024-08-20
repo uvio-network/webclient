@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { CategoryLabel } from "@/components/label/CategoryLabel";
 import { LifecycleLabel } from "@/components/label/LifecycleLabel";
-import { LabelCard } from "./LabelCard";
+import { LabelCard } from "@/components/label/LabelCard";
 
 interface Props {
   labels: string[];
