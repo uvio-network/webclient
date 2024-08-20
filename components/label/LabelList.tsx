@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { CategoryLabel } from "@/components/label/CategoryLabel";
 import { LifecycleLabel } from "@/components/label/LifecycleLabel";
+import { LabelCard } from "./LabelCard";
 
 interface Props {
   labels: string[];
@@ -12,7 +13,18 @@ interface Props {
 export const LabelList = (props: Props) => {
   return (
     <div className="flex py-1">
-      <LifecycleLabel lifecycle={props.lifecycle} />
+      {props.lifecycle === "pending" ? (
+        <LabelCard text="This claim's transaction has not yet finalized onchain.">
+          <LifecycleLabel dashed={true} lifecycle={props.lifecycle} />
+        </LabelCard>
+      ) : (
+        <Link
+          href={`/claim/lifecycle/${props.lifecycle}`}
+          target={props.target}
+        >
+          <LifecycleLabel dashed={false} lifecycle={props.lifecycle} />
+        </Link>
+      )}
 
       {props.labels.map((x, i) => (
         <Link
