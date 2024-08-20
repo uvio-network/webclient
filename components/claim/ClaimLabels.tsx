@@ -1,4 +1,4 @@
-import { LabelList } from "@/components/claim/LabelList";
+import { LabelList } from "@/components/label/LabelList";
 
 interface Props {
   labels: string[];

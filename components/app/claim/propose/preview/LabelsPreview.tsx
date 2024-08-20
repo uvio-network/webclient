@@ -1,5 +1,5 @@
 import { EditorStore } from "@/components/app/claim/propose/editor/EditorStore";
-import { LabelList } from "@/components/claim/LabelList";
+import { LabelList } from "@/components/label/LabelList";
 import { SplitList } from "@/modules/string/SplitList";
 
 export const LabelsPreview = () => {
