@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   title: "Uvio | See What's Real",
   description: "Uvio is the social network for prediction markets!",
   keywords: ["prediction market", "social network"],
+  twitter: { card: "summary", site: "@uvio.network" }
 }
 
 export const viewport: Viewport = {

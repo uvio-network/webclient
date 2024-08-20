@@ -121,16 +121,14 @@ const components = (edi: boolean, emb: boolean): Components => {
     },
     li(props) {
       return <li
-        className={`
-          ml-2
-        `}
+        className={``}
         {...getRst(props)}
       />;
     },
     hr(props) {
       return <hr
         className={`
-          my-4 border-gray-300 dark:border-gray-600
+          my-4 border-color
         `}
         {...getRst(props)}
       />;

@@ -4,4 +4,5 @@ export interface PostUpdateRequest {
 
   // public
   hash: string;
+  meta: string;
 }

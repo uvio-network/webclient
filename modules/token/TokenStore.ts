@@ -26,22 +26,42 @@ export const TokenStore = create(
         });
       },
 
-      updateAllocated: async (k: string, b: number) => {
+      deleteAllocated: async (k: string, b: number) => {
         const chn = ChainStore.getState().getActive();
 
-        const alo = get().allocated;
+        if (!get().allocated[k]) {
+          return;
+        }
 
         set((state: { allocated: TokenMessage }) => {
-          const balance = (state.allocated[k]?.balance || 0) + b;
+          const balance = state.allocated[k].balance - b;
 
-          alo[k] = {
+          state.allocated[k] = {
             ...chn.tokens[k],
             balance,
           };
 
           return {
             ...state,
-            allocated: alo,
+            allocated: state.allocated,
+          };
+        });
+      },
+
+      updateAllocated: async (k: string, b: number) => {
+        const chn = ChainStore.getState().getActive();
+
+        set((state: { allocated: TokenMessage }) => {
+          const balance = (state.allocated[k]?.balance || 0) + b;
+
+          state.allocated[k] = {
+            ...chn.tokens[k],
+            balance,
+          };
+
+          return {
+            ...state,
+            allocated: state.allocated,
           };
         });
       },

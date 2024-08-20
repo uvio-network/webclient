@@ -12,6 +12,7 @@ export async function PostUpdate(tok: string, req: PostUpdateRequest[]): Promise
           },
           public: {
             hash: x.hash,
+            meta: x.meta,
           },
         })),
       },

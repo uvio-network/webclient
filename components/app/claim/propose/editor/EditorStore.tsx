@@ -13,7 +13,7 @@ export interface EditorMessage {
 export const EditorStore = create(
   combine(
     {} as EditorMessage,
-    (set) => ({
+    (set, get) => ({
       delete: () => {
         set(() => {
           return {
@@ -23,6 +23,30 @@ export const EditorStore = create(
             stake: "",
           };
         });
+      },
+      getAmount: (): number => {
+        const spl = get().stake.split(" ");
+
+        if (!spl || spl.length !== 2) {
+          return 0;
+        }
+
+        const str = spl[0];
+
+        if (str === "") {
+          return 0;
+        }
+
+        return parseFloat(str);
+      },
+      getToken: (): string => {
+        const spl = get().stake.split(" ");
+
+        if (!spl || spl.length !== 2) {
+          return "";
+        }
+
+        return spl[1];
       },
       updateDay: (d: string) => {
         set((state: EditorMessage) => {

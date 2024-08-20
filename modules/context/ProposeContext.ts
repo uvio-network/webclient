@@ -11,6 +11,7 @@ export interface ProposeContext {
   hash: string;
   post: PostCreateResponse;
   success: boolean;
+  symbol: string;
   token: TokenConfig;
   tree: string;
   vote: VoteCreateResponse;
