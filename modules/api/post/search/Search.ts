@@ -15,6 +15,7 @@ export async function PostSearch(tok: string, req: PostSearchRequest[]): Promise
           },
           public: {
             labels: x.labels || "",
+            lifecycle: x.lifecycle || "",
           },
           symbol: {
             list: x.list || "",

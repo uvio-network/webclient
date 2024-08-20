@@ -7,6 +7,7 @@ import { AppLogo } from "@/components/app/AppLogo";
 import { AuthButton } from "@/components/sidebar/button/AuthButton";
 import { BarsLeftIcon } from "@/components/icon/BarsLeftIcon";
 import { BaseButton } from "@/components/button/BaseButton";
+import { LifecycleButton } from "@/components/sidebar/button/LifecycleButton";
 import { LoadingStore } from "@/components/loading/LoadingStore";
 import { ProposeButton } from "@/components/sidebar/button/ProposeButton";
 import { SocialButton } from "@/components/sidebar/button/SocialButton";
@@ -68,6 +69,10 @@ export const Sidebar = () => {
 
         {/* lists */}
         <ProposeButton />
+
+        <Separator.Horizontal />
+
+        <LifecycleButton />
 
         <Separator.Horizontal />
 

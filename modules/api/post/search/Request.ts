@@ -6,6 +6,7 @@ export interface PostSearchRequest {
 
   // public
   labels?: string;
+  lifecycle?: string;
 
   // symbol
   list?: string;
