@@ -60,13 +60,13 @@ export default function Page() {
             error={(ctx: ProposeContext) => {
               TokenStore.getState().deleteAllocated(ctx.symbol, ctx.amount);
             }}
-            onchain={(ctx: ProposeContext) => {
-              QueryStore.getState().claim.refresh();
-              TokenStore.getState().updateAvailable();
-            }}
             offchain={(ctx: ProposeContext) => {
               router.push(`/claim/${ctx.post.id}`);
               TokenStore.getState().updateAllocated(ctx.symbol, ctx.amount);
+            }}
+            onchain={(ctx: ProposeContext) => {
+              QueryStore.getState().claim.refresh();
+              TokenStore.getState().updateAvailable();
             }}
           />
         </div>

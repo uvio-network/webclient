@@ -56,14 +56,14 @@ export const ClaimButtons = (props: Props) => {
                 error={(ctx: StakeContext) => {
                   TokenStore.getState().deleteAllocated(ctx.symbol, ctx.amount);
                 }}
-                onchain={(ctx: StakeContext) => {
-                  QueryStore.getState().claim.refresh();
-                  TokenStore.getState().updateAvailable();
-                }}
                 offchain={(ctx: StakeContext) => {
                   props.setOpen("");
                   query.claim.refresh();
                   TokenStore.getState().updateAllocated(ctx.symbol, ctx.amount);
+                }}
+                onchain={(ctx: StakeContext) => {
+                  QueryStore.getState().claim.refresh();
+                  TokenStore.getState().updateAvailable();
                 }}
               />
             </div>
