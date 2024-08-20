@@ -10,6 +10,7 @@ import { StakeButtons } from "@/components/app/claim/stake/editor/StakeButtons";
 import { SubmitButton } from "@/components/app/claim/stake/editor/SubmitButton";
 import { TokenStore } from "@/modules/token/TokenStore";
 import { ValueField } from "@/components/app/claim/stake/field/ValueField";
+import { StakeContext } from "@/modules/context/StakeContext";
 
 interface Props {
   claim: ClaimObject;
@@ -52,10 +53,16 @@ export const ClaimButtons = (props: Props) => {
 
             <div className="w-full ml-2">
               <SubmitButton
-                onSuccess={(vot: string, tok: string, amo: number) => {
+                error={(ctx: StakeContext) => {
+                  TokenStore.getState().deleteAllocated(ctx.symbol, ctx.amount);
+                }}
+                offchain={(ctx: StakeContext) => {
                   props.setOpen("");
                   query.claim.refresh();
-                  TokenStore.getState().updateAllocated(tok, amo);
+                  TokenStore.getState().updateAllocated(ctx.symbol, ctx.amount);
+                }}
+                onchain={(ctx: StakeContext) => {
+                  QueryStore.getState().claim.refresh();
                   TokenStore.getState().updateAvailable();
                 }}
               />

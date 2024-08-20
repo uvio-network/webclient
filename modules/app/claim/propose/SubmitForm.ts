@@ -94,7 +94,7 @@ export const SubmitForm = async (err: (ctx: ProposeContext) => void, off: (ctx: 
     const sym = editor.getToken();
     const lis = Object.keys(chain.tokens);
 
-    if (!editor.stake || editor.stake === "") {
+    if (num === 0) {
       return ToastSender.Error("You must stake reputation with your claim.");
     }
     if (!inpPrt(editor.stake)) {

@@ -41,7 +41,7 @@ export const AuthProvider = () => {
     return () => {
       mnt = false;
     };
-  }, []);
+  });
 
   // For every unauthenticated we have to acknowledge that the authorization
   // process has been finished so that the intended interface can continue to
