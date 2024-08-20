@@ -1,7 +1,10 @@
+import { ProposeContext } from "@/modules/context/ProposeContext";
 import { SubmitForm } from "@/modules/app/claim/propose/SubmitForm";
 
 interface Props {
-  onSuccess: (pos: string, vot: string, tok: string, amo: number) => void;
+  error: (ctx: ProposeContext) => void;
+  offchain: (ctx: ProposeContext) => void;
+  onchain: (ctx: ProposeContext) => void;
 }
 
 export const SubmitButton = (props: Props) => {
@@ -9,7 +12,7 @@ export const SubmitButton = (props: Props) => {
     <button
       className="px-2 py-1 bg-blue-500 text-white rounded"
       onClick={() => {
-        SubmitForm(props.onSuccess);
+        SubmitForm(props.error, props.offchain, props.onchain);
       }}
       type="button"
     >

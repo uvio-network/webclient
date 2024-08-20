@@ -4,4 +4,5 @@ export interface VoteUpdateRequest {
 
   // public
   hash: string;
+  meta: string;
 }

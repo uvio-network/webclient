@@ -11,6 +11,8 @@ import { HasDuplicate } from "@/modules/string/HasDuplicate";
 import { MarketsPropose } from "@/modules/transaction/markets/MarketsPropose";
 import { PostCreate } from "@/modules/api/post/create/Create";
 import { PostCreateRequest } from "@/modules/api/post/create/Request";
+import { PostUpdate } from "@/modules/api/post/update/Update";
+import { PostUpdateRequest } from "@/modules/api/post/update/Request";
 import { ProposeContext } from "@/modules/context/ProposeContext";
 import { SplitList } from "@/modules/string/SplitList";
 import { TokenMessage } from "@/modules/token/TokenStore";
@@ -21,9 +23,11 @@ import { VoteCreateRequest } from "@/modules/api/vote/create/Request";
 import { WalletMessage } from "@/modules/wallet/WalletStore";
 import { WalletStore } from "@/modules/wallet/WalletStore";
 import { Unix } from "@/modules/time/Time";
+import { VoteUpdateRequest } from "@/modules/api/vote/update/Request";
+import { VoteUpdate } from "@/modules/api/vote/update/Update";
 
 // SubmitForm validates user input and then performs the claim creation.
-export const SubmitForm = async (suc: (pos: string, vot: string, tok: string, amo: number) => void) => {
+export const SubmitForm = async (err: (ctx: ProposeContext) => void, off: (ctx: ProposeContext) => void, onc: (ctx: ProposeContext) => void) => {
   const chain = ChainStore.getState().getActive();
   const editor = EditorStore.getState();
   const token = TokenStore.getState().available;
@@ -86,9 +90,8 @@ export const SubmitForm = async (suc: (pos: string, vot: string, tok: string, am
   }
 
   {
-    const spl = editor.stake.split(" ");
-    const num = spl[0];
-    const sym = spl[1];
+    const num = editor.getAmount();
+    const sym = editor.getToken();
     const lis = Object.keys(chain.tokens);
 
     if (!editor.stake || editor.stake === "") {
@@ -108,12 +111,8 @@ export const SubmitForm = async (suc: (pos: string, vot: string, tok: string, am
     }
   }
 
-  {
-    ToastSender.Info("Alrighty pumpkin, let's see if you got all the marbles.");
-  }
-
   let ctx: ProposeContext = {
-    amount: newAmo(editor),
+    amount: editor.getAmount(),
     auth: user.token,
     chain: chain.id.toString(),
     claim: "", // filled on the fly
@@ -121,28 +120,41 @@ export const SubmitForm = async (suc: (pos: string, vot: string, tok: string, am
     hash: "", // filled on the fly
     post: EmptyPostCreateResponse(),
     success: false,
-    token: chain.tokens[editor.stake.split(" ")[1]],
+    symbol: editor.getToken(),
+    token: chain.tokens[editor.getToken()],
     tree: "", // filled on the fly
     vote: EmptyVoteCreateResponse(),
   };
 
   {
-    ctx = await chnCre(ctx, wallet);
-    ctx = await posCre(ctx, editor);
-    ctx = await votCre(ctx, editor);
+    ctx = await posCre(ctx);
+    ctx = await votCre(ctx);
   }
 
   {
     ToastSender.Success("Hooray, thy claim proposed milady!");
     editor.delete();
-    suc(ctx.post.id, ctx.vote.id, editor.stake.split(" ")[1], ctx.amount);
+    off(ctx);
+  }
+
+  {
+    ctx = await chnCre(ctx, wallet);
+  }
+
+  if (ctx.success === true) {
+    await posUpd(ctx);
+    await votUpd(ctx);
+    onc(ctx);
+  } else {
+    ToastSender.Success("Ohh, nope, that was not good enough!");
+    err(ctx);
   }
 
   // TODO prevent duplicated submits
 };
 
-const inpBal = (num: string, sym: string, tok: TokenMessage): boolean => {
-  const des = parseFloat(num);
+const inpBal = (num: number, sym: string, tok: TokenMessage): boolean => {
+  const des = num;
   const cur = tok[sym]?.balance || 0;
 
   return cur >= des;
@@ -157,15 +169,13 @@ const inpPrt = (inp: string): boolean => {
   return inp.split(" ").length === 2;
 };
 
-// inpNum returns true if the given input string is an integer or floating point
-// number.
+// inpNum returns true if the given input number is valid and greater than zero.
 //
 //     5
 //     0.003
 //
-const inpNum = (num: string): boolean => {
-  if (num === "") return false;
-  return parseFloat(num) > 0;
+const inpNum = (num: number): boolean => {
+  return !isNaN(num) && num > 0;
 };
 
 // inpSym returns true if the given input string has one of the whitelisted
@@ -173,10 +183,6 @@ const inpNum = (num: string): boolean => {
 const inpSym = (sym: string, lis: string[]): boolean => {
   if (sym === "") return false;
   return lis.some((x) => x === sym);
-};
-
-const newAmo = (edi: EditorMessage): number => {
-  return parseFloat(edi.stake.split(" ")[0]);
 };
 
 const newExp = (edi: EditorMessage): number => {
@@ -194,18 +200,20 @@ const chnCre = async (ctx: ProposeContext, wal: WalletMessage): Promise<ProposeC
   }
 }
 
-const posCre = async (ctx: ProposeContext, edi: EditorMessage): Promise<ProposeContext> => {
+const posCre = async (ctx: ProposeContext): Promise<ProposeContext> => {
+  const editor = EditorStore.getState();
+
   const req: PostCreateRequest = {
     chain: ctx.chain,
-    hash: ctx.hash,
+    hash: "",
     expiry: ctx.expiry.toString(),
     kind: "claim",
-    labels: SplitList(edi.labels).join(","),
+    labels: SplitList(editor.labels).join(","),
     lifecycle: "propose",
-    meta: ctx.tree + "," + ctx.claim,
+    meta: "",
     parent: "",
-    text: edi.markdown,
-    token: edi.stake.split(" ")[1],
+    text: editor.markdown,
+    token: editor.getToken(),
   };
 
   try {
@@ -219,22 +227,60 @@ const posCre = async (ctx: ProposeContext, edi: EditorMessage): Promise<ProposeC
   }
 }
 
-const votCre = async (ctx: ProposeContext, edi: EditorMessage): Promise<ProposeContext> => {
+const posUpd = async (ctx: ProposeContext) => {
+  const req: PostUpdateRequest = {
+    // intern
+    id: ctx.post.id,
+    // public
+    hash: ctx.hash,
+    meta: ctx.tree + "," + ctx.claim,
+  };
+
+  try {
+    const [res] = await PostUpdate(ctx.auth, [req]);
+  } catch (err) {
+    console.error(err);
+    ToastSender.Error(err instanceof Error ? err.message : String(err));
+    return Promise.reject(err);
+  }
+}
+
+const votCre = async (ctx: ProposeContext): Promise<ProposeContext> => {
+  const editor = EditorStore.getState();
+
   const req: VoteCreateRequest = {
     chain: ctx.chain,
     claim: ctx.post.id,
-    hash: ctx.hash,
+    hash: "",
     kind: "stake",
     lifecycle: "onchain",
     meta: "",
     option: "true",
-    value: newAmo(edi).toString(),
+    value: editor.getAmount().toString(),
   };
 
   try {
     const [res] = await VoteCreate(ctx.auth, [req]);
     ctx.vote = res;
     return ctx;
+  } catch (err) {
+    console.error(err);
+    ToastSender.Error(err instanceof Error ? err.message : String(err));
+    return Promise.reject(err);
+  }
+}
+
+const votUpd = async (ctx: ProposeContext) => {
+  const req: VoteUpdateRequest = {
+    // intern
+    id: ctx.vote.id,
+    // public
+    hash: ctx.hash,
+    meta: "",
+  };
+
+  try {
+    const [res] = await VoteUpdate(ctx.auth, [req]);
   } catch (err) {
     console.error(err);
     ToastSender.Error(err instanceof Error ? err.message : String(err));

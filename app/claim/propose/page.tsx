@@ -8,6 +8,8 @@ import { LabelsPreview } from "@/components/app/claim/propose/preview/LabelsPrev
 import { MarkdownField } from "@/components/app/claim/propose/field/MarkdownField";
 import { MarkdownPreview } from "@/components/app/claim/propose/preview/MarkdownPreview";
 import { PageButton } from "@/components/page/PageButton";
+import { ProposeContext } from "@/modules/context/ProposeContext";
+import { QueryStore } from "@/modules/query/QueryStore";
 import { StakeField } from "@/components/app/claim/propose/field/StakeField";
 import { SubmitButton } from "@/components/app/claim/propose/editor/SubmitButton";
 import { TokenStore } from "@/modules/token/TokenStore";
@@ -55,10 +57,16 @@ export default function Page() {
         </div>
         <div className="flex-none">
           <SubmitButton
-            onSuccess={(pos: string, vot: string, tok: string, amo: number) => {
-              router.push(`/claim/${pos}`);
-              TokenStore.getState().updateAllocated(tok, amo);
+            error={(ctx: ProposeContext) => {
+              TokenStore.getState().deleteAllocated(ctx.symbol, ctx.amount);
+            }}
+            onchain={(ctx: ProposeContext) => {
+              QueryStore.getState().claim.refresh();
               TokenStore.getState().updateAvailable();
+            }}
+            offchain={(ctx: ProposeContext) => {
+              router.push(`/claim/${ctx.post.id}`);
+              TokenStore.getState().updateAllocated(ctx.symbol, ctx.amount);
             }}
           />
         </div>

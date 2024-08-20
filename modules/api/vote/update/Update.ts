@@ -12,6 +12,7 @@ export async function VoteUpdate(tok: string, req: VoteUpdateRequest[]): Promise
           },
           public: {
             hash: x.hash,
+            meta: x.meta,
           },
         })),
       },
