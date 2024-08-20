@@ -13,7 +13,7 @@ export interface EditorMessage {
 export const EditorStore = create(
   combine(
     {} as EditorMessage,
-    (set) => ({
+    (set, get) => ({
       delete: () => {
         set(() => {
           return {
