@@ -29,7 +29,6 @@ export const ClaimButtons = (props: Props) => {
       editor.updateClaim(props.claim.id())
       editor.updateMinimum(props.claim.votes().minimum)
       editor.updateToken(props.claim.token())
-      editor.updateTree(props.claim.meta()[0])
     }
   }, [props.claim, props.open, editor]);
 
@@ -54,16 +53,16 @@ export const ClaimButtons = (props: Props) => {
             <div className="w-full ml-2">
               <SubmitButton
                 error={(ctx: StakeContext) => {
-                  TokenStore.getState().deleteAllocated(ctx.symbol, ctx.amount);
+                  TokenStore.getState().updateBalance();
                 }}
                 offchain={(ctx: StakeContext) => {
                   props.setOpen("");
-                  query.claim.refresh();
-                  TokenStore.getState().updateAllocated(ctx.symbol, ctx.amount);
+                  query.claim.refresh(); // TODO why do we use the different query scope here?
+                  TokenStore.getState().updateBalance();
                 }}
                 onchain={(ctx: StakeContext) => {
                   QueryStore.getState().claim.refresh();
-                  TokenStore.getState().updateAvailable();
+                  TokenStore.getState().updateBalance();
                 }}
               />
             </div>

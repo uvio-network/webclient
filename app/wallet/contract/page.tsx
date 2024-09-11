@@ -107,7 +107,7 @@ export default function Page() {
                   <BaseButton
                     background="none"
                     onClick={() => {
-                      TokenStore.getState().updateAvailable();
+                      TokenStore.getState().updateBalance();
                     }}
                     confirm={true}
                     padding="p-0"

@@ -1,8 +1,8 @@
 import { ChainStore } from "@/modules/chain/ChainStore";
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
-import { MarketsBalance } from "@/modules/transaction/markets/MarketsBalance";
-import { TokenBalance } from "@/modules/transaction/token/TokenBalance";
+import { SearchBalance } from "@/modules/transaction/claims/read/SearchBalance";
+import { TokenBalance } from "@/modules/transaction/token/read/TokenBalance";
 import { TokenConfig } from "@/modules/token/TokenConfig";
 import { WalletStore } from "@/modules/wallet/WalletStore";
 
@@ -26,69 +26,35 @@ export const TokenStore = create(
         });
       },
 
-      deleteAllocated: async (k: string, b: number) => {
-        const chn = ChainStore.getState().getActive();
-
-        if (!get().allocated[k]) {
-          return;
-        }
-
-        set((state: { allocated: TokenMessage }) => {
-          const balance = state.allocated[k].balance - b;
-
-          state.allocated[k] = {
-            ...chn.tokens[k],
-            balance,
-          };
-
-          return {
-            ...state,
-            allocated: state.allocated,
-          };
-        });
-      },
-
-      updateAllocated: async (k: string, b: number) => {
-        const chn = ChainStore.getState().getActive();
-
-        set((state: { allocated: TokenMessage }) => {
-          const balance = (state.allocated[k]?.balance || 0) + b;
-
-          state.allocated[k] = {
-            ...chn.tokens[k],
-            balance,
-          };
-
-          return {
-            ...state,
-            allocated: state.allocated,
-          };
-        });
-      },
-
-      updateAvailable: async () => {
+      updateBalance: async () => {
         const chn = ChainStore.getState().getActive();
         const wal = WalletStore.getState().wallet;
 
+        const alo = get().allocated;
         const avl = get().available;
 
         await Promise.all(
           Object.entries(chn.tokens).map(async ([key, val]: [string, TokenConfig]) => {
-            const [mar, tok] = await Promise.all([
-              MarketsBalance(wal, val),
+            const [bal, erc] = await Promise.all([
+              SearchBalance(wal, chn.contracts[key], val),
               TokenBalance(wal, val),
             ]);
 
+            alo[key] = {
+              ...val,
+              balance: bal.alo,
+            };
+
             avl[key] = {
               ...val,
-              balance: mar + tok,
+              balance: bal.avl + erc,
             };
           })
         );
 
-        set((state) => {
+        set(() => {
           return {
-            ...state,
+            allocated: alo,
             available: avl,
           };
         });

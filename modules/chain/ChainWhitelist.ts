@@ -1,23 +1,24 @@
 import * as Config from "@/modules/config";
 
-import { arbitrumSepolia } from "viem/chains";
+import { baseSepolia } from "viem/chains";
 import { ChainConfig } from "@/modules/chain/ChainConfig";
 import { ERC20 } from "@/modules/abi/ERC20";
-import { Markets } from "@/modules/abi/Markets";
+import { Claims } from "@/modules/abi/Claims";
 
 export const ChainWhitelist: ChainConfig[] = [
   {
-    ...arbitrumSepolia,
-    biconomyPaymasterApiKey: Config.ArbitrumSepoliaBiconomyPaymasterApiKey,
+    ...baseSepolia,
+    biconomyPaymasterApiKey: Config.BaseSepoliaBiconomyPaymasterApiKey,
     contracts: {
-      "Markets": { abi: Markets, address: "0xBa230f4Bf34E48D04e65dE9a0F6Fe5EcDAa0c17A" },
+      "Claims-UVX": { abi: Claims, address: "0x48455E0c620D46239BE9358C9B2Bd6D0bf1F3AA6" },
+      "Claims-WETH": { abi: Claims, address: "0x6Ed3CD11d2DeBbc08a2d36D1da57eBF3dFA02a8D" },
     },
     rpcEndpoints: [
-      Config.ArbitrumSepoliaAlchemyRpcEndpoint,
+      Config.BaseSepoliaAlchemyRpcEndpoint,
     ],
     tokens: {
-      "UVX": { abi: ERC20, address: "0xD0F77441B70c84aa3366a9F79F2fD16618739aB0", decimals: 18, precision: 2 },
-      "WETH": { abi: ERC20, address: "0x980B62Da83eFf3D4576C647993b0c1D7faf17c73", decimals: 18, precision: 6 },
+      "UVX": { abi: ERC20, address: "0x04Ec0582e2700Db583e3BCb9b913D181Ac2D68A8", decimals: 18, precision: 2 },
+      "WETH": { abi: ERC20, address: "0x4200000000000000000000000000000000000006", decimals: 18, precision: 6 },
     },
   },
 ];

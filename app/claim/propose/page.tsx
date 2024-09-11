@@ -58,15 +58,15 @@ export default function Page() {
         <div className="flex-none">
           <SubmitButton
             error={(ctx: ProposeContext) => {
-              TokenStore.getState().deleteAllocated(ctx.symbol, ctx.amount);
+              TokenStore.getState().updateBalance();
             }}
             offchain={(ctx: ProposeContext) => {
               router.push(`/claim/${ctx.post.id}`);
-              TokenStore.getState().updateAllocated(ctx.symbol, ctx.amount);
+              TokenStore.getState().updateBalance();
             }}
             onchain={(ctx: ProposeContext) => {
               QueryStore.getState().claim.refresh();
-              TokenStore.getState().updateAvailable();
+              TokenStore.getState().updateBalance();
             }}
           />
         </div>

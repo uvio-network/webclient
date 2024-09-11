@@ -1,20 +1,22 @@
 import * as ToastSender from "@/components/toast/ToastSender";
 
 import { ChainStore } from "@/modules/chain/ChainStore";
-import { EditorMessage } from "@/components/app/claim/stake/editor/EditorStore";
 import { EditorStore } from "@/components/app/claim/stake/editor/EditorStore";
 import { EmptyVoteCreateResponse } from "@/modules/api/vote/create/Response";
+import { parseUnits } from "viem";
+import { SendTransaction } from "@/modules/transaction/SendTransaction";
 import { StakeContext } from "@/modules/context/StakeContext";
+import { TokenApprove } from "@/modules/transaction/token/write/TokenApprove";
 import { TokenMessage } from "@/modules/token/TokenStore";
 import { TokenStore } from "@/modules/token/TokenStore";
+import { UpdatePropose } from "@/modules/transaction/claims/write/UpdatePropose";
 import { UserStore } from "@/modules/user/UserStore";
 import { VoteCreate } from "@/modules/api/vote/create/Create";
 import { VoteCreateRequest } from "@/modules/api/vote/create/Request";
+import { VoteUpdate } from "@/modules/api/vote/update/Update";
+import { VoteUpdateRequest } from "@/modules/api/vote/update/Request";
 import { WalletMessage } from "@/modules/wallet/WalletStore";
 import { WalletStore } from "@/modules/wallet/WalletStore";
-import { MarketsStake } from "@/modules/transaction/markets/MarketsStake";
-import { VoteUpdateRequest } from "@/modules/api/vote/update/Request";
-import { VoteUpdate } from "@/modules/api/vote/update/Update";
 
 // SubmitForm validates user input and then performs the vote creation.
 export const SubmitForm = async (err: (ctx: StakeContext) => void, off: (ctx: StakeContext) => void, onc: (ctx: StakeContext) => void) => {
@@ -40,16 +42,19 @@ export const SubmitForm = async (err: (ctx: StakeContext) => void, off: (ctx: St
   }
 
   let ctx: StakeContext = {
-    amount: parseFloat(editor.value),
+    amount: {
+      num: parseFloat(editor.value),
+      big: parseUnits(String(parseFloat(editor.value)), chain.tokens[editor.token].decimals),
+    },
     auth: user.token,
     chain: chain.id.toString(),
     claim: editor.claim,
+    claims: chain.contracts["Claims-" + editor.token],
     hash: "", // filled on the fly
     option: editor.option,
     success: false,
     symbol: editor.token,
     token: chain.tokens[editor.token],
-    tree: editor.tree,
     vote: EmptyVoteCreateResponse(),
   };
 
@@ -64,7 +69,7 @@ export const SubmitForm = async (err: (ctx: StakeContext) => void, off: (ctx: St
   }
 
   {
-    ctx = await chnCre(ctx, wallet);
+    ctx = await conCre(ctx, wallet);
   }
 
   if (ctx.success === true) {
@@ -94,10 +99,17 @@ const inpNum = (str: string): boolean => {
   return !isNaN(Number(str)) && parseFloat(str) > 0;
 };
 
-const chnCre = async (ctx: StakeContext, wal: WalletMessage): Promise<StakeContext> => {
+const conCre = async (ctx: StakeContext, wal: WalletMessage): Promise<StakeContext> => {
+  const txn = [
+    TokenApprove(ctx.amount.big, ctx.claims, ctx.token),
+    UpdatePropose(ctx, ctx.claims),
+  ];
+
   try {
-    const res = await MarketsStake(ctx, wal);
-    return res;
+    const { hash, success } = await SendTransaction(wal, txn);
+    ctx.hash = hash;
+    ctx.success = success;
+    return ctx;
   } catch (err) {
     console.error(err);
     ToastSender.Error(err instanceof Error ? err.message : String(err));
@@ -114,7 +126,7 @@ const votCre = async (ctx: StakeContext): Promise<StakeContext> => {
     lifecycle: "onchain",
     meta: "",
     option: String(ctx.option),
-    value: ctx.amount.toString(),
+    value: ctx.amount.num.toString(),
   };
 
   try {

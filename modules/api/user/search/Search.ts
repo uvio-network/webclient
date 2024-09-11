@@ -21,9 +21,6 @@ export async function UserSearch(tok: string, req: UserSearchRequest[]): Promise
     );
 
     return cal.response.object.map((x) => ({
-      // extern
-      staked: x.extern?.staked || [],
-
       // intern
       created: x.intern?.created || "",
       id: x.intern?.id || "",
