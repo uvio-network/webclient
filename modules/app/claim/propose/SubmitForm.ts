@@ -3,12 +3,12 @@ import moment from "moment";
 import * as ToastSender from "@/components/toast/ToastSender";
 
 import { ChainStore } from "@/modules/chain/ChainStore";
+import { CreatePropose } from "@/modules/transaction/claims/write/CreatePropose";
 import { EditorMessage } from "@/components/app/claim/propose/editor/EditorStore";
 import { EditorStore } from "@/components/app/claim/propose/editor/EditorStore";
 import { EmptyPostCreateResponse } from "@/modules/api/post/create/Response";
 import { EmptyVoteCreateResponse } from "@/modules/api/vote/create/Response";
 import { HasDuplicate } from "@/modules/string/HasDuplicate";
-import { MarketsPropose } from "@/modules/transaction/markets/MarketsPropose";
 import { PostCreate } from "@/modules/api/post/create/Create";
 import { PostCreateRequest } from "@/modules/api/post/create/Request";
 import { PostUpdate } from "@/modules/api/post/update/Update";
@@ -25,6 +25,9 @@ import { WalletStore } from "@/modules/wallet/WalletStore";
 import { Unix } from "@/modules/time/Time";
 import { VoteUpdateRequest } from "@/modules/api/vote/update/Request";
 import { VoteUpdate } from "@/modules/api/vote/update/Update";
+import { parseUnits } from "viem";
+import { TokenApprove } from "@/modules/transaction/token/write/TokenApprove";
+import { SendTransaction } from "@/modules/transaction/SendTransaction";
 
 // SubmitForm validates user input and then performs the claim creation.
 export const SubmitForm = async (err: (ctx: ProposeContext) => void, off: (ctx: ProposeContext) => void, onc: (ctx: ProposeContext) => void) => {
@@ -112,17 +115,21 @@ export const SubmitForm = async (err: (ctx: ProposeContext) => void, off: (ctx: 
   }
 
   let ctx: ProposeContext = {
-    amount: editor.getAmount(),
+    amount: {
+      num: editor.getAmount(),
+      big: parseUnits(String(editor.getAmount()), chain.tokens[editor.getToken()].decimals),
+    },
     auth: user.token,
     chain: chain.id.toString(),
-    claim: "", // filled on the fly
+    claim: "",                                              // filled on the fly
+    claims: chain.contracts["Claims-" + editor.getToken()],
     expiry: newExp(editor),
-    hash: "", // filled on the fly
+    hash: "",                                               // filled on the fly
+    option: true,                                           // hardcoded for now
     post: EmptyPostCreateResponse(),
     success: false,
     symbol: editor.getToken(),
     token: chain.tokens[editor.getToken()],
-    tree: "", // filled on the fly
     vote: EmptyVoteCreateResponse(),
   };
 
@@ -138,7 +145,7 @@ export const SubmitForm = async (err: (ctx: ProposeContext) => void, off: (ctx: 
   }
 
   {
-    ctx = await chnCre(ctx, wallet);
+    ctx = await conCre(ctx, wallet);
   }
 
   if (ctx.success === true) {
@@ -189,10 +196,17 @@ const newExp = (edi: EditorMessage): number => {
   return Unix(`${edi.day} ${edi.month} ${edi.year}`);
 };
 
-const chnCre = async (ctx: ProposeContext, wal: WalletMessage): Promise<ProposeContext> => {
+const conCre = async (ctx: ProposeContext, wal: WalletMessage): Promise<ProposeContext> => {
+  const txn = [
+    TokenApprove(ctx.amount.big, ctx.claims, ctx.token),
+    CreatePropose(ctx, ctx.claims),
+  ];
+
   try {
-    const res = await MarketsPropose(ctx, wal);
-    return res;
+    const { hash, success } = await SendTransaction(wal, txn);
+    ctx.hash = hash;
+    ctx.success = success;
+    return ctx;
   } catch (err) {
     console.error(err);
     ToastSender.Error(err instanceof Error ? err.message : String(err));
@@ -233,7 +247,7 @@ const posUpd = async (ctx: ProposeContext) => {
     id: ctx.post.id,
     // public
     hash: ctx.hash,
-    meta: ctx.tree + "," + ctx.claim,
+    meta: "",
   };
 
   try {

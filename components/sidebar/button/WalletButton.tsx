@@ -14,7 +14,7 @@ import { WalletStore } from "@/modules/wallet/WalletStore";
 const T = "UVX";
 
 export const WalletButton = () => {
-  const { available } = TokenStore();
+  const { allocated, available } = TokenStore();
   const { wallet } = WalletStore();
 
   const { object } = UserStore(useShallow((state) => ({
@@ -23,17 +23,17 @@ export const WalletButton = () => {
 
   React.useEffect(() => {
     if (wallet.contract) {
-      TokenStore.getState().updateAvailable();
+      TokenStore.getState().updateBalance();
     }
   }, [wallet, wallet.contract]);
 
   return (
     <>
-      {object && (
+      {allocated[T] && object && (
         <Link href={"/user/" + object.id() + "/activity"}>
           <BaseButton
             icon={<CurrentPulseIcon />}
-            text={object.staked(T)}
+            text={allocated[T].balance.toFixed(allocated[T].precision)}
           />
         </Link>
       )}

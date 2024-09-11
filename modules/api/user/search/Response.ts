@@ -1,7 +1,4 @@
 export interface UserSearchResponse {
-  // extern
-  staked: UserSearchResponse_Staked[];
-
   // intern
   created: string;
   id: string;
@@ -18,9 +15,6 @@ export interface UserSearchResponse_Staked {
 
 export const EmptyUserSearchResponse = (): UserSearchResponse => {
   return {
-    // extern
-    staked: [],
-
     // intern
     created: "",
     id: "",

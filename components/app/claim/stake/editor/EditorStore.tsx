@@ -6,7 +6,6 @@ export interface EditorMessage {
   minimum: number;
   option: boolean;
   token: string;
-  tree: string;
   value: string;
 };
 
@@ -54,14 +53,6 @@ export const EditorStore = create(
           return {
             ...state,
             token: t,
-          };
-        });
-      },
-      updateTree: (t: string) => {
-        set((state: EditorMessage) => {
-          return {
-            ...state,
-            tree: t,
           };
         });
       },
