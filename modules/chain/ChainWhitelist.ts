@@ -10,7 +10,7 @@ export const ChainWhitelist: ChainConfig[] = [
   // https://docs.uvio.network/contracts/base-sepolia
   {
     ...localhost,
-    biconomyPaymasterApiKey: Config.BaseSepoliaBiconomyPaymasterApiKey,
+    biconomyPaymasterApiKey: "",
     contracts: {
       "Claims-UVX": { abi: Claims, address: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0" },
     },
