@@ -36,7 +36,7 @@ export const TokenStore = create(
         await Promise.all(
           Object.entries(chn.tokens).map(async ([key, val]: [string, TokenConfig]) => {
             const [bal, erc] = await Promise.all([
-              SearchBalance(wal, chn.contracts[key], val),
+              SearchBalance(wal, chn.contracts["Claims-" + key], val),
               TokenBalance(wal, val),
             ]);
 
