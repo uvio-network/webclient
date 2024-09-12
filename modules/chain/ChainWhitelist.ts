@@ -2,10 +2,25 @@ import * as Config from "@/modules/config";
 
 import { baseSepolia } from "viem/chains";
 import { ChainConfig } from "@/modules/chain/ChainConfig";
-import { ERC20 } from "@/modules/abi/ERC20";
 import { Claims } from "@/modules/abi/Claims";
+import { ERC20 } from "@/modules/abi/ERC20";
+import { localhost } from "viem/chains";
 
 export const ChainWhitelist: ChainConfig[] = [
+  // https://docs.uvio.network/contracts/base-sepolia
+  {
+    ...localhost,
+    biconomyPaymasterApiKey: "",
+    contracts: {
+      "Claims-UVX": { abi: Claims, address: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0" },
+    },
+    rpcEndpoints: [
+      "http://127.0.0.1:8545",
+    ],
+    tokens: {
+      "UVX": { abi: ERC20, address: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512", decimals: 18, precision: 2 },
+    },
+  },
   {
     ...baseSepolia,
     biconomyPaymasterApiKey: Config.BaseSepoliaBiconomyPaymasterApiKey,
