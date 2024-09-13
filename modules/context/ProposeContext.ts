@@ -1,7 +1,9 @@
+import { Address } from "viem";
+import { ContractConfig } from "@/modules/contract/ContractConfig";
 import { PostCreateResponse } from "@/modules/api/post/create/Response";
+import { PublicClient } from "viem";
 import { TokenConfig } from "@/modules/token/TokenConfig";
 import { VoteCreateResponse } from "@/modules/api/vote/create/Response";
-import { ContractConfig } from "../contract/ContractConfig";
 
 export interface ProposeContext {
   amount: {
@@ -10,12 +12,15 @@ export interface ProposeContext {
   };
   auth: string;
   chain: string;
-  claim: string;
   claims: ContractConfig;
   expiry: number;
+  from: Address;
   hash: string;
+  labels: string;
+  markdown: string;
   option: boolean;
   post: PostCreateResponse;
+  public: PublicClient;
   success: boolean;
   symbol: string;
   token: TokenConfig;

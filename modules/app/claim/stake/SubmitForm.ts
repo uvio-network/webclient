@@ -1,15 +1,16 @@
 import * as ToastSender from "@/components/toast/ToastSender";
+import * as TokenApprove from "@/modules/transaction/token/write/TokenApprove";
+import * as UpdatePropose from "@/modules/transaction/claims/write/UpdatePropose";
 
+import { Address } from "viem";
 import { ChainStore } from "@/modules/chain/ChainStore";
 import { EditorStore } from "@/components/app/claim/stake/editor/EditorStore";
 import { EmptyVoteCreateResponse } from "@/modules/api/vote/create/Response";
 import { parseUnits } from "viem";
 import { SendTransaction } from "@/modules/transaction/SendTransaction";
 import { StakeContext } from "@/modules/context/StakeContext";
-import { TokenApprove } from "@/modules/transaction/token/write/TokenApprove";
 import { TokenMessage } from "@/modules/token/TokenStore";
 import { TokenStore } from "@/modules/token/TokenStore";
-import { UpdatePropose } from "@/modules/transaction/claims/write/UpdatePropose";
 import { UserStore } from "@/modules/user/UserStore";
 import { VoteCreate } from "@/modules/api/vote/create/Create";
 import { VoteCreateRequest } from "@/modules/api/vote/create/Request";
@@ -50,13 +51,23 @@ export const SubmitForm = async (err: (ctx: StakeContext) => void, off: (ctx: St
     chain: chain.id.toString(),
     claim: editor.claim,
     claims: chain.contracts["Claims-" + editor.token],
+    from: wallet.contract!.address() as Address,
     hash: "", // filled on the fly
     option: editor.option,
+    public: wallet.public!,
     success: false,
     symbol: editor.token,
     token: chain.tokens[editor.token],
     vote: EmptyVoteCreateResponse(),
   };
+
+  // Before we create any resources, whether it is offchain or onchain, we
+  // create the required transactions and simulate them to the best of our
+  // abilities. If we cannot even simulate transactions, we have no business
+  // creating any resources on behalf of the user.
+  {
+    await txnSim(ctx);
+  }
 
   {
     ctx = await votCre(ctx);
@@ -76,7 +87,7 @@ export const SubmitForm = async (err: (ctx: StakeContext) => void, off: (ctx: St
     await votUpd(ctx);
     onc(ctx);
   } else {
-    ToastSender.Success("Ohh, nope, that was not good enough!");
+    ToastSender.Error("Ohh, nope, that was not good enough!");
     err(ctx);
   }
 
@@ -101,14 +112,15 @@ const inpNum = (str: string): boolean => {
 
 const conCre = async (ctx: StakeContext, wal: WalletMessage): Promise<StakeContext> => {
   const txn = [
-    TokenApprove(ctx.amount.big, ctx.claims, ctx.token),
-    UpdatePropose(ctx, ctx.claims),
+    TokenApprove.Encode(ctx.amount.big, ctx.claims.address, ctx.token),
+    UpdatePropose.Encode(ctx),
   ];
 
   try {
-    const { hash, success } = await SendTransaction(wal, txn);
-    ctx.hash = hash;
-    ctx.success = success;
+    const res = await SendTransaction(wal, txn);
+    ctx.hash = res.hash;
+    ctx.success = res.success;
+
     return ctx;
   } catch (err) {
     console.error(err);
@@ -116,6 +128,17 @@ const conCre = async (ctx: StakeContext, wal: WalletMessage): Promise<StakeConte
     return Promise.reject(err);
   }
 }
+
+const txnSim = async (ctx: StakeContext) => {
+  try {
+    await TokenApprove.Simulate(ctx.public, ctx.from, ctx.amount.big, ctx.claims.address, ctx.token);
+    await UpdatePropose.Simulate(ctx);
+  } catch (err) {
+    console.error(err);
+    ToastSender.Error(err instanceof Error ? err.message : String(err));
+    return Promise.reject(err);
+  }
+};
 
 const votCre = async (ctx: StakeContext): Promise<StakeContext> => {
   const req: VoteCreateRequest = {

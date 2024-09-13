@@ -5,6 +5,7 @@ import { ChainConfig } from "@/modules/chain/ChainConfig";
 import { Claims } from "@/modules/abi/Claims";
 import { ERC20 } from "@/modules/abi/ERC20";
 import { localhost } from "viem/chains";
+import { UVX } from "@/modules/abi/UVX";
 
 export const ChainWhitelist: ChainConfig[] = [
   // https://docs.uvio.network/contracts/base-sepolia
@@ -18,7 +19,7 @@ export const ChainWhitelist: ChainConfig[] = [
       "http://127.0.0.1:8545",
     ],
     tokens: {
-      "UVX": { abi: ERC20, address: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512", decimals: 18, precision: 2 },
+      "UVX": { abi: UVX, address: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512", decimals: 18, precision: 2 },
     },
   },
   {
@@ -32,7 +33,7 @@ export const ChainWhitelist: ChainConfig[] = [
       Config.BaseSepoliaAlchemyRpcEndpoint,
     ],
     tokens: {
-      "UVX": { abi: ERC20, address: "0x04Ec0582e2700Db583e3BCb9b913D181Ac2D68A8", decimals: 18, precision: 2 },
+      "UVX": { abi: UVX, address: "0x04Ec0582e2700Db583e3BCb9b913D181Ac2D68A8", decimals: 18, precision: 2 },
       "WETH": { abi: ERC20, address: "0x4200000000000000000000000000000000000006", decimals: 18, precision: 6 },
     },
   },

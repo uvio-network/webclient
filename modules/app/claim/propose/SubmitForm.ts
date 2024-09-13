@@ -1,19 +1,23 @@
 import moment from "moment";
 
+import * as CreatePropose from "@/modules/transaction/claims/write/CreatePropose";
 import * as ToastSender from "@/components/toast/ToastSender";
+import * as TokenApprove from "@/modules/transaction/token/write/TokenApprove";
 
+import { Address } from "viem";
 import { ChainStore } from "@/modules/chain/ChainStore";
-import { CreatePropose } from "@/modules/transaction/claims/write/CreatePropose";
 import { EditorMessage } from "@/components/app/claim/propose/editor/EditorStore";
 import { EditorStore } from "@/components/app/claim/propose/editor/EditorStore";
 import { EmptyPostCreateResponse } from "@/modules/api/post/create/Response";
 import { EmptyVoteCreateResponse } from "@/modules/api/vote/create/Response";
 import { HasDuplicate } from "@/modules/string/HasDuplicate";
+import { parseUnits } from "viem";
 import { PostCreate } from "@/modules/api/post/create/Create";
 import { PostCreateRequest } from "@/modules/api/post/create/Request";
 import { PostUpdate } from "@/modules/api/post/update/Update";
 import { PostUpdateRequest } from "@/modules/api/post/update/Request";
 import { ProposeContext } from "@/modules/context/ProposeContext";
+import { SendTransaction } from "@/modules/transaction/SendTransaction";
 import { SplitList } from "@/modules/string/SplitList";
 import { TokenMessage } from "@/modules/token/TokenStore";
 import { TokenStore } from "@/modules/token/TokenStore";
@@ -25,9 +29,6 @@ import { WalletStore } from "@/modules/wallet/WalletStore";
 import { Unix } from "@/modules/time/Time";
 import { VoteUpdateRequest } from "@/modules/api/vote/update/Request";
 import { VoteUpdate } from "@/modules/api/vote/update/Update";
-import { parseUnits } from "viem";
-import { TokenApprove } from "@/modules/transaction/token/write/TokenApprove";
-import { SendTransaction } from "@/modules/transaction/SendTransaction";
 
 // SubmitForm validates user input and then performs the claim creation.
 export const SubmitForm = async (err: (ctx: ProposeContext) => void, off: (ctx: ProposeContext) => void, onc: (ctx: ProposeContext) => void) => {
@@ -121,17 +122,28 @@ export const SubmitForm = async (err: (ctx: ProposeContext) => void, off: (ctx: 
     },
     auth: user.token,
     chain: chain.id.toString(),
-    claim: "",                                              // filled on the fly
     claims: chain.contracts["Claims-" + editor.getToken()],
     expiry: newExp(editor),
-    hash: "",                                               // filled on the fly
-    option: true,                                           // hardcoded for now
+    from: wallet.contract!.address() as Address,
+    hash: "", // filled on the fly
+    labels: SplitList(editor.labels).join(","),
+    markdown: editor.markdown,
+    option: true, // hardcoded for now
     post: EmptyPostCreateResponse(),
+    public: wallet.public!,
     success: false,
     symbol: editor.getToken(),
     token: chain.tokens[editor.getToken()],
     vote: EmptyVoteCreateResponse(),
   };
+
+  // Before we create any resources, whether it is offchain or onchain, we
+  // create the required transactions and simulate them to the best of our
+  // abilities. If we cannot even simulate transactions, we have no business
+  // creating any resources on behalf of the user.
+  {
+    await txnSim(ctx);
+  }
 
   {
     ctx = await posCre(ctx);
@@ -153,7 +165,7 @@ export const SubmitForm = async (err: (ctx: ProposeContext) => void, off: (ctx: 
     await votUpd(ctx);
     onc(ctx);
   } else {
-    ToastSender.Success("Ohh, nope, that was not good enough!");
+    ToastSender.Error("Ohh, nope, that was not good enough!");
     err(ctx);
   }
 
@@ -196,38 +208,43 @@ const newExp = (edi: EditorMessage): number => {
   return Unix(`${edi.day} ${edi.month} ${edi.year}`);
 };
 
+const ranNum = (len: number): BigInt => {
+  const min = BigInt(10 ** (len - 1));
+  const max = BigInt(10 ** len - 1);
+  return BigInt(Math.floor(Math.random() * Number(max - min + BigInt(1))) + Number(min));
+};
+
 const conCre = async (ctx: ProposeContext, wal: WalletMessage): Promise<ProposeContext> => {
   const txn = [
-    TokenApprove(ctx.amount.big, ctx.claims, ctx.token),
-    CreatePropose(ctx, ctx.claims),
+    TokenApprove.Encode(ctx.amount.big, ctx.claims.address, ctx.token),
+    CreatePropose.Encode(ctx),
   ];
 
   try {
-    const { hash, success } = await SendTransaction(wal, txn);
-    ctx.hash = hash;
-    ctx.success = success;
+    const res = await SendTransaction(wal, txn);
+    ctx.hash = res.hash;
+    ctx.success = res.success;
+
     return ctx;
   } catch (err) {
     console.error(err);
     ToastSender.Error(err instanceof Error ? err.message : String(err));
     return Promise.reject(err);
   }
-}
+};
 
 const posCre = async (ctx: ProposeContext): Promise<ProposeContext> => {
-  const editor = EditorStore.getState();
-
   const req: PostCreateRequest = {
     chain: ctx.chain,
     hash: "",
     expiry: ctx.expiry.toString(),
     kind: "claim",
-    labels: SplitList(editor.labels).join(","),
+    labels: ctx.labels,
     lifecycle: "propose",
     meta: "",
     parent: "",
-    text: editor.markdown,
-    token: editor.getToken(),
+    text: ctx.markdown,
+    token: ctx.symbol,
   };
 
   try {
@@ -239,7 +256,7 @@ const posCre = async (ctx: ProposeContext): Promise<ProposeContext> => {
     ToastSender.Error(err instanceof Error ? err.message : String(err));
     return Promise.reject(err);
   }
-}
+};
 
 const posUpd = async (ctx: ProposeContext) => {
   const req: PostUpdateRequest = {
@@ -257,11 +274,29 @@ const posUpd = async (ctx: ProposeContext) => {
     ToastSender.Error(err instanceof Error ? err.message : String(err));
     return Promise.reject(err);
   }
-}
+};
+
+const txnSim = async (ctx: ProposeContext) => {
+  // Since we are trying to create a claim, and since we are trying to simulate
+  // the contract write for exactly that objective, we need to fake the claim ID
+  // for the simulation step because the post resource for our claim object has
+  // not yet been created. When we create the post object offchain, we will
+  // overwrite the claim ID with the real value.
+  {
+    ctx.post.id = ranNum(32).toString();
+  }
+
+  try {
+    await TokenApprove.Simulate(ctx.public, ctx.from, ctx.amount.big, ctx.claims.address, ctx.token);
+    await CreatePropose.Simulate(ctx);
+  } catch (err) {
+    console.error(err);
+    ToastSender.Error(err instanceof Error ? err.message : String(err));
+    return Promise.reject(err);
+  }
+};
 
 const votCre = async (ctx: ProposeContext): Promise<ProposeContext> => {
-  const editor = EditorStore.getState();
-
   const req: VoteCreateRequest = {
     chain: ctx.chain,
     claim: ctx.post.id,
@@ -269,8 +304,8 @@ const votCre = async (ctx: ProposeContext): Promise<ProposeContext> => {
     kind: "stake",
     lifecycle: "onchain",
     meta: "",
-    option: "true",
-    value: editor.getAmount().toString(),
+    option: String(ctx.option),
+    value: ctx.amount.num.toString(),
   };
 
   try {
@@ -282,7 +317,7 @@ const votCre = async (ctx: ProposeContext): Promise<ProposeContext> => {
     ToastSender.Error(err instanceof Error ? err.message : String(err));
     return Promise.reject(err);
   }
-}
+};
 
 const votUpd = async (ctx: ProposeContext) => {
   const req: VoteUpdateRequest = {
@@ -300,4 +335,4 @@ const votUpd = async (ctx: ProposeContext) => {
     ToastSender.Error(err instanceof Error ? err.message : String(err));
     return Promise.reject(err);
   }
-}
+};
