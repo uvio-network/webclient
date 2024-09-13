@@ -75,7 +75,7 @@ export default function Page() {
             </div>
             <div className="my-auto">
               <Link
-                href={`${chain.blockExplorers?.default.url}/address/${wallet.contract?.address()}`}
+                href={`${chain.blockExplorers?.default.url}/address/${wallet.contract?.address()}#tokentxns`}
                 target="_blank"
               >
                 <BaseButton
@@ -117,7 +117,7 @@ export default function Page() {
                 </div>
                 <div className="my-auto">
                   <Link
-                    href={`${chain.blockExplorers?.default.url}/token/${val.address}`}
+                    href={`${chain.blockExplorers?.default.url}/token/${val.address}?a=${wallet.contract?.address()}`}
                     target="_blank"
                   >
                     <BaseButton

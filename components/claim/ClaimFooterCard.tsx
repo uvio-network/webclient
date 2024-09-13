@@ -29,9 +29,7 @@ export const ClaimFooterCard = (props: Props) => {
       openDelay={250}
     >
       <HoverCard.Trigger className="text-gray-400 dark:text-gray-500">
-        <EffectButton
-          value={probability}
-        >
+        <EffectButton value={probability}>
           <div className="underline underline-offset-4 decoration-dashed cursor-default">
             {`${probability} %`}
           </div>
