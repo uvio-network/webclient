@@ -13,7 +13,6 @@ export async function WalletCreate(tok: string, req: WalletCreateRequest[]): Pro
             address: x.address,
             description: x.description,
             kind: x.kind,
-            provider: x.provider,
           },
         })),
       },

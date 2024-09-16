@@ -1,27 +1,10 @@
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
-import { NewPublicClient } from "@/modules/chain/PublicClient";
-import { PublicClient } from "viem";
 import { WalletObject } from "@/modules/wallet/WalletObject";
 
 export interface WalletMessage {
-  // contract is the smart account instance or smart contract wallet as selected
-  // by the user, if any. Should the user choose to do without account
-  // abstraction, then contract is undefined.
-  contract: WalletObject | undefined;
-
-  // public is the public blockchain client configured for the selected network.
-  // This client is used to read public onchain data like token balances.
-  public: PublicClient | undefined;
-
-  // ready indicates whether the user's clients and wallets are initialized.
+  object: WalletObject;
   ready: boolean;
-
-  // signer is the wallet that controls the user's smart contract wallet, if
-  // account abstraction is being used. The user may choose to use any wallet
-  // without account abstraction, so that the signer replaces the contract to
-  // represent the user onchain.
-  signer: WalletObject | undefined;
 };
 
 export const WalletStore = create(
@@ -29,33 +12,13 @@ export const WalletStore = create(
     {
       wallet: {} as WalletMessage,
     },
-    (set, get) => ({
+    (set) => ({
       delete: () => {
         set(() => {
           return {
             wallet: {
-              contract: undefined,
-              public: undefined,
+              object: new WalletObject(),
               ready: false,
-              signer: undefined,
-            },
-          };
-        });
-      },
-      refresh: () => {
-        set(() => {
-          const con = get().wallet.contract;
-          const sig = get().wallet.signer;
-
-          con?.refresh();
-          sig?.refresh();
-
-          return {
-            wallet: {
-              contract: con,
-              public: NewPublicClient(),
-              ready: true,
-              signer: sig,
             },
           };
         });

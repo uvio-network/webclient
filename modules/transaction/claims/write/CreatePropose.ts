@@ -23,7 +23,7 @@ export const Simulate = async (ctx: ProposeContext) => {
         stateDiff: TokenApprove.State(ctx.from, ctx.claims.address, ctx.amount.big),
       },
     ],
-  })
+  });
 };
 
 const encPar = (ctx: ProposeContext): Required<EncodeFunctionDataParameters> => {

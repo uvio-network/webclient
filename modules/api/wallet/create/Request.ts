@@ -4,5 +4,4 @@ export interface WalletCreateRequest {
   address: string;
   description: string;
   kind: string;
-  provider: string;
 }

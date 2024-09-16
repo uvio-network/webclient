@@ -5,11 +5,11 @@ import * as ToastSender from "@/components/toast/ToastSender";
 import { EnsureUser } from "@/modules/user/EnsureUser";
 import { EnsureWallets } from "@/modules/wallet/EnsureWallets";
 import { LoadingStore } from "@/components/loading/LoadingStore";
-import { NewWalletContract } from "@/modules/wallet/WalletContract";
 import { Sleep } from "@/modules/sleep/Sleep";
 import { TokenStore } from "@/modules/token/TokenStore";
 import { UserStore } from "@/modules/user/UserStore";
 import { WalletStore } from "@/modules/wallet/WalletStore";
+import { WalletObject } from "@/modules/wallet/WalletObject";
 
 export const AuthProvider = () => {
   const [login, setLogin] = React.useState<boolean>(false);
@@ -20,9 +20,17 @@ export const AuthProvider = () => {
   // The user may have all kinds of wallets connected using all kinds of apps
   // and browser extensions. We need to find the one that got embedded by Privy
   // and use that as signer for the user's smart account that we want to setup.
-  const embedded = wallets.find((x) => {
-    return x.connectorType === "embedded" && x.walletClientType === "privy";
-  });
+  let wallet: Privy.ConnectedWallet | undefined;
+  if (ready) {
+    const embedded = wallets.find((x) => (x.connectorType === "embedded"));
+    const injected = wallets.find((x) => (x.connectorType === "injected"));
+
+    if (injected) {
+      wallet = injected;
+    } else if (embedded) {
+      wallet = embedded;
+    }
+  }
 
   // Continuously check the user's access token in order to update it before it
   // expires.
@@ -55,7 +63,7 @@ export const AuthProvider = () => {
   }, [authenticated, ready]);
 
   React.useEffect(() => {
-    if (embedded && login && ready && user) {
+    if (wallet && login && user) {
       // We have to reset our login flag because consecutive logins require to
       // be waited for each. So if have a login once, but a user logs out and
       // logs in again, then we have to make sure that we are waiting for the
@@ -65,9 +73,9 @@ export const AuthProvider = () => {
 
       // Finally process all external API calls and all data collected up to
       // this point in order to update our internal user store.
-      setupAuth(user, embedded);
+      setupAuth(user, wallet);
     }
-  }, [embedded, login, ready, user]);
+  }, [login, user, wallet]);
 
   // Note that we need to use this login hook for all wallets top be available
   // on signup and login. Only if we set login to true we can proceed to fetch
@@ -100,23 +108,22 @@ export const AuthProvider = () => {
   );
 };
 
-const setupAuth = async (user: Privy.User, signer: Privy.ConnectedWallet) => {
+const setupAuth = async (user: Privy.User, wallet: Privy.ConnectedWallet) => {
   try {
     const token = await Privy.getAccessToken();
     if (!token) {
       return ToastSender.Error("Your access token could not be validated.");
     }
 
-    const contract = await NewWalletContract(signer);
-    const address = await contract.getAddress();
+    const wal = await new WalletObject().create(wallet);
 
     // Ensure the user object first, and then ensure the user's wallet objects.
     // This order of operations is important, because ensuring the user's
     // wallets depends on the user object being properly prepared and available.
     {
-      await EnsureUser(address, token);
+      await EnsureUser(wal.address(), token);
       LoadingStore.getState().authorized();
-      await EnsureWallets(contract, signer, token);
+      await EnsureWallets(wal, token);
     }
 
     {

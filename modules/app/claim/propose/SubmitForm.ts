@@ -17,7 +17,6 @@ import { PostCreateRequest } from "@/modules/api/post/create/Request";
 import { PostUpdate } from "@/modules/api/post/update/Update";
 import { PostUpdateRequest } from "@/modules/api/post/update/Request";
 import { ProposeContext } from "@/modules/context/ProposeContext";
-import { SendTransaction } from "@/modules/transaction/SendTransaction";
 import { SplitList } from "@/modules/string/SplitList";
 import { TokenMessage } from "@/modules/token/TokenStore";
 import { TokenStore } from "@/modules/token/TokenStore";
@@ -124,13 +123,13 @@ export const SubmitForm = async (err: (ctx: ProposeContext) => void, off: (ctx: 
     chain: chain.id.toString(),
     claims: chain.contracts["Claims-" + editor.getToken()],
     expiry: newExp(editor),
-    from: wallet.contract!.address() as Address,
+    from: wallet.object.address(),
     hash: "", // filled on the fly
     labels: SplitList(editor.labels).join(","),
     markdown: editor.markdown,
     option: true, // hardcoded for now
     post: EmptyPostCreateResponse(),
-    public: wallet.public!,
+    public: wallet.object.public(),
     success: false,
     symbol: editor.getToken(),
     token: chain.tokens[editor.getToken()],
@@ -221,9 +220,9 @@ const conCre = async (ctx: ProposeContext, wal: WalletMessage): Promise<ProposeC
   ];
 
   try {
-    const res = await SendTransaction(wal, txn);
-    ctx.hash = res.hash;
-    ctx.success = res.success;
+    const rec = await wal.object.sendTransaction(txn);
+    ctx.hash = rec.hash;
+    ctx.success = rec.success;
 
     return ctx;
   } catch (err) {

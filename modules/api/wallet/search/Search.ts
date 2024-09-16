@@ -29,7 +29,6 @@ export async function WalletSearch(tok: string, req: WalletSearchRequest[]): Pro
       address: x.public?.address || "",
       description: x.public?.description || "",
       kind: x.public?.kind || "",
-      provider: x.public?.provider || "",
     }));
   } catch (err) {
     return Promise.reject(err);
