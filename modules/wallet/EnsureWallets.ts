@@ -14,23 +14,18 @@ export const EnsureWallets = async (wal: WalletObject, tok: string) => {
   });
 };
 
-export const ensureWallets = async (wal: WalletObject, tok: string): Promise<WalletSearchResponse[]> => {
+export const ensureWallets = async (wal: WalletObject, tok: string) => {
   const sea = await WalletSearch(tok, [{ owner: "self" }]);
 
   const req: WalletCreateRequest[] = [];
 
-  {
-    if (!existsWallet(wal.address(), wal.connectorType(), sea)) {
-      req.push(createWallet(wal.address(), wal.connectorType()));
-    }
+  if (!existsWallet(wal.address(), wal.connectorType(), sea)) {
+    req.push(createWallet(wal.address(), wal.connectorType()));
   }
 
   if (req.length !== 0) {
     await WalletCreate(tok, req);
-    return await WalletSearch(tok, [{ owner: "self" }]);
   }
-
-  return sea;
 };
 
 const createWallet = (add: string, kin: string): WalletCreateRequest => {

@@ -2,12 +2,12 @@ import * as Privy from "@privy-io/react-auth";
 
 import { Address } from "viem";
 import { NewPublicClient } from "@/modules/chain/PublicClient";
+import { NewWalletEmbedded } from "@/modules/wallet/WalletEmbedded";
+import { NewWalletInjected } from "@/modules/wallet/WalletInjected";
 import { PublicClient } from "viem";
 import { Receipt } from "@/modules/wallet/WalletInterface";
 import { Signer } from "@/modules/wallet/WalletInterface";
 import { Transaction } from "@biconomy/account";
-import { NewWalletEmbedded } from "./WalletEmbedded";
-import { NewWalletInjected } from "./WalletInjected";
 
 export class WalletObject implements Signer {
   private pub: PublicClient;
@@ -18,28 +18,16 @@ export class WalletObject implements Signer {
   }
 
   async create(wal: Privy.ConnectedWallet): Promise<WalletObject> {
-    switch (wal.connectorType) {
-      case "embedded":
-        {
-          this.sig = await NewWalletEmbedded(wal);
-        }
+    if (wal.connectorType === "embedded") {
+      this.sig = await NewWalletEmbedded(wal);
+    }
 
-        {
-          break;
-        }
-      case "injected":
+    if (wal.connectorType === "injected") {
+      this.sig = await NewWalletInjected(wal);
+    }
 
-        {
-          this.sig = await NewWalletInjected(wal);
-        }
-
-        {
-          break;
-        }
-      default:
-        {
-          throw "unknown connector type";
-        }
+    if (wal.connectorType !== "embedded" && wal.connectorType !== "injected") {
+      throw "unknown connector type";
     }
 
     return this;

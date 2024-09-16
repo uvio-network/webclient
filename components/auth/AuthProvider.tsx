@@ -63,7 +63,7 @@ export const AuthProvider = () => {
   }, [authenticated, ready]);
 
   React.useEffect(() => {
-    if (wallet && login && user) {
+    if (login && user && wallet) {
       // We have to reset our login flag because consecutive logins require to
       // be waited for each. So if have a login once, but a user logs out and
       // logs in again, then we have to make sure that we are waiting for the
@@ -110,8 +110,8 @@ export const AuthProvider = () => {
 
 const setupAuth = async (user: Privy.User, wallet: Privy.ConnectedWallet) => {
   try {
-    const token = await Privy.getAccessToken();
-    if (!token) {
+    const tok = await Privy.getAccessToken();
+    if (!tok) {
       return ToastSender.Error("Your access token could not be validated.");
     }
 
@@ -121,9 +121,9 @@ const setupAuth = async (user: Privy.User, wallet: Privy.ConnectedWallet) => {
     // This order of operations is important, because ensuring the user's
     // wallets depends on the user object being properly prepared and available.
     {
-      await EnsureUser(wal.address(), token);
+      await EnsureUser(wal.address(), tok);
       LoadingStore.getState().authorized();
-      await EnsureWallets(wal, token);
+      await EnsureWallets(wal, tok);
     }
 
     {
