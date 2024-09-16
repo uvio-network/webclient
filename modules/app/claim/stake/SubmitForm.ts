@@ -7,7 +7,6 @@ import { ChainStore } from "@/modules/chain/ChainStore";
 import { EditorStore } from "@/components/app/claim/stake/editor/EditorStore";
 import { EmptyVoteCreateResponse } from "@/modules/api/vote/create/Response";
 import { parseUnits } from "viem";
-import { SendTransaction } from "@/modules/transaction/SendTransaction";
 import { StakeContext } from "@/modules/context/StakeContext";
 import { TokenMessage } from "@/modules/token/TokenStore";
 import { TokenStore } from "@/modules/token/TokenStore";
@@ -51,10 +50,10 @@ export const SubmitForm = async (err: (ctx: StakeContext) => void, off: (ctx: St
     chain: chain.id.toString(),
     claim: editor.claim,
     claims: chain.contracts["Claims-" + editor.token],
-    from: wallet.contract!.address() as Address,
+    from: wallet.object.address(),
     hash: "", // filled on the fly
     option: editor.option,
-    public: wallet.public!,
+    public: wallet.object.public(),
     success: false,
     symbol: editor.token,
     token: chain.tokens[editor.token],
@@ -117,9 +116,9 @@ const conCre = async (ctx: StakeContext, wal: WalletMessage): Promise<StakeConte
   ];
 
   try {
-    const res = await SendTransaction(wal, txn);
-    ctx.hash = res.hash;
-    ctx.success = res.success;
+    const rec = await wal.object.sendTransaction(txn);
+    ctx.hash = rec.hash;
+    ctx.success = rec.success;
 
     return ctx;
   } catch (err) {

@@ -20,28 +20,28 @@ export const WalletButton = () => {
   const { allocated, available } = TokenStore();
   const { wallet } = WalletStore();
 
-  const { object } = UserStore(useShallow((state) => ({
-    object: state.user.object,
+  const { user } = UserStore(useShallow((state) => ({
+    user: state.user.object,
   })));
 
   // Make sure we update balances every time the user enters or refreshes the
   // page.
   React.useEffect(() => {
-    if (wallet.contract) {
+    if (wallet.ready) {
       TokenStore.getState().updateBalance();
     }
-  }, [wallet, wallet.contract]);
+  }, [wallet]);
 
   // Additionally to the above, make sure that we update balances every 2
   // seconds if the user registered just now, as long as its balance is zero.
   React.useEffect(() => {
-    if (!object || !wallet.contract) {
+    if (!user || !wallet.ready) {
       return;
     }
 
     // If the user has a balance, or if the user is older than 60 seconds, don't
     // do anything here.
-    if (moment.utc().diff(object.created(), "seconds") > 60) {
+    if (moment.utc().diff(user.created(), "seconds") > 60) {
       return;
     }
 
@@ -58,7 +58,7 @@ export const WalletButton = () => {
         // If we get here, update balances for the first 60 seconds of a user's
         // lifetime as long as its balance is zero.
         const avl = bef === 0;
-        const rec = moment.utc().diff(object.created(), "seconds") <= 60;
+        const rec = moment.utc().diff(user.created(), "seconds") <= 60;
 
         if (avl && rec) {
           {
@@ -85,12 +85,12 @@ export const WalletButton = () => {
     return () => {
       mnt = false;
     };
-  }, [object, T, wallet, wallet.contract]);
+  }, [user, T, wallet]);
 
   return (
     <>
-      {allocated[T] && object && (
-        <Link href={"/user/" + object.id() + "/activity"}>
+      {allocated[T] && user && (
+        <Link href={"/user/" + user.id() + "/activity"}>
           <BaseButton
             effect={true}
             icon={<CurrentPulseIcon />}

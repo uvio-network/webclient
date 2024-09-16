@@ -63,7 +63,7 @@ export default function Page() {
 
           <div className="flex my-4 p-4 bg-gray-50 dark:bg-gray-900 rounded">
             <div className="w-full text-gray-500 dark:text-gray-400 font-mono overflow-auto">
-              {wallet.contract?.address()}
+              {wallet.object.address()}
             </div>
             <div className="my-auto mx-2">
               <BaseButton
@@ -75,7 +75,7 @@ export default function Page() {
             </div>
             <div className="my-auto">
               <Link
-                href={`${chain.blockExplorers?.default.url}/address/${wallet.contract?.address()}#tokentxns`}
+                href={`${chain.blockExplorers?.default.url}/address/${wallet.object.address()}#tokentxns`}
                 target="_blank"
               >
                 <BaseButton
@@ -117,7 +117,7 @@ export default function Page() {
                 </div>
                 <div className="my-auto">
                   <Link
-                    href={`${chain.blockExplorers?.default.url}/token/${val.address}?a=${wallet.contract?.address()}`}
+                    href={`${chain.blockExplorers?.default.url}/token/${val.address}?a=${wallet.object.address()}`}
                     target="_blank"
                   >
                     <BaseButton
