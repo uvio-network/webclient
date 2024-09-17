@@ -12,9 +12,9 @@ import { WalletStore } from "@/modules/wallet/WalletStore";
 import { WalletObject } from "@/modules/wallet/WalletObject";
 
 export const AuthProvider = () => {
-  const [login, setLogin] = React.useState<boolean>(false);
+  const [alreadyLoggedIn, setAlreadyLoggedIn] = React.useState<boolean>(false);
 
-  const { authenticated, user } = Privy.usePrivy();
+  const { authenticated, logout, user } = Privy.usePrivy();
   const { wallets, ready } = Privy.useWallets();
 
   // The user may have all kinds of wallets connected using all kinds of apps
@@ -45,38 +45,44 @@ export const AuthProvider = () => {
     };
   });
 
-  // For every unauthenticated we have to acknowledge that the authorization
-  // process has been finished so that the intended interface can continue to
-  // render. So once we know the wallet interface is ready and that the user
-  // could not be authenticated in Pricy, we signal our own loading store to
-  // continue.
   React.useEffect(() => {
+    // For every unauthenticated request we have to acknowledge that the
+    // intended page can continue to render. So once we know that the wallet
+    // interface is ready and that the user could not be authenticated in Privy,
+    // we signal our own loading store to continue rendering.
     if (!authenticated && ready) {
       LoadingStore.getState().authorized();
     }
-  }, [authenticated, ready]);
+
+    // It may happen that users disconnect from our dApp using the permission
+    // management of their own wallet extension. Those external permissions may
+    // brick our internal authorization in a way that Privy thinks the user is
+    // already logged in, but the permission on the browser extension side
+    // prevented the connection with the user's wallet to be established. For us
+    // that means that we need to logout the user if Privy thinks the user is
+    // authenticated, while the user decided to logout on their end.
+    if (alreadyLoggedIn && authenticated && ready && wallets.length === 0) {
+      logout();
+    }
+  }, [alreadyLoggedIn, authenticated, ready, wallets]);
 
   React.useEffect(() => {
-    if (login && user && wallet) {
-      // We have to reset our login flag because consecutive logins require to
-      // be waited for each. So if have a login once, but a user logs out and
-      // logs in again, then we have to make sure that we are waiting for the
-      // useLogin.onComplete very time. Otherwise the user's wallet information
-      // will not be available to us.
-      setLogin(false);
+    if (authenticated && user && wallet) {
+      // We have to reset our alreadyLoggedIn flag because consecutive logins
+      // need to be treated separately.
+      setAlreadyLoggedIn(false);
 
       // Finally process all external API calls and all data collected up to
       // this point in order to update our internal user store.
       setupAuth(user, wallet);
     }
-  }, [login, user, wallet]);
+  }, [authenticated, user, wallet]);
 
-  // Note that we need to use this login hook for all wallets top be available
-  // on signup and login. Only if we set login to true we can proceed to fetch
-  // our own data and setup our internal user store.
+  // Note that we need to use this login hook to manage the edge case of users
+  // disconnecting their wallets from within their own wallet extensions.
   Privy.useLogin({
-    onComplete: () => {
-      setLogin(true);
+    onComplete: (user, isNewUser, wasAlreadyAuthenticated) => {
+      setAlreadyLoggedIn(wasAlreadyAuthenticated);
     },
   });
 
