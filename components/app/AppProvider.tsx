@@ -21,11 +21,6 @@ export const AppProvider = () => {
           embeddedWallets: {
             // Create embedded wallets for users who don't have a wallet yet.
             createOnLogin: "users-without-wallets",
-            // Disable transaction confirmations in order to make account
-            // abstraction work. When we use gas sponsorships for users, then
-            // users do not have to confirm transactions, because they are also
-            // not paying for the gas anymore.
-            noPromptOnSignature: true,
           },
           supportedChains: chain.getAll(),
         }}
