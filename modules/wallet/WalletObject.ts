@@ -38,7 +38,7 @@ export class WalletObject implements Signer {
   }
 
   connectorType(): string {
-    return this.connectorType();
+    return this.sig.connectorType();
   }
 
   public(): PublicClient {

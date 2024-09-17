@@ -18,18 +18,12 @@ export const AuthProvider = () => {
   const { wallets, ready } = Privy.useWallets();
 
   // The user may have all kinds of wallets connected using all kinds of apps
-  // and browser extensions. We need to find the one that got embedded by Privy
-  // and use that as signer for the user's smart account that we want to setup.
+  // and browser extensions. We do only consider the wallet that was connected
+  // most recently.
   let wallet: Privy.ConnectedWallet | undefined;
   if (ready) {
-    const embedded = wallets.find((x) => (x.connectorType === "embedded"));
-    const injected = wallets.find((x) => (x.connectorType === "injected"));
-
-    if (injected) {
-      wallet = injected;
-    } else if (embedded) {
-      wallet = embedded;
-    }
+    const sorted = wallets.sort((a, b) => b.connectedAt - a.connectedAt);
+    wallet = sorted[0];
   }
 
   // Continuously check the user's access token in order to update it before it
