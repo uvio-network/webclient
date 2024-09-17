@@ -8,7 +8,6 @@ import { localhost } from "viem/chains";
 import { UVX } from "@/modules/abi/UVX";
 
 export const ChainWhitelist: ChainConfig[] = [
-  // https://docs.uvio.network/contracts/base-sepolia
   {
     ...localhost,
     biconomyPaymasterApiKey: "",
@@ -22,6 +21,7 @@ export const ChainWhitelist: ChainConfig[] = [
       "UVX": { abi: UVX, address: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512", decimals: 18, precision: 2 },
     },
   },
+  // https://docs.uvio.network/contracts/base-sepolia
   {
     ...baseSepolia,
     biconomyPaymasterApiKey: Config.BaseSepoliaBiconomyPaymasterApiKey,
