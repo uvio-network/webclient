@@ -1,6 +1,6 @@
 import * as Privy from "@privy-io/react-auth";
 
-import { Address, TransactionReceipt } from "viem";
+import { Address } from "viem";
 import { ChainStore } from "@/modules/chain/ChainStore";
 import { createWalletClient } from "viem";
 import { custom } from "viem";
@@ -10,12 +10,19 @@ import { PublicClient } from "viem";
 import { Receipt } from "@/modules/wallet/WalletInterface";
 import { Signer } from "@/modules/wallet/WalletInterface";
 import { Transaction } from "@biconomy/account";
+import { TransactionReceipt } from "viem";
 import { WalletClient } from "viem";
 
 export const NewWalletInjected = async (wal: Privy.ConnectedWallet): Promise<Signer> => {
+  const chain = ChainStore.getState();
+  const active = chain.getActive();
+
+  await wal.switchChain(active.id);
+  const provider = await wal.getEthereumProvider();
+
   const cli = createWalletClient({
-    chain: ChainStore.getState().getActive(),
-    transport: custom(await wal.getEthereumProvider()),
+    chain: active,
+    transport: custom(provider),
   });
 
   return new Injected(cli, wal);

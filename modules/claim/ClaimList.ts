@@ -5,7 +5,7 @@ import { PostSearch } from "@/modules/api/post/search/Search";
 import { PostSearchRequest } from "@/modules/api/post/search/Request";
 import { PostSearchResponse } from "@/modules/api/post/search/Response";
 import { UniqueOwners } from "@/modules/api/post/search/Response";
-import { UserSearchResponse } from "@/modules/api/user/search/Response";
+import { SystemUserSearchResponse, UserSearchResponse } from "@/modules/api/user/search/Response";
 import { UserSearch } from "@/modules/api/user/search/Search";
 
 export const NewClaimList = async (req: PostSearchRequest[]): Promise<ClaimObject[]> => {
@@ -31,10 +31,21 @@ export const NewClaimList = async (req: PostSearchRequest[]): Promise<ClaimObjec
     }
 
     for (const x of pos) {
-      const y = ump.get(x.owner);
+      // We need to check for some eventual inconsistencies. When we fetch posts
+      // and users, then there should be a user object for every post object
+      // that we deal with. The exception here are posts that have been created
+      // automatically by the system. Those posts have the owner ID 1 associated
+      // with them, because those posts have been automatically created by the
+      // system. And so for the user ID 1 there does not exist a user object,
+      // which means we have to ignore those cases in the condition below.
+      let y = ump.get(x.owner);
       if (!y) {
-        console.error("The received lists of server responses are inconsistent. At least one UserSearchResponse could not be found for its corresponding PostSearchResponse.");
-        return [];
+        if (x.owner == "1") {
+          y = SystemUserSearchResponse();
+        } else {
+          console.error("The received lists of server responses are inconsistent. At least one UserSearchResponse could not be found for its corresponding PostSearchResponse.");
+          return [];
+        }
       }
 
       const z = pmp.get(x.parent);

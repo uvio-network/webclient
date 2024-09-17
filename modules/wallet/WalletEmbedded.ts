@@ -18,12 +18,12 @@ export const NewWalletEmbedded = async (wal: Privy.ConnectedWallet, index: numbe
   const provider = await wal.getEthersProvider();
 
   const con = await createSmartAccountClient({
-    signer: provider.getSigner(),
     biconomyPaymasterApiKey: active.biconomyPaymasterApiKey,
     bundlerUrl: NewBundlerURL(active.id),
-    rpcUrl: active.rpcEndpoints[0],
     chainId: active.id,
     index: index,
+    rpcUrl: active.rpcEndpoints[0],
+    signer: provider.getSigner(),
   });
 
   const add = await con.getAddress();

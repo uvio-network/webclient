@@ -24,3 +24,15 @@ export const EmptyUserSearchResponse = (): UserSearchResponse => {
     name: "",
   };
 };
+
+export const SystemUserSearchResponse = (): UserSearchResponse => {
+  return {
+    // intern
+    created: "1726597877",
+    id: "1",
+
+    // public
+    image: "",
+    name: "Sleeper Service",
+  };
+};
