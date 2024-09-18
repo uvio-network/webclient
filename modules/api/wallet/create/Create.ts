@@ -9,7 +9,6 @@ export async function WalletCreate(tok: string, req: WalletCreateRequest[]): Pro
         object: req.map((x) => ({
           intern: {},
           public: {
-            active: x.active,
             address: x.address,
             description: x.description,
             kind: x.kind,

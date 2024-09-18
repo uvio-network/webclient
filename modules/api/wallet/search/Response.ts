@@ -5,7 +5,6 @@ export interface WalletSearchResponse {
   owner: string;
 
   // public
-  active: string;
   address: string;
   description: string;
   kind: string;

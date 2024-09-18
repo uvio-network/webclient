@@ -6,7 +6,8 @@ const disagreement = 1;
 
 export interface ClaimUpside {
   // hsitg expresses whether the user for which this upside is calculated has in
-  // fact skin in the game.
+  // fact skin in the game, meaning the user in question has staked or voted on
+  // the claim at hand.
   hsitg: boolean;
   // share is the potential percentage that the current user has to gain
   // theoretically for either side of the bet.

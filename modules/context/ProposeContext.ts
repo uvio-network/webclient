@@ -21,6 +21,7 @@ export interface ProposeContext {
   option: boolean;
   post: PostCreateResponse;
   public: PublicClient;
+  reference: string;
   success: boolean;
   symbol: string;
   token: TokenConfig;

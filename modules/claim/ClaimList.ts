@@ -43,14 +43,16 @@ export const NewClaimList = async (req: PostSearchRequest[]): Promise<ClaimObjec
         if (x.owner == "1") {
           y = SystemUserSearchResponse();
         } else {
-          console.error("The received lists of server responses are inconsistent. At least one UserSearchResponse could not be found for its corresponding PostSearchResponse.");
+          console.error("ClaimList", "ID", x.id, "owner", x.owner);
+          ToastSender.Error("The received lists of server responses are inconsistent. At least one UserSearchResponse could not be found for its corresponding PostSearchResponse.");
           return [];
         }
       }
 
       const z = pmp.get(x.parent);
-      if (!z && x.kind === "comment") {
-        console.error("The received lists of server responses are inconsistent. At least one parent PostSearchResponse could not be found for its corresponding comment PostSearchResponse.");
+      if (!z && x.parent !== "") {
+        console.error("ClaimList", "ID", x.id, "parent", x.parent);
+        ToastSender.Error("The received lists of server responses are inconsistent. At least one parent PostSearchResponse could not be found for its corresponding comment PostSearchResponse.");
         return [];
       }
 
@@ -66,7 +68,7 @@ export const NewClaimList = async (req: PostSearchRequest[]): Promise<ClaimObjec
     }
   } catch (err) {
     console.error(err);
-    ToastSender.Error("Fog mey, it's even more over than we thought it was!");
+    ToastSender.Error(String(err));
     return Promise.reject(err);
   }
 

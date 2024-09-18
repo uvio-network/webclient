@@ -19,7 +19,7 @@ export const ClaimActions = (props: Props) => {
 
   const isClaim = props.claim.kind() === "claim" ? true : false;
   const isPage = usePathname() === "/claim/" + props.claim.id() ? true : false;
-  const isPending = props.claim.lifecycle() === "pending";
+  const isPending = props.claim.pending();
 
   return (
     // This relative container is the anchor for elements inside of the
@@ -39,6 +39,7 @@ export const ClaimActions = (props: Props) => {
         <ClaimLabels
           labels={props.claim.labels()}
           lifecycle={props.claim.lifecycle()}
+          pending={props.claim.pending()}
         />
       )}
 
