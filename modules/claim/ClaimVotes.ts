@@ -28,14 +28,16 @@ export const NewClaimVotes = (pos: PostSearchResponse): ClaimVotes => {
     probability: 0,
   };
 
+  const tot = sum.agreement + sum.disagreement;
+
   // Calculate the probability as the fraction of staked reputation that agrees
   // with the proposed claim. If for instance 9 ETH are staked in agreement and
   // 1 ETH is staked in disagreement, then the claims probability is 90%. On the
   // other hand, if there would be only 1 ETH staked in agreement, and 9 ETH
   // staked in disagreement, the proposed claim would only have a probability of
   // 10% to be true.
-  {
-    sum.probability = sum.agreement / (sum.agreement + sum.disagreement) * 100;
+  if (tot > 0) {
+    sum.probability = sum.agreement / tot * 100;
   }
 
   return sum;

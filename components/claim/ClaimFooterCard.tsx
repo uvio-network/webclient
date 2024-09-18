@@ -11,11 +11,13 @@ interface Props {
 }
 
 export const ClaimFooterCard = (props: Props) => {
+  const resolve = props.claim.lifecycle() === "resolve";
+
   const hsitg = props.claim.upside().hsitg;
   const token = props.claim.token();
 
   const probability = props.claim.votes().probability.toFixed(0);
-  const total = (props.claim.votes().agreement + props.claim.votes().disagreement).toFixed(2);
+  const total = (props.claim.votes().agreement + props.claim.votes().disagreement).toFixed(votPre(resolve));
 
   const stakeAgree = props.claim.upside().stake[0];
   const stakeDisagree = props.claim.upside().stake[1];
@@ -50,43 +52,52 @@ export const ClaimFooterCard = (props: Props) => {
           sideOffset={5}
         >
           <div className="text-gray-500 dark:text-gray-400 text-sm">
-            This claim has a probability of <strong>{probability}%</strong> to be true, based on a total of {total} {token} staked.
-
-            {stakeAgree !== 0 && (
+            {resolve === true ? (
               <div>
-                <Separator.Horizontal />
+                This resolution was voted to be true by <strong>{probability}%</strong> of the voters, based on a total of {total} votes.
 
-                <div>
-                  You have {stakeAgree} {token} staked in <strong>agreement</strong> with the claim&apos;s statement.
-
-                  <br /><br />
-
-                  Your potential upside is currently <strong>{shareAgree}%</strong>, for which this market must be resolved in agreement with the claim&apos;s statement.
-                </div>
               </div>
-            )}
-
-            {stakeDisagree !== 0 && (
+            ) : (
               <div>
-                <Separator.Horizontal />
+                This claim has a probability of <strong>{probability}%</strong> to be true, based on a total of {total} {token} staked.
 
-                <div>
-                  You have {stakeDisagree} {token} staked in <strong>disagreement</strong> with the claim&apos;s statement.
+                {stakeAgree !== 0 && (
+                  <div>
+                    <Separator.Horizontal />
 
-                  <br /><br />
+                    <div>
+                      You have {stakeAgree} {token} staked in <strong>agreement</strong> with the claim&apos;s statement.
 
-                  Your potential upside is currently <strong>{shareDisagree}%</strong>, for which this market must be resolved in disagreement with the claim&apos;s statement.
-                </div>
-              </div>
-            )}
+                      <br /><br />
 
-            {hsitg === false && (
-              <div>
-                <Separator.Horizontal />
+                      Your potential upside is currently <strong>{shareAgree}%</strong>, for which this market must be resolved in agreement with the claim&apos;s statement.
+                    </div>
+                  </div>
+                )}
 
-                <div>
-                  You have no reputation staked in this market.
-                </div>
+                {stakeDisagree !== 0 && (
+                  <div>
+                    <Separator.Horizontal />
+
+                    <div>
+                      You have {stakeDisagree} {token} staked in <strong>disagreement</strong> with the claim&apos;s statement.
+
+                      <br /><br />
+
+                      Your potential upside is currently <strong>{shareDisagree}%</strong>, for which this market must be resolved in disagreement with the claim&apos;s statement.
+                    </div>
+                  </div>
+                )}
+
+                {hsitg === false && (
+                  <div>
+                    <Separator.Horizontal />
+
+                    <div>
+                      You have no reputation staked in this market.
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -94,4 +105,9 @@ export const ClaimFooterCard = (props: Props) => {
       </HoverCard.Portal>
     </HoverCard.Root>
   );
+};
+
+const votPre = (res: boolean): number => {
+  if (res) return 0;
+  return 2;
 };

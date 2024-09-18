@@ -38,6 +38,7 @@ const encPar = (ctx: ProposeContext): Required<EncodeFunctionDataParameters> => 
       ctx.amount.big,    // balance, the amount we deposited
       ctx.option,        // vote, agree or disagree with the claim
       ctx.expiry,        // expiry, unix timestamp in seconds
+      ctx.reference,     // hash, the claim's content checksum
       [],                // whitelisted tokens, none
     ],
   };

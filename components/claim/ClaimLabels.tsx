@@ -3,6 +3,7 @@ import { LabelList } from "@/components/label/LabelList";
 interface Props {
   labels: string[];
   lifecycle: string;
+  pending: boolean;
 }
 
 export const ClaimLabels = (props: Props) => {
@@ -11,6 +12,7 @@ export const ClaimLabels = (props: Props) => {
       <LabelList
         labels={props.labels}
         lifecycle={props.lifecycle}
+        pending={props.pending}
       />
     </div>
   );

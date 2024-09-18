@@ -25,7 +25,6 @@ export async function WalletSearch(tok: string, req: WalletSearchRequest[]): Pro
       owner: x.intern?.owner || "",
 
       //public
-      active: x.public?.active || "",
       address: x.public?.address || "",
       description: x.public?.description || "",
       kind: x.public?.kind || "",

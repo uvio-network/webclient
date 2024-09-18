@@ -107,6 +107,37 @@ export const Claims = [
     "inputs": [
       {
         "indexed": false,
+        "internalType": "uint256",
+        "name": "cla",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "use",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "bal",
+        "type": "uint256"
+      }
+    ],
+    "name": "ClaimUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "dis",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
         "internalType": "address",
         "name": "use",
         "type": "address"
@@ -130,6 +161,12 @@ export const Claims = [
   {
     "anonymous": false,
     "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "dis",
+        "type": "uint256"
+      },
       {
         "indexed": false,
         "internalType": "uint256",
@@ -163,6 +200,12 @@ export const Claims = [
     "inputs": [
       {
         "indexed": false,
+        "internalType": "uint256",
+        "name": "pro",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
         "internalType": "address",
         "name": "use",
         "type": "address"
@@ -186,6 +229,12 @@ export const Claims = [
   {
     "anonymous": false,
     "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "pro",
+        "type": "uint256"
+      },
       {
         "indexed": false,
         "internalType": "uint256",
@@ -217,6 +266,12 @@ export const Claims = [
   {
     "anonymous": false,
     "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "pro",
+        "type": "uint256"
+      },
       {
         "indexed": false,
         "internalType": "address",
@@ -766,6 +821,11 @@ export const Claims = [
         "type": "uint64"
       },
       {
+        "internalType": "string",
+        "name": "con",
+        "type": "string"
+      },
+      {
         "internalType": "uint256",
         "name": "pro",
         "type": "uint256"
@@ -797,6 +857,11 @@ export const Claims = [
         "internalType": "uint64",
         "name": "exp",
         "type": "uint64"
+      },
+      {
+        "internalType": "string",
+        "name": "con",
+        "type": "string"
       },
       {
         "internalType": "address[]",
@@ -1043,6 +1108,25 @@ export const Claims = [
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "cla",
+        "type": "uint256"
+      }
+    ],
+    "name": "searchContent",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
       }
     ],
     "stateMutability": "view",

@@ -30,7 +30,6 @@ export const ensureWallets = async (wal: WalletObject, tok: string) => {
 
 const createWallet = (add: string, kin: string): WalletCreateRequest => {
   return {
-    active: "true",
     address: add,
     description: kin === "embedded" ? "embedded smart account" : "injected EOA",
     kind: kin,

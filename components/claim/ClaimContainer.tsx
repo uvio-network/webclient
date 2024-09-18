@@ -25,10 +25,10 @@ export const ClaimContainer = (props: Props) => {
       already rendered at the top of the claim page. And so in this case, we
       want to only render comments in a simplified version, without embedding.
       */}
-      {props.claim.kind() === "comment" && props.embed && (
+      {props.embed && props.claim.parent() && ((props.claim.kind() === "claim" && props.claim.lifecycle() !== "propose") || props.claim.kind() === "comment") && (
         <div className="mx-2 mt-2 px-2 pb-2 background-overlay rounded border border-color">
           <ClaimContent
-            claim={props.claim.parent()!} // if kind is "comment" then parent() will never be undefined
+            claim={props.claim.parent()!}
             embed={props.embed}
           />
         </div>

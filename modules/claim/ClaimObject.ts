@@ -92,7 +92,8 @@ export class ClaimObject {
   }
 
   lifecycle(): string {
-    return this.post.lifecycle;
+    const spl = SplitList(this.post.lifecycle, ":");
+    return spl[0].toLowerCase();
   }
 
   markdown(): string {
@@ -105,6 +106,11 @@ export class ClaimObject {
 
   parent(): ClaimObject | undefined {
     return this.claimParent;
+  }
+
+  pending(): boolean {
+    const spl = SplitList(this.post.lifecycle, ":");
+    return spl[1].toLowerCase() === "pending";
   }
 
   token(): string {

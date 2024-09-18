@@ -6,6 +6,7 @@ import { createWalletClient } from "viem";
 import { custom } from "viem";
 import { Hex } from "viem";
 import { NewPublicClient } from "@/modules/chain/PublicClient";
+import { parseGwei } from "viem";
 import { PublicClient } from "viem";
 import { Receipt } from "@/modules/wallet/WalletInterface";
 import { Signer } from "@/modules/wallet/WalletInterface";
@@ -56,6 +57,8 @@ class Injected implements Signer {
         data: x.data as Hex,
         to: x.to as Address,
         chain: this.cli.chain,
+        maxFeePerGas: parseGwei("6"),
+        maxPriorityFeePerGas: parseGwei("0.3"),
       });
 
       rec.push(await this.pub.waitForTransactionReceipt({

@@ -4,7 +4,6 @@ import * as CreatePropose from "@/modules/transaction/claims/write/CreatePropose
 import * as ToastSender from "@/components/toast/ToastSender";
 import * as TokenApprove from "@/modules/transaction/token/write/TokenApprove";
 
-import { Address } from "viem";
 import { ChainStore } from "@/modules/chain/ChainStore";
 import { EditorMessage } from "@/components/app/claim/propose/editor/EditorStore";
 import { EditorStore } from "@/components/app/claim/propose/editor/EditorStore";
@@ -130,6 +129,7 @@ export const SubmitForm = async (err: (ctx: ProposeContext) => void, off: (ctx: 
     option: true, // hardcoded for now
     post: EmptyPostCreateResponse(),
     public: wallet.object.public(),
+    reference: await newHsh(editor.markdown),
     success: false,
     symbol: editor.getToken(),
     token: chain.tokens[editor.getToken()],
@@ -211,6 +211,15 @@ const ranNum = (len: number): BigInt => {
   const min = BigInt(10 ** (len - 1));
   const max = BigInt(10 ** len - 1);
   return BigInt(Math.floor(Math.random() * Number(max - min + BigInt(1))) + Number(min));
+};
+
+const newHsh = async (str: string): Promise<string> => {
+  const enc = new TextEncoder().encode(str);
+  const buf = await window.crypto.subtle.digest("SHA-256", enc);
+  const unt = Array.from(new Uint8Array(buf));
+  const hsh = unt.map((b) => b.toString(16).padStart(2, "0")).join("");
+
+  return hsh;
 };
 
 const conCre = async (ctx: ProposeContext, wal: WalletMessage): Promise<ProposeContext> => {

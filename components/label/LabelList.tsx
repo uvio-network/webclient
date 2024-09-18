@@ -7,15 +7,16 @@ import { LabelCard } from "@/components/label/LabelCard";
 interface Props {
   labels: string[];
   lifecycle: string;
+  pending: boolean;
   target?: string;
 }
 
 export const LabelList = (props: Props) => {
   return (
     <div className="flex py-1">
-      {props.lifecycle === "pending" ? (
+      {props.pending ? (
         <LabelCard text="This claim's transaction has not yet finalized onchain.">
-          <LifecycleLabel dashed={true} lifecycle={props.lifecycle} />
+          <LifecycleLabel dashed={true} lifecycle="pending" />
         </LabelCard>
       ) : (
         <Link
