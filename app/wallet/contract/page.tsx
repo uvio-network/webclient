@@ -33,9 +33,10 @@ export default function Page() {
 
     React.useEffect(() => {
       loaded();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    if (loading) return <></>;
+    if (wallet?.object === undefined || loading) return <></>;
   }
 
   return (

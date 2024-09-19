@@ -60,6 +60,14 @@ export class ClaimObject {
   }
 
   //
+  // extern
+  //
+
+  samples(): { [key: string]: string } {
+    return this.post.samples;
+  }
+
+  //
   // intern
   //
 

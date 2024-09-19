@@ -16,6 +16,7 @@ export const AuthPage = ({ children }: { children: React.ReactNode }) => {
     if (!authorizing) {
       loaded();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authorizing]);
 
   if (loading || authorizing) return <></>;

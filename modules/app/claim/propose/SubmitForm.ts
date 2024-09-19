@@ -7,29 +7,34 @@ import * as TokenApprove from "@/modules/transaction/token/write/TokenApprove";
 import { ChainStore } from "@/modules/chain/ChainStore";
 import { EditorMessage } from "@/components/app/claim/propose/editor/EditorStore";
 import { EditorStore } from "@/components/app/claim/propose/editor/EditorStore";
+import { EmptyReceipt } from "@/modules/wallet/WalletInterface";
 import { EmptyPostCreateResponse } from "@/modules/api/post/create/Response";
 import { EmptyVoteCreateResponse } from "@/modules/api/vote/create/Response";
 import { HasDuplicate } from "@/modules/string/HasDuplicate";
 import { parseUnits } from "viem";
 import { PostCreate } from "@/modules/api/post/create/Create";
 import { PostCreateRequest } from "@/modules/api/post/create/Request";
+import { PostDelete } from "@/modules/api/post/delete/Delete";
+import { PostDeleteRequest } from "@/modules/api/post/delete/Request";
 import { PostUpdate } from "@/modules/api/post/update/Update";
 import { PostUpdateRequest } from "@/modules/api/post/update/Request";
 import { ProposeContext } from "@/modules/context/ProposeContext";
 import { SplitList } from "@/modules/string/SplitList";
 import { TokenMessage } from "@/modules/token/TokenStore";
 import { TokenStore } from "@/modules/token/TokenStore";
+import { Unix } from "@/modules/time/Time";
 import { UserStore } from "@/modules/user/UserStore";
 import { VoteCreate } from "@/modules/api/vote/create/Create";
 import { VoteCreateRequest } from "@/modules/api/vote/create/Request";
+import { VoteDelete } from "@/modules/api/vote/delete/Delete";
+import { VoteDeleteRequest } from "@/modules/api/vote/delete/Request";
+import { VoteUpdate } from "@/modules/api/vote/update/Update";
+import { VoteUpdateRequest } from "@/modules/api/vote/update/Request";
 import { WalletMessage } from "@/modules/wallet/WalletStore";
 import { WalletStore } from "@/modules/wallet/WalletStore";
-import { Unix } from "@/modules/time/Time";
-import { VoteUpdateRequest } from "@/modules/api/vote/update/Request";
-import { VoteUpdate } from "@/modules/api/vote/update/Update";
 
 // SubmitForm validates user input and then performs the claim creation.
-export const SubmitForm = async (err: (ctx: ProposeContext) => void, off: (ctx: ProposeContext) => void, onc: (ctx: ProposeContext) => void) => {
+export const SubmitForm = async (err: (ctx: ProposeContext) => void, off: (ctx: ProposeContext) => void, onc: (ctx: ProposeContext) => void, rej: (ctx: ProposeContext) => void) => {
   const chain = ChainStore.getState().getActive();
   const editor = EditorStore.getState();
   const token = TokenStore.getState().available;
@@ -123,14 +128,13 @@ export const SubmitForm = async (err: (ctx: ProposeContext) => void, off: (ctx: 
     claims: chain.contracts["Claims-" + editor.getToken()],
     expiry: newExp(editor),
     from: wallet.object.address(),
-    hash: "", // filled on the fly
     labels: SplitList(editor.labels).join(","),
     markdown: editor.markdown,
     option: true, // hardcoded for now
     post: EmptyPostCreateResponse(),
     public: wallet.object.public(),
+    receipt: EmptyReceipt(),
     reference: await newHsh(editor.markdown),
-    success: false,
     symbol: editor.getToken(),
     token: chain.tokens[editor.getToken()],
     vote: EmptyVoteCreateResponse(),
@@ -151,7 +155,6 @@ export const SubmitForm = async (err: (ctx: ProposeContext) => void, off: (ctx: 
 
   {
     ToastSender.Success("Hooray, thy claim proposed milady!");
-    editor.delete();
     off(ctx);
   }
 
@@ -159,10 +162,18 @@ export const SubmitForm = async (err: (ctx: ProposeContext) => void, off: (ctx: 
     ctx = await conCre(ctx, wallet);
   }
 
-  if (ctx.success === true) {
+  if (ctx.receipt.success === true) {
     await posUpd(ctx);
     await votUpd(ctx);
+    editor.delete();
     onc(ctx);
+  } else if (ctx.receipt.rejected === true) {
+    ToastSender.Info("No biggie darling, we'll take it back!");
+    // The vote object must be deleted first, because it requires the post
+    // object to exist in the backend in order to be deleted.
+    await votDel(ctx);
+    await posDel(ctx);
+    rej(ctx);
   } else {
     ToastSender.Error("Ohh, nope, that was not good enough!");
     err(ctx);
@@ -229,10 +240,8 @@ const conCre = async (ctx: ProposeContext, wal: WalletMessage): Promise<ProposeC
   ];
 
   try {
-    const rec = await wal.object.sendTransaction(txn);
-    ctx.hash = rec.hash;
-    ctx.success = rec.success;
-
+    const res = await wal.object.sendTransaction(txn);
+    ctx.receipt = res;
     return ctx;
   } catch (err) {
     console.error(err);
@@ -266,12 +275,27 @@ const posCre = async (ctx: ProposeContext): Promise<ProposeContext> => {
   }
 };
 
+const posDel = async (ctx: ProposeContext) => {
+  const req: PostDeleteRequest = {
+    // intern
+    id: ctx.post.id,
+  };
+
+  try {
+    const [res] = await PostDelete(ctx.auth, [req]);
+  } catch (err) {
+    console.error(err);
+    ToastSender.Error(err instanceof Error ? err.message : String(err));
+    return Promise.reject(err);
+  }
+}
+
 const posUpd = async (ctx: ProposeContext) => {
   const req: PostUpdateRequest = {
     // intern
     id: ctx.post.id,
     // public
-    hash: ctx.hash,
+    hash: ctx.receipt.hash,
     meta: "",
   };
 
@@ -327,12 +351,27 @@ const votCre = async (ctx: ProposeContext): Promise<ProposeContext> => {
   }
 };
 
+const votDel = async (ctx: ProposeContext) => {
+  const req: VoteDeleteRequest = {
+    // intern
+    id: ctx.vote.id,
+  };
+
+  try {
+    const [res] = await VoteDelete(ctx.auth, [req]);
+  } catch (err) {
+    console.error(err);
+    ToastSender.Error(err instanceof Error ? err.message : String(err));
+    return Promise.reject(err);
+  }
+}
+
 const votUpd = async (ctx: ProposeContext) => {
   const req: VoteUpdateRequest = {
     // intern
     id: ctx.vote.id,
     // public
-    hash: ctx.hash,
+    hash: ctx.receipt.hash,
     meta: "",
   };
 

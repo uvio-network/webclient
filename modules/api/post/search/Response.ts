@@ -1,4 +1,7 @@
 export interface PostSearchResponse {
+  // extern
+  samples: { [key: string]: string };
+
   // intern
   created: string;
   id: string;

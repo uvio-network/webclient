@@ -4,7 +4,8 @@ import React from "react";
 
 import * as Separator from "@/components/layout/separator";
 
-import { ClaimButtons } from "@/components/claim/ClaimButtons";
+import { ClaimButtonsStake } from "@/components/claim/ClaimButtonsStake";
+import { ClaimButtonsTruth } from "@/components/claim/ClaimButtonsTruth";
 import { ClaimFooter } from "@/components/claim/ClaimFooter";
 import { ClaimLabels } from "@/components/claim/ClaimLabels";
 import { ClaimObject } from "@/modules/claim/ClaimObject";
@@ -20,10 +21,11 @@ export const ClaimActions = (props: Props) => {
   const isClaim = props.claim.kind() === "claim" ? true : false;
   const isPage = usePathname() === "/claim/" + props.claim.id() ? true : false;
   const isPending = props.claim.pending();
+  const isResolve = props.claim.lifecycle() === "resolve";
 
   return (
     // This relative container is the anchor for elements inside of the
-    // ClaimButtons component. When any of the claim buttons is clicked, we
+    // ClaimButtons* component. When any of the claim buttons is clicked, we
     // overlay an element to explain some details about staking reputation. And
     // the overlay does only work properly when this div wrapper here provides
     // the anchor with its relative position.
@@ -60,11 +62,21 @@ export const ClaimActions = (props: Props) => {
       )}
 
       {isClaim && isPage && !isPending && (
-        <ClaimButtons
-          claim={props.claim}
-          open={open}
-          setOpen={setOpen}
-        />
+        <>
+          {isResolve ? (
+            <ClaimButtonsTruth
+              claim={props.claim}
+              open={open}
+              setOpen={setOpen}
+            />
+          ) : (
+            <ClaimButtonsStake
+              claim={props.claim}
+              open={open}
+              setOpen={setOpen}
+            />
+          )}
+        </>
       )}
 
       <ClaimFooter

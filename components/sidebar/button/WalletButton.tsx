@@ -85,7 +85,7 @@ export const WalletButton = () => {
     return () => {
       mnt = false;
     };
-  }, [user, T, wallet]);
+  }, [user, wallet]);
 
   return (
     <>

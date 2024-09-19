@@ -1,9 +1,10 @@
 "use client";
 
 import * as HoverCard from "@radix-ui/react-hover-card";
-import * as Separator from "@/components/layout/separator";
 
 import { ClaimObject } from "@/modules/claim/ClaimObject";
+import { ClaimFooterCardPropose } from "@/components/claim/ClaimFooterCardPropose";
+import { ClaimFooterCardResolve } from "@/components/claim/ClaimFooterCardResolve";
 import { EffectButton } from "@/components/button/EffectButton";
 
 interface Props {
@@ -11,19 +12,7 @@ interface Props {
 }
 
 export const ClaimFooterCard = (props: Props) => {
-  const resolve = props.claim.lifecycle() === "resolve";
-
-  const hsitg = props.claim.upside().hsitg;
-  const token = props.claim.token();
-
   const probability = props.claim.votes().probability.toFixed(0);
-  const total = (props.claim.votes().agreement + props.claim.votes().disagreement).toFixed(votPre(resolve));
-
-  const stakeAgree = props.claim.upside().stake[0];
-  const stakeDisagree = props.claim.upside().stake[1];
-
-  const shareAgree = props.claim.upside().share[0].toFixed(0);
-  const shareDisagree = props.claim.upside().share[1].toFixed(0);
 
   return (
     <HoverCard.Root
@@ -52,62 +41,14 @@ export const ClaimFooterCard = (props: Props) => {
           sideOffset={5}
         >
           <div className="text-gray-500 dark:text-gray-400 text-sm">
-            {resolve === true ? (
-              <div>
-                This resolution was voted to be true by <strong>{probability}%</strong> of the voters, based on a total of {total} votes.
-
-              </div>
+            {props.claim.lifecycle() === "resolve" ? (
+              <ClaimFooterCardResolve claim={props.claim} />
             ) : (
-              <div>
-                This claim has a probability of <strong>{probability}%</strong> to be true, based on a total of {total} {token} staked.
-
-                {stakeAgree !== 0 && (
-                  <div>
-                    <Separator.Horizontal />
-
-                    <div>
-                      You have {stakeAgree} {token} staked in <strong>agreement</strong> with the claim&apos;s statement.
-
-                      <br /><br />
-
-                      Your potential upside is currently <strong>{shareAgree}%</strong>, for which this market must be resolved in agreement with the claim&apos;s statement.
-                    </div>
-                  </div>
-                )}
-
-                {stakeDisagree !== 0 && (
-                  <div>
-                    <Separator.Horizontal />
-
-                    <div>
-                      You have {stakeDisagree} {token} staked in <strong>disagreement</strong> with the claim&apos;s statement.
-
-                      <br /><br />
-
-                      Your potential upside is currently <strong>{shareDisagree}%</strong>, for which this market must be resolved in disagreement with the claim&apos;s statement.
-                    </div>
-                  </div>
-                )}
-
-                {hsitg === false && (
-                  <div>
-                    <Separator.Horizontal />
-
-                    <div>
-                      You have no reputation staked in this market.
-                    </div>
-                  </div>
-                )}
-              </div>
+              <ClaimFooterCardPropose claim={props.claim} />
             )}
           </div>
         </HoverCard.Content>
       </HoverCard.Portal>
     </HoverCard.Root>
   );
-};
-
-const votPre = (res: boolean): number => {
-  if (res) return 0;
-  return 2;
 };
