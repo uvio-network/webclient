@@ -70,6 +70,7 @@ class Injected implements Signer {
 
     return {
       hash: las.transactionHash,
+      rejected: false,
       success: las.status.toLowerCase() === "success" ? true : false,
     };
   }

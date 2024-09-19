@@ -1,15 +1,11 @@
 import * as ToastSender from "@/components/toast/ToastSender";
-import * as TokenApprove from "@/modules/transaction/token/write/TokenApprove";
-import * as UpdatePropose from "@/modules/transaction/claims/write/UpdatePropose";
+import * as UpdateResolve from "@/modules/transaction/claims/write/UpdateResolve";
 
 import { ChainStore } from "@/modules/chain/ChainStore";
-import { EditorStore } from "@/components/app/claim/stake/editor/EditorStore";
+import { EditorStore } from "@/components/app/claim/truth/editor/EditorStore";
 import { EmptyReceipt } from "@/modules/wallet/WalletInterface";
 import { EmptyVoteCreateResponse } from "@/modules/api/vote/create/Response";
-import { parseUnits } from "viem";
-import { StakeContext } from "@/modules/context/StakeContext";
-import { TokenMessage } from "@/modules/token/TokenStore";
-import { TokenStore } from "@/modules/token/TokenStore";
+import { TruthContext } from "@/modules/context/TruthContext";
 import { UserStore } from "@/modules/user/UserStore";
 import { VoteCreate } from "@/modules/api/vote/create/Create";
 import { VoteCreateRequest } from "@/modules/api/vote/create/Request";
@@ -21,43 +17,24 @@ import { WalletMessage } from "@/modules/wallet/WalletStore";
 import { WalletStore } from "@/modules/wallet/WalletStore";
 
 // SubmitForm validates user input and then performs the vote creation.
-export const SubmitForm = async (err: (ctx: StakeContext) => void, off: (ctx: StakeContext) => void, onc: (ctx: StakeContext) => void) => {
+export const SubmitForm = async (err: (ctx: TruthContext) => void, off: (ctx: TruthContext) => void, onc: (ctx: TruthContext) => void) => {
   const chain = ChainStore.getState().getActive();
   const editor = EditorStore.getState();
-  const token = TokenStore.getState().available;
   const user = UserStore.getState().user;
   const wallet = WalletStore.getState().wallet;
 
-  {
-    if (!editor.value || editor.value === "") {
-      return ToastSender.Error("The staking value must not be empty.");
-    }
-    if (!inpNum(editor.value)) {
-      return ToastSender.Error("The staking value must be a positive number without token symbol.");
-    }
-    if (parseFloat(editor.value) < editor.minimum) {
-      return ToastSender.Error(`You must stake at least the minimum amount of ${editor.minimum} ${editor.token}.`);
-    }
-    if (!inpBal(editor.value, editor.token, token)) {
-      return ToastSender.Error(`You do not seem to have enough tokens to stake ${editor.value} ${editor.token}.`);
-    }
-  }
-
-  let ctx: StakeContext = {
-    amount: {
-      num: parseFloat(editor.value),
-      big: parseUnits(String(parseFloat(editor.value)), chain.tokens[editor.token].decimals),
-    },
+  let ctx: TruthContext = {
     auth: user.token,
     chain: chain.id.toString(),
-    claim: editor.claim,
+    claim: {
+      propose: editor.propose,
+      resolve: editor.resolve,
+    },
     claims: chain.contracts["Claims-" + editor.token],
     from: wallet.object.address(),
     option: editor.option,
     public: wallet.object.public(),
     receipt: EmptyReceipt(),
-    symbol: editor.token,
-    token: chain.tokens[editor.token],
     vote: EmptyVoteCreateResponse(),
   };
 
@@ -74,7 +51,7 @@ export const SubmitForm = async (err: (ctx: StakeContext) => void, off: (ctx: St
   }
 
   {
-    ToastSender.Success("Certified, you staked the shit out of that claim!");
+    ToastSender.Success("Heareth heareth, let there truth be told!");
     off(ctx);
   }
 
@@ -97,31 +74,13 @@ export const SubmitForm = async (err: (ctx: StakeContext) => void, off: (ctx: St
   // TODO prevent duplicated submits
 };
 
-const inpBal = (num: string, sym: string, tok: TokenMessage): boolean => {
-  const des = parseFloat(num);
-  const cur = tok[sym]?.balance || 0;
-
-  return cur >= des;
-};
-
-// inpNum returns true if the given input number is valid and greater than zero.
-//
-//     5
-//     0.003
-//
-const inpNum = (str: string): boolean => {
-  return !isNaN(Number(str)) && parseFloat(str) > 0;
-};
-
-const conCre = async (ctx: StakeContext, wal: WalletMessage): Promise<StakeContext> => {
+const conCre = async (ctx: TruthContext, wal: WalletMessage): Promise<TruthContext> => {
   const txn = [
-    TokenApprove.Encode(ctx.amount.big, ctx.claims.address, ctx.token),
-    UpdatePropose.Encode(ctx),
+    UpdateResolve.Encode(ctx),
   ];
 
   try {
-    const res = await wal.object.sendTransaction(txn);
-    ctx.receipt = res;
+    ctx.receipt = await wal.object.sendTransaction(txn);
     return ctx;
   } catch (err) {
     console.error(err);
@@ -130,10 +89,9 @@ const conCre = async (ctx: StakeContext, wal: WalletMessage): Promise<StakeConte
   }
 }
 
-const txnSim = async (ctx: StakeContext) => {
+const txnSim = async (ctx: TruthContext) => {
   try {
-    await TokenApprove.Simulate(ctx.public, ctx.from, ctx.amount.big, ctx.claims.address, ctx.token);
-    await UpdatePropose.Simulate(ctx);
+    await UpdateResolve.Simulate(ctx);
   } catch (err) {
     console.error(err);
     ToastSender.Error(err instanceof Error ? err.message : String(err));
@@ -141,16 +99,16 @@ const txnSim = async (ctx: StakeContext) => {
   }
 };
 
-const votCre = async (ctx: StakeContext): Promise<StakeContext> => {
+const votCre = async (ctx: TruthContext): Promise<TruthContext> => {
   const req: VoteCreateRequest = {
     chain: ctx.chain,
-    claim: ctx.claim,
+    claim: ctx.claim.resolve,
     hash: "",
-    kind: "stake",
+    kind: "truth",
     lifecycle: "onchain",
     meta: "",
     option: String(ctx.option),
-    value: ctx.amount.num.toString(),
+    value: "1",
   };
 
   try {
@@ -164,7 +122,7 @@ const votCre = async (ctx: StakeContext): Promise<StakeContext> => {
   }
 }
 
-const votDel = async (ctx: StakeContext) => {
+const votDel = async (ctx: TruthContext) => {
   const req: VoteDeleteRequest = {
     // intern
     id: ctx.vote.id,
@@ -179,7 +137,7 @@ const votDel = async (ctx: StakeContext) => {
   }
 }
 
-const votUpd = async (ctx: StakeContext) => {
+const votUpd = async (ctx: TruthContext) => {
   const req: VoteUpdateRequest = {
     // intern
     id: ctx.vote.id,

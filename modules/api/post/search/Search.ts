@@ -30,6 +30,9 @@ export async function PostSearch(tok: string, req: PostSearchRequest[]): Promise
     );
 
     return cal.response.object.map((x) => ({
+      // extern
+      samples: x.extern?.samples || {},
+
       // intern
       created: x.intern?.created || "",
       id: x.intern?.id || "",

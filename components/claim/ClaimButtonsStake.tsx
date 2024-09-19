@@ -18,7 +18,7 @@ interface Props {
   setOpen: (open: string) => void;
 }
 
-export const ClaimButtons = (props: Props) => {
+export const ClaimButtonsStake = (props: Props) => {
   const editor = EditorStore.getState();
   const query = QueryStore.getState();
 
@@ -52,6 +52,7 @@ export const ClaimButtons = (props: Props) => {
 
             <div className="w-full ml-2">
               <SubmitButton
+                open={props.open}
                 error={(ctx: StakeContext) => {
                   TokenStore.getState().updateBalance();
                 }}

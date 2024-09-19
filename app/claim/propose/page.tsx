@@ -74,6 +74,10 @@ export default function Page() {
                   QueryStore.getState().claim.refresh();
                   TokenStore.getState().updateBalance();
                 }}
+                rejected={(ctx: ProposeContext) => {
+                  router.push(`/claim/propose`);
+                  TokenStore.getState().updateBalance();
+                }}
               />
             </div>
           </div>

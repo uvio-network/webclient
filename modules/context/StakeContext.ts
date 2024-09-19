@@ -1,6 +1,7 @@
 import { Address } from "viem";
 import { ContractConfig } from "@/modules/contract/ContractConfig";
 import { PublicClient } from "viem";
+import { Receipt } from "@/modules/wallet/WalletInterface";
 import { TokenConfig } from "@/modules/token/TokenConfig";
 import { VoteCreateResponse } from "@/modules/api/vote/create/Response";
 
@@ -14,10 +15,9 @@ export interface StakeContext {
   claim: string;
   claims: ContractConfig;
   from: Address;
-  hash: string;
   option: boolean;
   public: PublicClient;
-  success: boolean;
+  receipt: Receipt;
   symbol: string;
   token: TokenConfig;
   vote: VoteCreateResponse;

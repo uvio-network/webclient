@@ -1,12 +1,12 @@
-import { StakeContext } from "@/modules/context/StakeContext";
-import { SubmitForm } from "@/modules/app/claim/stake/SubmitForm";
+import { SubmitForm } from "@/modules/app/claim/truth/SubmitForm";
 import { ToTitle } from "@/modules/string/ToTitle";
+import { TruthContext } from "@/modules/context/TruthContext";
 
 interface Props {
   open: string;
-  error: (ctx: StakeContext) => void;
-  offchain: (ctx: StakeContext) => void;
-  onchain: (ctx: StakeContext) => void;
+  error: (ctx: TruthContext) => void;
+  offchain: (ctx: TruthContext) => void;
+  onchain: (ctx: TruthContext) => void;
 }
 
 export const SubmitButton = (props: Props) => {
@@ -18,7 +18,7 @@ export const SubmitButton = (props: Props) => {
         SubmitForm(props.error, props.offchain, props.onchain);
       }}
     >
-      Stake in {ToTitle(props.open)}
+      Verify with {ToTitle(props.open)}
     </button>
   );
 };

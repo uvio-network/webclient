@@ -58,6 +58,7 @@ class Embedded implements Signer {
 
     return {
       hash: receipt.transactionHash,
+      rejected: false,
       success: success.toLowerCase() === "true" ? true : false,
     };
   }
