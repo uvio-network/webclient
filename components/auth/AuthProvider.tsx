@@ -13,6 +13,7 @@ import { WalletObject } from "@/modules/wallet/WalletObject";
 
 export const AuthProvider = () => {
   const [alreadyLoggedIn, setAlreadyLoggedIn] = React.useState<boolean>(false);
+  const [login, setLogin] = React.useState<boolean>(false);
 
   const { authenticated, logout, user } = Privy.usePrivy();
   const { wallets, ready } = Privy.useWallets();
@@ -64,25 +65,35 @@ export const AuthProvider = () => {
     if (alreadyLoggedIn && authenticated && ready && wallets.length === 0) {
       logout();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [alreadyLoggedIn, authenticated, ready, wallets]);
 
   React.useEffect(() => {
-    if (authenticated && user && wallet) {
-      // We have to reset our alreadyLoggedIn flag because consecutive logins
-      // need to be treated separately.
+    if (authenticated && login && user && wallet) {
+      // We have to reset our alreadyLoggedIn and login flags in any event,
+      // because consecutive logins need to be treated separately.
       setAlreadyLoggedIn(false);
+      setLogin(false);
 
       // Finally process all external API calls and all data collected up to
       // this point in order to update our internal user store.
       setupAuth(user, wallet);
     }
-  }, [authenticated, user, wallet]);
+  }, [authenticated, login, user, wallet]);
 
-  // Note that we need to use this login hook to manage the edge case of users
-  // disconnecting their wallets from within their own wallet extensions.
   Privy.useLogin({
     onComplete: (user, isNewUser, wasAlreadyAuthenticated) => {
+      // Note that we need to use this login hook to manage the edge case of
+      // users disconnecting their wallets from within their own wallet
+      // extensions. For those edge cases we need to track which of our users
+      // was already logged in.
       setAlreadyLoggedIn(wasAlreadyAuthenticated);
+
+      // Additionally, we also have to track some signal for the login to be
+      // completed. Only once the user login has concluded can we proceed with
+      // our own API calls. If we ignore the login flag, we will end up making
+      // apiserver calls twice over.
+      setLogin(true);
     },
   });
 

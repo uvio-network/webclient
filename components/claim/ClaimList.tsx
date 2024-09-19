@@ -75,6 +75,7 @@ export const ClaimList = (props: Props) => {
       if (!posts.isPending) {
         loaded();
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [posts.isPending]);
 
     if (loading) return <></>;

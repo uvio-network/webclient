@@ -1,11 +1,12 @@
 import * as Privy from "@privy-io/react-auth";
 
-import { Address, BaseError, TransactionExecutionError } from "viem";
+import { Address } from "viem";
+import { BaseError } from "viem";
 import { NewPublicClient } from "@/modules/chain/PublicClient";
 import { NewWalletEmbedded } from "@/modules/wallet/WalletEmbedded";
 import { NewWalletInjected } from "@/modules/wallet/WalletInjected";
 import { PublicClient } from "viem";
-import { Receipt, UserDeniedSignatureError } from "@/modules/wallet/WalletInterface";
+import { Receipt } from "@/modules/wallet/WalletInterface";
 import { RejectedReceipt } from "@/modules/wallet/WalletInterface";
 import { Signer } from "@/modules/wallet/WalletInterface";
 import { Transaction } from "@biconomy/account";
