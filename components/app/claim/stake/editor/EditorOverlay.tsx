@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { BaseButton } from "@/components/button/BaseButton";
 import { XMarkIcon } from "@/components/icon/XMarkIcon";
 
@@ -10,7 +12,16 @@ export const EditorOverlay = (props: Props) => {
   return (
     <div className="absolute top-0 flex w-full h-14 rounded-t background-overlay">
       <div className="flex-1 p-2 text-xs">
-        You are staking reputation in <strong>{props.open}</strong> with the claim&apos;s statement. Funds cannot be withdrawn, but will be distributed according to this market&apos;s resolution.
+        You are about to stake funds in <strong>{props.open}</strong> with the claim&apos;s statement.
+        There is no guarantee of getting your money back. Please read the docs at&nbsp;
+        <Link
+          className="text-blue-400"
+          href="https://docs.uvio.network"
+          target="_blank"
+        >
+          docs.uvio.network
+        </Link>
+        .
       </div>
 
       <div className="flex-none">

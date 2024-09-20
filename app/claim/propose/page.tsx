@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import * as React from "react";
 
 import { ExpiryField } from "@/components/app/claim/propose/field/ExpiryField";
@@ -79,6 +81,21 @@ export default function Page() {
                   TokenStore.getState().updateBalance();
                 }}
               />
+            </div>
+          </div>
+
+          <div className="flex my-4 p-4 bg-gray-50 dark:bg-gray-900 rounded">
+            <div className="w-full text-sm text-gray-500 dark:text-gray-400 overflow-auto">
+              You are about to lock up your funds until this new market resolves.
+              There is no guarantee of getting your money back. Please read the docs at&nbsp;
+              <Link
+                className="text-blue-400"
+                href="https://docs.uvio.network"
+                target="_blank"
+              >
+                docs.uvio.network
+              </Link>
+              .
             </div>
           </div>
         </div>
