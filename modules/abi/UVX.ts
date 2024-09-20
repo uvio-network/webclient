@@ -1,4 +1,4 @@
-// https://github.com/uvio-network/contracts/blob/v0.2.0/contracts/UVX.sol
+// https://github.com/uvio-network/contracts/blob/v0.3.0/contracts/UVX.sol
 export const UVX = [
   {
     "inputs": [

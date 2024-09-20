@@ -1,4 +1,4 @@
-// https://github.com/uvio-network/contracts/blob/v0.2.0/contracts/Claims.sol
+// https://github.com/uvio-network/contracts/blob/v0.3.0/contracts/Claims.sol
 export const Claims = [
   {
     "inputs": [
@@ -475,7 +475,7 @@ export const Claims = [
   },
   {
     "inputs": [],
-    "name": "CLAIM_BALANCE_U",
+    "name": "CLAIM_BALANCE_S",
     "outputs": [
       {
         "internalType": "uint8",
