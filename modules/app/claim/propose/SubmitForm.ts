@@ -101,11 +101,11 @@ export const SubmitForm = async (err: (ctx: ProposeContext) => void, off: (ctx: 
     const sym = editor.getToken();
     const lis = Object.keys(chain.tokens);
 
+    if (num === 0 || sym === "") {
+      return ToastSender.Error("Your staked reputation must be in the format [number token].");
+    }
     if (num === 0) {
       return ToastSender.Error("You must stake reputation with your claim.");
-    }
-    if (!inpPrt(editor.stake)) {
-      return ToastSender.Error("Your staked reputation must be in teh format [number token].");
     }
     if (!inpNum(num)) {
       return ToastSender.Error("The amount of your stake must be a positive number.");
