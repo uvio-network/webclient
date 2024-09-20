@@ -66,7 +66,7 @@ export const ClaimList = (props: Props) => {
   // the claim page where we show claims and their comments underneath. So if we
   // render the claim page, then negate the condition below and use the result
   // as boolean flag to embed claims everywhere else but here.
-  const embed = !(list.length >= 1 && list[0].id() === props.page && list[0].kind() === "claim");
+  const embed = !(list.length >= 1 && list[0].id() === props.page && list[0].kind() === "claim" && list[0].lifecycle() === "propose");
 
   {
     const { loaded, loading } = LoadingStore();
@@ -170,7 +170,7 @@ const ordPos = (cla: ClaimObject[], pag: string): ClaimObject[] => {
   }
 
   for (const x of cla) {
-    if (lis[0].id() !== x.id()) {
+    if (lis[0].id() !== x.id() && lis[0].parent()?.id() !== x.id()) {
       lis.push(x);
     }
   }

@@ -5,6 +5,7 @@ import { LifecycleLabel } from "@/components/label/LifecycleLabel";
 import { LabelCard } from "@/components/label/LabelCard";
 
 interface Props {
+  comment: boolean;
   labels: string[];
   lifecycle: string;
   pending: boolean;
@@ -13,18 +14,26 @@ interface Props {
 
 export const LabelList = (props: Props) => {
   return (
-    <div className="flex py-1">
-      {props.pending ? (
-        <LabelCard text="This claim's transaction has not yet finalized onchain.">
-          <LifecycleLabel dashed={true} lifecycle="pending" />
+    <div className="flex">
+      {props.comment ? (
+        <LabelCard text="This post comments on the embedded claim.">
+          <LifecycleLabel dashed={false} lifecycle="comment" />
         </LabelCard>
       ) : (
-        <Link
-          href={`/claim/lifecycle/${props.lifecycle}`}
-          target={props.target}
-        >
-          <LifecycleLabel dashed={false} lifecycle={props.lifecycle} />
-        </Link>
+        <>
+          {props.pending ? (
+            <LabelCard text="This claim's transaction has not yet finalized onchain.">
+              <LifecycleLabel dashed={true} lifecycle="pending" />
+            </LabelCard>
+          ) : (
+            <Link
+              href={`/claim/lifecycle/${props.lifecycle}`}
+              target={props.target}
+            >
+              <LifecycleLabel dashed={false} lifecycle={props.lifecycle} />
+            </Link>
+          )}
+        </>
       )}
 
       {props.labels.map((x, i) => (
