@@ -77,6 +77,12 @@ const calSta = (res: VoteObject[]): number[] => {
   var lis: number[] = [0, 0];
 
   for (const x of res) {
+    // We should only ever consider votes that have been confirmed onchain. So
+    // if a vote is still pending, we ignore it.
+    if (x.pending()) {
+      continue;
+    }
+
     if (x.option()) {
       lis[agreement] += x.value();
     } else {

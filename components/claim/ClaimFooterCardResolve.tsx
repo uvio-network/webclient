@@ -10,19 +10,24 @@ interface Props {
 }
 
 export const ClaimFooterCardResolve = (props: Props) => {
-  const probability = props.claim.votes().probability.toFixed(0);
+  const current = props.claim.votes().total;
   const selected = useSel(props.claim.samples());
   const total = Object.keys(props.claim.samples()).length;
 
+  const percentage = ((current / total) * 100).toFixed(0);
+
+  const voteTrue = props.claim.upside().stake[0];
+  const voteFalse = props.claim.upside().stake[1];
+
   return (
     <div>
-      {probability === "0" ? (
+      {current === 0 ? (
         <div>
           This resolution has not yet been voted on.
         </div>
       ) : (
         <div>
-          This resolution was voted to be true by <strong>{probability}%</strong> of the voters, based on a total of {total} votes.
+          This resolution was voted to be true by <strong>{percentage}%</strong> of the voters, based on a total of {total} votes.
         </div>
       )}
 
@@ -30,12 +35,28 @@ export const ClaimFooterCardResolve = (props: Props) => {
         <Separator.Horizontal />
 
         {selected === true ? (
-          <div>
-            You have been selected to vote in this resolution.
-          </div>
+          <>
+            {voteTrue === 0 && voteFalse === 0 && (
+              <div>
+                You have been selected to vote on this resolution.
+              </div>
+            )}
+
+            {voteTrue !== 0 && (
+              <div>
+                You voted for the associated claim to be <strong>true</strong>.
+              </div>
+            )}
+
+            {voteFalse !== 0 && (
+              <div>
+                You voted for the associated claim to be <strong>false</strong>.
+              </div>
+            )}
+          </>
         ) : (
           <div>
-            You have not been selected to vote in this resolution.
+            You have not been selected to vote on this resolution.
           </div>
         )}
       </div>

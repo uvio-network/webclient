@@ -45,8 +45,16 @@ export class VoteObject {
     return this.vote.kind;
   }
 
+  lifecycle(): string {
+    return this.vote.lifecycle;
+  }
+
   option(): boolean {
     return this.vote.option.toLowerCase() === "true";
+  }
+
+  pending(): boolean {
+    return this.lifecycle() === "pending";
   }
 
   value(): number {

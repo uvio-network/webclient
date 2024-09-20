@@ -26,7 +26,7 @@ export const EditorOverlay = (props: Props) => {
 
       <div className="flex-none">
         <BaseButton
-          hover="hover:text-black enabled:dark:hover:text-white"
+          background="none"
           icon={<XMarkIcon />}
           onClick={() => props.setOpen("")}
         />

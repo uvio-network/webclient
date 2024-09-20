@@ -72,7 +72,10 @@ export const ClaimButtonsStake = (props: Props) => {
       )}
 
       {!props.open && (
-        <StakeButtons setOpen={props.setOpen} />
+        <StakeButtons
+          expired={props.claim.expired()}
+          setOpen={props.setOpen}
+        />
       )}
     </>
   );
