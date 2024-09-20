@@ -1,6 +1,7 @@
 export interface PostCreateRequest {
   // public
   chain: string;
+  contract: string;
   expiry: string;
   hash: string;
   kind: string;

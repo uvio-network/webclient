@@ -39,6 +39,7 @@ export const SubmitForm = async (suc: (cla: string, com: string) => void) => {
 const posCre = async (use: UserMessage, edi: EditorMessage): Promise<PostCreateResponse> => {
   const req: PostCreateRequest = {
     chain: "",
+    contract: "",
     hash: "",
     expiry: "",
     kind: "comment",

@@ -253,6 +253,7 @@ const conCre = async (ctx: ProposeContext, wal: WalletMessage): Promise<ProposeC
 const posCre = async (ctx: ProposeContext): Promise<ProposeContext> => {
   const req: PostCreateRequest = {
     chain: ctx.chain,
+    contract: ctx.claims.address,
     hash: "",
     expiry: ctx.expiry.toString(),
     kind: "claim",

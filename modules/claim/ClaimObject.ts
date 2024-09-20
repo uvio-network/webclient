@@ -1,5 +1,6 @@
 import moment from "moment";
 
+import { Address } from "viem";
 import { ClaimUpside } from "@/modules/claim/ClaimUpside";
 import { ClaimVotes } from "@/modules/claim/ClaimVotes";
 import { EmptyUserSearchResponse } from "@/modules/api/user/search/Response";
@@ -86,6 +87,14 @@ export class ClaimObject {
   //
   // public
   //
+
+  chain(): number {
+    return Number(this.post.chain);
+  }
+
+  contract(): Address {
+    return this.post.contract as Address;
+  }
 
   expired(): boolean {
     return moment().utc().isAfter(this.expiry());

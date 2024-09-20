@@ -2,6 +2,7 @@ import * as ToastSender from "@/components/toast/ToastSender";
 import * as UpdateResolve from "@/modules/transaction/claims/write/UpdateResolve";
 
 import { ChainStore } from "@/modules/chain/ChainStore";
+import { ContractWithAddress } from "@/modules/chain/ChainConfig";
 import { EditorStore } from "@/components/app/claim/truth/editor/EditorStore";
 import { EmptyReceipt } from "@/modules/wallet/WalletInterface";
 import { EmptyVoteCreateResponse } from "@/modules/api/vote/create/Response";
@@ -30,7 +31,7 @@ export const SubmitForm = async (err: (ctx: TruthContext) => void, off: (ctx: Tr
       propose: editor.propose,
       resolve: editor.resolve,
     },
-    claims: chain.contracts["Claims-" + editor.token],
+    claims: ContractWithAddress(editor.contract, chain),
     from: wallet.object.address(),
     option: editor.option,
     public: wallet.object.public(),

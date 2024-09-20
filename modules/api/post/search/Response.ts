@@ -10,6 +10,7 @@ export interface PostSearchResponse {
 
   // public
   chain: string;
+  contract: string;
   expiry: string;
   hash: string;
   kind: string;

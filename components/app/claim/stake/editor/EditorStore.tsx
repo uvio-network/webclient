@@ -1,8 +1,10 @@
+import { Address } from "viem";
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
 
 export interface EditorMessage {
   claim: string;
+  contract: Address;
   minimum: number;
   option: boolean;
   token: string;
@@ -17,6 +19,7 @@ export const EditorStore = create(
         set(() => {
           return {
             claim: "",
+            contract: "0x0",
             minimum: 0,
             option: false,
             token: "",
@@ -29,6 +32,14 @@ export const EditorStore = create(
           return {
             ...state,
             claim: c,
+          };
+        });
+      },
+      updateContract: (c: Address) => {
+        set((state: EditorMessage) => {
+          return {
+            ...state,
+            contract: c,
           };
         });
       },

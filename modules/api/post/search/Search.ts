@@ -41,6 +41,7 @@ export async function PostSearch(tok: string, req: PostSearchRequest[]): Promise
 
       //public
       chain: x.public?.chain || "",
+      contract: x.public?.contract || "",
       expiry: x.public?.expiry || "",
       hash: x.public?.hash || "",
       kind: x.public?.kind || "",

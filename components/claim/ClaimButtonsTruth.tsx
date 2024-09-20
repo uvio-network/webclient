@@ -25,6 +25,7 @@ export const ClaimButtonsTruth = (props: Props) => {
     if (props.open === "") {
       editor.delete();
     } else {
+      editor.updateContract(props.claim.contract())
       editor.updatePropose(props.claim.parent()!.id())
       editor.updateResolve(props.claim.id())
       editor.updateToken(props.claim.parent()!.token())
