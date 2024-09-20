@@ -13,6 +13,7 @@ import { usePathname } from "next/navigation";
 
 interface Props {
   claim: ClaimObject;
+  embed: boolean;
 }
 
 export const ClaimActions = (props: Props) => {
@@ -32,32 +33,36 @@ export const ClaimActions = (props: Props) => {
     <div
       className={`
         relative w-full
-        ${isClaim ? "py-2" : "pb-2"}
+        ${!isPage && isResolve ? "pb-2" : "py-2"}
         border
         ${open !== "" ? "background-overlay border-color rounded" : "border-background"}
       `}
     >
       {isClaim && isPage && (
         <ClaimLabels
+          comment={false}
           labels={props.claim.labels()}
           lifecycle={props.claim.lifecycle()}
           pending={props.claim.pending()}
         />
       )}
 
-      {/*
-      We show the horizontal separator on every page. On the claim page we show
-      the claim labels and the claim buttons. Those additional elements have
-      margin definitions, that together with the margin of the rendered markdown
-      elements cause the claim footer to be more or less far away from the rest
-      of the claim content. So on the claim page, we use the default margin of
-      the horizontal separator, but on every other page, we restrict the
-      separator margin in a way that the claim content and the clainm footer are
-      about an equal distance to one another.
-      */}
-      {isClaim && (
+      {!isClaim && isPage && props.claim.parent() && (
+        <ClaimLabels
+          comment={true}
+          labels={props.claim.parent()!.labels()}
+          lifecycle={props.claim.parent()!.lifecycle()}
+          pending={props.claim.parent()!.pending()}
+        />
+      )}
+
+      {!isPage && isResolve ? (
+        // We want to show the separator on every page, except for resolves that
+        // include embeddings on the timeline.
+        <></>
+      ) : (
         <div className="px-2">
-          <Separator.Horizontal margin={isPage ? "" : "mt-0 mb-2"} />
+          <Separator.Horizontal margin={!isPage ? "mt-0 mb-2" : !isClaim ? "mt-4 mb-2" : ""} />
         </div>
       )}
 

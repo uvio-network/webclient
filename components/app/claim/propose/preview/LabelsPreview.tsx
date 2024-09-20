@@ -7,6 +7,7 @@ export const LabelsPreview = () => {
 
   return (
     <LabelList
+      comment={false}
       labels={SplitList(editor.labels).map((str) => str.toLowerCase().replace(/\s+/g, "-"))}
       lifecycle="propose"
       pending={false}
