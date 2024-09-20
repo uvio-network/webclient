@@ -44,7 +44,7 @@ export const ClaimFooter = (props: Props) => {
               />
             )}
 
-            {((isClaim && isResolve) || (isComment && stakeAgree)) && (
+            {(isResolve || isComment) && stakeAgree && (
               <NoButton
                 effect={true}
                 font="font-normal"
@@ -79,7 +79,7 @@ export const ClaimFooter = (props: Props) => {
               />
             )}
 
-            {((isClaim && isResolve) || (isComment && stakeDisagree)) && (
+            {(isResolve || isComment) && stakeDisagree && (
               <NoButton
                 effect={true}
                 font="font-normal"

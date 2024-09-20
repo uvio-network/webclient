@@ -7,6 +7,7 @@ export interface ClaimVotes {
   disagreement: number;
   minimum: number;
   probability: number;
+  total: number;
 }
 
 // NewClaimVotes takes the apischema formatted vote summary for the given claim
@@ -20,15 +21,16 @@ export const NewClaimVotes = (pos: PostSearchResponse): ClaimVotes => {
     return parseFloat(x);
   });
 
-  const sum = {
+  const sum: ClaimVotes = {
     agreement: num[0] || 0,
     creator: num[3] || 0,
     disagreement: num[1] || 0,
     minimum: num[2] || 0,
     probability: 0,
+    total: 0,
   };
 
-  const tot = sum.agreement + sum.disagreement;
+  sum.total = sum.agreement + sum.disagreement;
 
   // Calculate the probability as the fraction of staked reputation that agrees
   // with the proposed claim. If for instance 9 ETH are staked in agreement and
@@ -36,8 +38,8 @@ export const NewClaimVotes = (pos: PostSearchResponse): ClaimVotes => {
   // other hand, if there would be only 1 ETH staked in agreement, and 9 ETH
   // staked in disagreement, the proposed claim would only have a probability of
   // 10% to be true.
-  if (tot > 0) {
-    sum.probability = sum.agreement / tot * 100;
+  if (sum.total > 0) {
+    sum.probability = sum.agreement / sum.total * 100;
   }
 
   return sum;

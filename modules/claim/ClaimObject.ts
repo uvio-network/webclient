@@ -87,6 +87,10 @@ export class ClaimObject {
   // public
   //
 
+  expired(): boolean {
+    return moment().utc().isAfter(this.expiry());
+  }
+
   expiry(): moment.Moment {
     return moment.unix(parseInt(this.post.expiry, 10)).utc();
   }

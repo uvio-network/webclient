@@ -65,7 +65,10 @@ export const ClaimButtonsTruth = (props: Props) => {
       )}
 
       {!props.open && (
-        <TruthButtons setOpen={props.setOpen} />
+        <TruthButtons
+          expired={props.claim.expired()}
+          setOpen={props.setOpen}
+        />
       )}
     </>
   );

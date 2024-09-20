@@ -8,6 +8,7 @@ const agreement = "agreement";
 const disagreement = "disagreement";
 
 interface Props {
+  expired: boolean;
   setOpen: (open: string) => void;
 }
 
@@ -20,20 +21,31 @@ export const StakeButtons = (props: Props) => {
 
   const onClick = (act: string) => {
     return () => {
-      if (valid) {
+      if (props.expired) {
+        ToastSender.Info("This claim has already expired!");
+        return;
+      }
+
+      if (!valid) {
+        ToastSender.Info("You need to login to stake reputation!");
+        return;
+      }
+
+      {
         editor.updateOption(act === agreement ? "true" : "false")
         props.setOpen(act);
-      } else {
-        ToastSender.Info("You need to login to stake reputation!");
       }
     };
   };
 
   return (
-    <div className="flex px-2">
+    <div className="flex mb-2 px-2">
       <div className="w-full mr-2">
         <button
-          className="p-4 w-full rounded text-gray-800 hover:text-black bg-emerald-400 hover:bg-emerald-500"
+          className={`
+            p-4 w-full rounded
+            ${props.expired ? "text-gray-400 dark:text-gray-500 bg-gray-200 dark:bg-gray-700 cursor-default" : "text-gray-800 hover:text-black bg-emerald-400 hover:bg-emerald-500"}
+          `}
           onClick={onClick(agreement)}
           type="button"
         >
@@ -43,7 +55,10 @@ export const StakeButtons = (props: Props) => {
 
       <div className="w-full ml-2">
         <button
-          className="p-4 w-full rounded text-gray-900 hover:text-black bg-rose-400 hover:bg-rose-500"
+          className={`
+            p-4 w-full rounded
+            ${props.expired ? "text-gray-400 dark:text-gray-500 bg-gray-200 dark:bg-gray-700 cursor-default" : "text-gray-900 hover:text-black bg-rose-400 hover:bg-rose-500"}
+          `}
           onClick={onClick(disagreement)}
           type="button"
         >
