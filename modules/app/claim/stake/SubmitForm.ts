@@ -3,6 +3,7 @@ import * as TokenApprove from "@/modules/transaction/token/write/TokenApprove";
 import * as UpdatePropose from "@/modules/transaction/claims/write/UpdatePropose";
 
 import { ChainStore } from "@/modules/chain/ChainStore";
+import { ContractWithAddress } from "@/modules/chain/ChainConfig";
 import { EditorStore } from "@/components/app/claim/stake/editor/EditorStore";
 import { EmptyReceipt } from "@/modules/wallet/WalletInterface";
 import { EmptyVoteCreateResponse } from "@/modules/api/vote/create/Response";
@@ -28,6 +29,11 @@ export const SubmitForm = async (err: (ctx: StakeContext) => void, off: (ctx: St
   const user = UserStore.getState().user;
   const wallet = WalletStore.getState().wallet;
 
+  // Remove the token suffix if the user added it.
+  {
+    editor.value = editor.value.replace(" " + editor.token, "");
+  }
+
   {
     if (!editor.value || editor.value === "") {
       return ToastSender.Error("The staking value must not be empty.");
@@ -51,7 +57,7 @@ export const SubmitForm = async (err: (ctx: StakeContext) => void, off: (ctx: St
     auth: user.token,
     chain: chain.id.toString(),
     claim: editor.claim,
-    claims: chain.contracts["Claims-" + editor.token],
+    claims: ContractWithAddress(editor.contract, chain),
     from: wallet.object.address(),
     option: editor.option,
     public: wallet.object.public(),

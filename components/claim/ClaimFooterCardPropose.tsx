@@ -34,7 +34,7 @@ export const ClaimFooterCardPropose = (props: Props) => {
 
             {shareAgree !== "0" && (
               <div>
-                <br /><br />
+                <br />
 
                 Your potential upside is currently <strong>{shareAgree}%</strong>, for which this market must be resolved in agreement with the claim&apos;s statement.
               </div>
@@ -52,7 +52,7 @@ export const ClaimFooterCardPropose = (props: Props) => {
 
             {shareDisagree !== "0" && (
               <div>
-                <br /><br />
+                <br />
 
                 Your potential upside is currently <strong>{shareDisagree}%</strong>, for which this market must be resolved in disagreement with the claim&apos;s statement.
               </div>

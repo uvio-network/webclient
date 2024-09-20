@@ -10,6 +10,7 @@ export async function PostCreate(tok: string, req: PostCreateRequest[]): Promise
           intern: {},
           public: {
             chain: x.chain,
+            contract: x.contract,
             expiry: x.expiry,
             hash: x.hash,
             kind: x.kind,
