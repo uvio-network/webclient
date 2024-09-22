@@ -21,7 +21,7 @@ export const NewClaimList = async (tok: string, req: PostSearchRequest[]): Promi
 
     const [use, vot] = await Promise.all([
       UserSearch(tok, UniqueOwners(pos).map(x => ({ id: x }))),
-      VoteSearch(tok, pos.map((x) => ({ owner: "self", claim: x.id }))),
+      tok && tok !== "" ? VoteSearch(tok, pos.map((x) => ({ owner: "self", claim: x.id }))) : Promise.resolve([]),
     ]);
 
     const pmp = new Map<string, PostSearchResponse>();

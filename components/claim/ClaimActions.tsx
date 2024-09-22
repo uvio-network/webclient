@@ -19,7 +19,6 @@ export const ClaimActions = (props: Props) => {
   const [open, setOpen] = React.useState<string>("");
 
   const isClaim = props.claim.kind() === "claim" ? true : false;
-  const isComment = props.claim.kind() === "comment" ? true : false;
   const isPage = usePathname() === "/claim/" + props.claim.id() ? true : false;
   const isPending = props.claim.pending();
   const isResolve = props.claim.lifecycle() === "resolve";
@@ -33,7 +32,7 @@ export const ClaimActions = (props: Props) => {
     <div
       className={`
         relative w-full
-        ${!isPage && isResolve ? "pb-2" : "py-2"}
+        py-2
         border
         ${open !== "" ? "background-overlay border-color rounded" : "border-background"}
       `}
@@ -56,15 +55,9 @@ export const ClaimActions = (props: Props) => {
         />
       )}
 
-      {(!isPage && (isComment || isResolve)) ? (
-        // We want to show the separator on every page, except for resolves that
-        // include embeddings on the timeline.
-        <></>
-      ) : (
-        <div className="px-2">
-          <Separator.Horizontal margin={!isPage ? "mt-0 mb-2" : !isClaim ? "mt-4 mb-2" : ""} />
-        </div>
-      )}
+      <div className="px-2">
+        <Separator.Horizontal margin={!isPage ? "mt-0 mb-2" : !isClaim ? "mt-4 mb-2" : ""} />
+      </div>
 
       {isClaim && isPage && !isPending && (
         <>
