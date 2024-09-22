@@ -4,16 +4,13 @@ import React from "react";
 
 import { ClaimContainer } from "@/components/claim/ClaimContainer";
 import { ClaimObject } from "@/modules/claim/ClaimObject";
-import { ClaimIDs } from "@/modules/claim/ClaimList";
 import { NewClaimList } from "@/modules/claim/ClaimList";
-import { NewVoteList } from "@/modules/vote/VoteList";
 import { LoadingStore } from "@/components/loading/LoadingStore";
 import { PostSearchRequest } from "@/modules/api/post/search/Request";
 import { QueryStore } from "@/modules/query/QueryStore";
 import { useQuery } from "@tanstack/react-query";
 import { UserStore } from "@/modules/user/UserStore";
 import { useShallow } from "zustand/react/shallow";
-import { VoteObject } from "@/modules/vote/VoteObject";
 
 interface Props {
   page?: string;
@@ -22,6 +19,10 @@ interface Props {
 }
 
 export const ClaimList = (props: Props) => {
+  const { authorizing } = LoadingStore(useShallow((state) => ({
+    authorizing: state.authorizing,
+  })));
+
   const { token, valid } = UserStore(useShallow((state) => ({
     token: state.user.token,
     valid: state.user.valid,
@@ -32,41 +33,22 @@ export const ClaimList = (props: Props) => {
   const posts = useQuery({
     queryKey: [...props.query, "NewClaimList"],
     queryFn: async () => {
-      return await NewClaimList(props.request);
+      return await NewClaimList(token, props.request);
     },
-  }, query.client)
-
-  // Fetching the votes of the authenticated user is conditional and depends on
-  // the auth token, and the result of the claims query above.
-  const votes = useQuery({
-    queryKey: [...props.query, "NewVoteList"],
-    queryFn: async () => {
-      return await NewVoteList(token, ClaimIDs(posts.data || []));
-    },
-    enabled: valid && !posts.isPending && posts.data?.length !== 0 ? true : false,
+    enabled: !authorizing && valid,
+    staleTime: 5000, // this prevents NewClaimList to be called multiple times
   }, query.client)
 
   updateClaim(() => {
     posts.refetch();
-    votes.refetch();
   });
 
   // We search for posts in all kinds of variations in this component. For one,
-  // we want to always work with a list of posts, even if it is empty. So getLis
-  // does that for us. And then, we have to account for pages rendered with or
-  // without comments. If we are tasked to render a claim page, and the post to
-  // render is in fact a comment, then we remove the parent claim from the
-  // search response in order to only forward the post of kind "comment". Note
-  // that search queries are automatically extended at the moment in order to
-  // provide claims with comments and comments with their parent claims. This
-  // automatic extension is the reason for our filtering efforts here.
-  const list = getLis(posts.data || [], votes.data || [], props.page || "");
-
-  // We want to embed claims on comment posts on basically every page, except on
-  // the claim page where we show claims and their comments underneath. So if we
-  // render the claim page, then negate the condition below and use the result
-  // as boolean flag to embed claims everywhere else but here.
-  const embed = !(list.length >= 1 && list[0].id() === props.page && list[0].kind() === "claim" && list[0].lifecycle() === "propose");
+  // getLis gives us a list of posts, which is easier to work with below, even
+  // if it is empty. And then, we have to account for pages rendered with or
+  // without comments. If we are tasked to render a claims page, and the post to
+  // render is in fact a comment, then we only render the comment itself.
+  const list = getLis(posts.data || [], props.page || "");
 
   {
     const { loaded, loading } = LoadingStore();
@@ -93,7 +75,6 @@ export const ClaimList = (props: Props) => {
         <div key={x.id()}>
           <ClaimContainer
             claim={x}
-            embed={embed}
           />
 
           {/*
@@ -111,66 +92,64 @@ export const ClaimList = (props: Props) => {
   );
 };
 
-const getLis = (cla: ClaimObject[], vot: VoteObject[], pag: string): ClaimObject[] => {
-  cla = ordPos(cla, pag);
-  cla = mrgLis(cla, vot);
-  return cla;
-};
-
-// mrgLis produces a new array of updated claim objects according to the
-// matching vote objects as provided.
-const mrgLis = (cla: ClaimObject[], vot: VoteObject[]): ClaimObject[] => {
-  if (!vot || vot.length === 0) {
-    return cla;
-  }
-
-  const map: Map<string, VoteObject[]> = new Map();
-
-  for (const x of vot) {
-    const l = map.get(x.claim()) || [];
-    l.push(x);
-    map.set(x.claim(), l);
-  }
-
-  const lis: ClaimObject[] = [];
-
-  for (const x of cla) {
-    const l = map.get(x.id())?.map((y) => (y.getVote()));
-
-    lis.push(new ClaimObject(
-      x.getPost(),
-      x.getUser(),
-      x.getPrnt(),
-      l || [],
-    ));
-  }
-
-  return lis;
-};
-
-// ordPos ensures the order of post objects according to the page we are
+// getLis ensures the order of post objects according to the page we are
 // supposed to render.
-const ordPos = (cla: ClaimObject[], pag: string): ClaimObject[] => {
+const getLis = (cla: ClaimObject[], pag: string): ClaimObject[] => {
   if (!pag || pag === "") {
+    for (const x of cla) {
+      // On the timeline, every claim is allowed to embed once, if a parent
+      // exists.
+      if (x.kind() == "claim") {
+        x.setEmbd(1);
+      }
+
+      // On the timeline, every comment is allowed to embed twice, to the extend
+      // that those parents exists.
+      if (x.kind() == "comment") {
+        x.setEmbd(2);
+      }
+    }
+
     return cla;
   }
 
+  // If we are rendering a single comment on the comment page, then only return
+  // the comment object itself.
   for (const x of cla) {
     if (x.kind() === "comment" && x.id() === pag) {
+      x.setEmbd(2);
       return [x];
     }
   }
 
   const lis: ClaimObject[] = [];
+
+  // If we are rendering a dedicated claims page, then put the claim of this
+  // page at the top.
   for (const x of cla) {
     if (x.kind() === "claim" && x.id() === pag) {
+      x.setEmbd(2);
       lis.push(x);
       break;
     }
   }
 
+  const fir = lis[0];
+
   for (const x of cla) {
-    if (lis[0].id() !== x.id() && lis[0].parent()?.id() !== x.id()) {
+    // Do not add the claim again that we have already added at the top of this
+    // list.
+    if (fir.id() === x.id()) {
+      continue
+    }
+
+    // Do not add the parent of the first claim, because the first claim has its
+    // parent already embedded.
+    if (fir.parent()?.id() === x.id()) {
+      continue
+    }
+
+    {
       lis.push(x);
     }
   }

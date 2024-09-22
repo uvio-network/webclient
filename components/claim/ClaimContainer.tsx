@@ -4,10 +4,10 @@ import { ClaimActions } from "@/components/claim/ClaimActions";
 import { ClaimContent } from "@/components/claim/ClaimContent";
 import { ClaimHeader } from "@/components/claim/ClaimHeader";
 import { ClaimObject } from "@/modules/claim/ClaimObject";
+import { usePathname } from "next/navigation";
 
 interface Props {
   claim: ClaimObject;
-  embed: boolean;
 }
 
 export const ClaimContainer = (props: Props) => {
@@ -15,7 +15,7 @@ export const ClaimContainer = (props: Props) => {
     <div className={`${props.claim.kind() === "claim" ? "mb-6" : "mb-2"}`}>
       <div className="p-2 w-full">
         <ClaimHeader claim={props.claim} />
-        <ClaimContent claim={props.claim} />
+        <ClaimContent claim={props.claim} embed={false} />
       </div>
 
       {/*
@@ -25,18 +25,17 @@ export const ClaimContainer = (props: Props) => {
       already rendered at the top of the claim page. And so in this case, we
       want to only render comments in a simplified version, without embedding.
       */}
-      {props.embed && props.claim.parent() && ((props.claim.kind() === "claim" && props.claim.lifecycle() !== "propose") || props.claim.kind() === "comment") && (
+      {props.claim.embed() > 0 && props.claim.parent() && ((props.claim.lifecycle() === "resolve") || props.claim.kind() === "comment") && (
         <div className="m-2 px-2 pb-2 background-overlay rounded border border-color">
           <ClaimContent
             claim={props.claim.parent()!}
-            embed={props.embed}
+            embed={true}
           />
         </div>
       )}
 
       <ClaimActions
         claim={props.claim}
-        embed={props.embed}
       />
     </div>
   );
