@@ -50,6 +50,16 @@ export const ClaimList = (props: Props) => {
   // render is in fact a comment, then we only render the comment itself.
   const list = getLis(posts.data || [], props.page || "");
 
+  React.useEffect(() => {
+    if (list.length !== 0) {
+      if (props.query.join("-").startsWith("claim-id")) {
+        ClaimStore.getState().updateTree(list[0].tree());
+      } else {
+        ClaimStore.getState().delete();
+      }
+    }
+  }, [list, props.query]);
+
   {
     const { loaded, loading } = LoadingStore();
 
@@ -62,16 +72,6 @@ export const ClaimList = (props: Props) => {
 
     if (loading) return <></>;
   }
-
-  React.useEffect(() => {
-    if (list.length !== 0) {
-      if (props.query.join("-").startsWith("claim-id")) {
-        ClaimStore.getState().updateTree(list[0].tree());
-      } else {
-        ClaimStore.getState().delete();
-      }
-    }
-  }, [list, props.query]);
 
   return (
     <div>
