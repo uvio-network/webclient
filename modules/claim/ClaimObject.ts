@@ -107,6 +107,10 @@ export class ClaimObject {
     return this.claimOwner;
   }
 
+  tree(): string {
+    return this.post.tree;
+  }
+
   //
   // public
   //

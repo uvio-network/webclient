@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 
+import * as React from "react";
 import * as ToastSender from "@/components/toast/ToastSender";
 
 import { BaseButton } from "@/components/button/BaseButton";

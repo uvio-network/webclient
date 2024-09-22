@@ -1,9 +1,9 @@
+import * as React from "react";
 import * as Separator from "@/components/layout/separator";
-
-import React from "react";
 
 import { ClaimContainer } from "@/components/claim/ClaimContainer";
 import { ClaimObject } from "@/modules/claim/ClaimObject";
+import { ClaimStore } from "@/modules/claim/ClaimStore";
 import { NewClaimList } from "@/modules/claim/ClaimList";
 import { LoadingStore } from "@/components/loading/LoadingStore";
 import { PostSearchRequest } from "@/modules/api/post/search/Request";
@@ -62,6 +62,16 @@ export const ClaimList = (props: Props) => {
 
     if (loading) return <></>;
   }
+
+  React.useEffect(() => {
+    if (list.length !== 0) {
+      if (props.query.join("-").startsWith("claim-id")) {
+        ClaimStore.getState().updateTree(list[0].tree());
+      } else {
+        ClaimStore.getState().delete();
+      }
+    }
+  }, [list, props.query]);
 
   return (
     <div>

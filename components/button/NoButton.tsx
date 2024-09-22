@@ -6,7 +6,7 @@ interface Props {
   font?: string;
   effect?: boolean;
   position?: string; // text position, either left or right from the icon
-  icon: React.ReactElement;
+  icon?: React.ReactElement;
   text?: string;
 }
 

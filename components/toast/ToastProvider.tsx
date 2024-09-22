@@ -1,4 +1,3 @@
-import * as React from "react";
 import * as RadixToast from "@radix-ui/react-toast";
 
 import { ToastMessage } from "@/components/toast/ToastStore";

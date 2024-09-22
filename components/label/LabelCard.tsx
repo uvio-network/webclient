@@ -1,6 +1,7 @@
 "use client";
 
 import * as HoverCard from "@radix-ui/react-hover-card";
+import * as React from "react";
 
 interface Props {
   children: React.ReactNode;

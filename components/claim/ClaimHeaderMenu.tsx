@@ -1,5 +1,3 @@
-import React from "react";
-
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Separator from "@/components/layout/separator";
 import * as ToastSender from "@/components/toast/ToastSender";
@@ -29,7 +27,7 @@ export const ClaimHeaderMenu = (props: Props) => {
     if (isStaker || isVoter) {
       router.push(`/claim/${props.claim.id()}/comment`);
     } else {
-      ToastSender.Info("You have no skin in the game to do that!");
+      ToastSender.Info("You have no skin in the game to comment on that claim!");
     }
   };
 
