@@ -3,10 +3,10 @@
 import * as React from "react";
 
 import { ClaimObject } from "@/modules/claim/ClaimObject";
+import { LimitMarkdown } from "@/modules/string/LimitMarkdown";
 import { RenderMarkdown } from "@/components/markdown/RenderMarkdown";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { LimitMarkdown } from "@/modules/string/LimitMarkdown";
 
 interface Props {
   claim: ClaimObject;
@@ -17,8 +17,8 @@ interface Props {
 export const ClaimContent = (props: Props) => {
   const router = useRouter();
 
-  const isPage = usePathname() === "/claim/" + props.claim.id() ? true : false;
   const claimPage = "/claim/" + props.claim.id();
+  const isPage = usePathname() === "/claim/" + props.claim.id() ? true : false;
 
   const process = (txt: string): string => {
     if (isPage) {
@@ -59,6 +59,16 @@ export const ClaimContent = (props: Props) => {
         embed={props.embed}
         markdown={process(props.claim.markdown())}
       />
+
+      {props.embed && props.claim.parent() !== undefined && (
+        <div className="mt-2 px-2 pb-2 background-overlay rounded border border-color">
+          <RenderMarkdown
+            editor={props.editor}
+            embed={true}
+            markdown={process(props.claim.parent()!.markdown())}
+          />
+        </div>
+      )}
     </div>
   );
 };

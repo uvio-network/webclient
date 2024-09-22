@@ -1,4 +1,3 @@
-import Link from "next/link";
 import React from "react";
 
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
@@ -8,6 +7,7 @@ import * as ToastSender from "@/components/toast/ToastSender";
 import { BaseButton } from "@/components/button/BaseButton";
 import { ClaimObject } from "@/modules/claim/ClaimObject";
 import { MenuHorizontalIcon } from "@/components/icon/MenuHorizontalIcon";
+import { useRouter } from "next/navigation";
 
 interface Props {
   claim: ClaimObject;
@@ -20,8 +20,15 @@ const itemClassName = `
 `;
 
 export const ClaimHeaderMenu = (props: Props) => {
+  const router = useRouter();
+
+  const isStaker = props.claim.upside().hsitg;
+  const isVoter = props.claim.selected();
+
   const addComment = () => {
-    if (props.claim.upside().hsitg === false) {
+    if (isStaker || isVoter) {
+      router.push(`/claim/${props.claim.id()}/comment`);
+    } else {
       ToastSender.Info("You have no skin in the game to do that!");
     }
   };
@@ -57,15 +64,7 @@ export const ClaimHeaderMenu = (props: Props) => {
           {props.claim.kind() === "claim" && (
             <>
               <DropdownMenu.Item className={itemClassName} onSelect={addComment}>
-                {props.claim.upside().hsitg === true ? (
-                  <Link href={`/claim/${props.claim.id()}/comment`}>
-                    Add Comment
-                  </Link>
-                ) : (
-                  <>
-                    Add Comment
-                  </>
-                )}
+                Add Comment
               </DropdownMenu.Item>
 
               <Separator.Horizontal margin="my-2" />

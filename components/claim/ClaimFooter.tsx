@@ -18,11 +18,11 @@ export const ClaimFooter = (props: Props) => {
 
   const token = isClaim ? props.claim.token() : props.claim.parent()!.token();
 
-  const stakeAgree = props.claim.votes().agreement !== 0 ? true : false;
-  const stakeDisagree = props.claim.votes().disagreement !== 0 ? true : false;
+  const stakeAgree = votNum(isComment, props.claim, true);
+  const stakeDisagree = votNum(isComment, props.claim, false);
 
-  const textAgree = votTxt(isResolve, props.claim.votes().agreement, token);
-  const textDisagree = votTxt(isResolve, props.claim.votes().disagreement, token);
+  const textAgree = votStr(isResolve, stakeAgree, token);
+  const textDisagree = votStr(isResolve, stakeDisagree, token);
 
   const onClick = () => {
     ToastSender.Info("It's comming just chill ok!");
@@ -44,7 +44,7 @@ export const ClaimFooter = (props: Props) => {
               />
             )}
 
-            {(isResolve || isComment) && stakeAgree && (
+            {(isResolve || isComment) && stakeAgree !== 0 && (
               <NoButton
                 effect={true}
                 font="font-normal"
@@ -79,7 +79,7 @@ export const ClaimFooter = (props: Props) => {
               />
             )}
 
-            {(isResolve || isComment) && stakeDisagree && (
+            {(isResolve || isComment) && stakeDisagree !== 0 && (
               <NoButton
                 effect={true}
                 font="font-normal"
@@ -95,7 +95,23 @@ export const ClaimFooter = (props: Props) => {
   );
 };
 
-const votTxt = (res: boolean, num: number, tok: string): string => {
+const votNum = (com: boolean, cla: ClaimObject, opt: boolean): number => {
+  if (!com) {
+    if (opt) {
+      return cla.votes().agreement;
+    } else {
+      return cla.votes().disagreement;
+    }
+  }
+
+  if (opt) {
+    return cla.parent()?.parent()?.votes().agreement || 0;
+  } else {
+    return cla.parent()?.parent()?.votes().disagreement || 0;
+  }
+};
+
+const votStr = (res: boolean, num: number, tok: string): string => {
   if (res) return num.toFixed(0);
 
   return num.toFixed(2) + " " + tok;

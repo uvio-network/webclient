@@ -3,7 +3,6 @@
 import * as Separator from "@/components/layout/separator";
 
 import { ClaimObject } from "@/modules/claim/ClaimObject";
-import { UserStore } from "@/modules/user/UserStore";
 
 interface Props {
   claim: ClaimObject;
@@ -11,7 +10,7 @@ interface Props {
 
 export const ClaimFooterCardResolve = (props: Props) => {
   const current = props.claim.votes().total;
-  const selected = useSel(props.claim.samples());
+  const selected = props.claim.selected();
   const total = Object.keys(props.claim.samples()).length;
 
   const percentage = ((current / total) * 100).toFixed(0);
@@ -62,18 +61,4 @@ export const ClaimFooterCardResolve = (props: Props) => {
       </div>
     </div>
   );
-};
-
-const useSel = (sam: { [key: string]: string }): boolean => {
-  const user = UserStore.getState().user;
-
-  if (!user.valid || !user.object) {
-    return false;
-  }
-
-  if (Object.values(sam).includes(user.object.id())) {
-    return true;
-  }
-
-  return false;
 };

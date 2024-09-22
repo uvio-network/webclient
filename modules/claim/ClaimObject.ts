@@ -10,10 +10,12 @@ import { PostSearchResponse } from "@/modules/api/post/search/Response";
 import { SplitList } from "@/modules/string/SplitList";
 import { UserObject } from "@/modules/user/UserObject";
 import { UserSearchResponse } from "@/modules/api/user/search/Response";
+import { UserStore } from "@/modules/user/UserStore";
 import { VoteObject } from "@/modules/vote/VoteObject";
 import { VoteSearchResponse } from "@/modules/api/vote/search/Response";
 
 export class ClaimObject {
+  private embd: number;
   private post: PostSearchResponse;
   private user: UserSearchResponse;
   private prnt: PostSearchResponse | undefined;
@@ -24,17 +26,30 @@ export class ClaimObject {
   private claimUpside: ClaimUpside;
   private claimVotes: ClaimVotes;
 
-  constructor(post: PostSearchResponse, user: UserSearchResponse, prnt: PostSearchResponse | undefined, vote: VoteSearchResponse[]) {
+  constructor(post: PostSearchResponse, user: UserSearchResponse, prnt: ClaimObject | PostSearchResponse | undefined, vote: VoteSearchResponse[]) {
     {
+      this.embd = 0;
       this.post = post;
       this.user = user;
-      this.prnt = prnt;
+      if (prnt instanceof ClaimObject) {
+        this.prnt = prnt.getPost();
+      } else if (prnt === undefined) {
+        this.prnt = undefined;
+      } else {
+        this.prnt = prnt;
+      }
       this.vote = vote;
     }
 
     {
       this.claimOwner = new UserObject(user);
-      this.claimParent = prnt ? new ClaimObject(prnt, EmptyUserSearchResponse(), undefined, []) : undefined;
+      if (prnt instanceof ClaimObject) {
+        this.claimParent = prnt;
+      } else if (prnt === undefined) {
+        this.claimParent = undefined;
+      } else {
+        this.claimParent = new ClaimObject(prnt, EmptyUserSearchResponse(), undefined, []);
+      }
       this.claimVotes = NewClaimVotes(post);
       this.claimUpside = NewClaimUpside(this.claimVotes, vote.map((x) => (new VoteObject(x))));
     }
@@ -58,6 +73,14 @@ export class ClaimObject {
 
   getVote(): VoteSearchResponse[] {
     return this.vote;
+  }
+
+  //
+  // setter
+  //
+
+  setEmbd(emb: number) {
+    return this.embd = emb;
   }
 
   //
@@ -96,6 +119,10 @@ export class ClaimObject {
     return this.post.contract as Address;
   }
 
+  embed(): number {
+    return this.embd;
+  }
+
   expired(): boolean {
     return moment().utc().isAfter(this.expiry());
   }
@@ -113,6 +140,10 @@ export class ClaimObject {
   }
 
   lifecycle(): string {
+    if (this.post.lifecycle === "") {
+      return "";
+    }
+
     const spl = SplitList(this.post.lifecycle, ":");
     return spl[0].toLowerCase();
   }
@@ -130,8 +161,26 @@ export class ClaimObject {
   }
 
   pending(): boolean {
+    if (this.post.lifecycle === "") {
+      return false;
+    }
+
     const spl = SplitList(this.post.lifecycle, ":");
     return spl[1].toLowerCase() === "pending";
+  }
+
+  selected(): boolean {
+    const user = UserStore.getState().user;
+
+    if (!user.valid || !user.object) {
+      return false;
+    }
+
+    if (Object.values(this.samples()).includes(user.object.id())) {
+      return true;
+    }
+
+    return false;
   }
 
   token(): string {

@@ -10,6 +10,7 @@ import { MarkdownField } from "@/components/app/claim/comment/field/MarkdownFiel
 import { MarkdownPreview } from "@/components/app/claim/comment/preview/MarkdownPreview";
 import { PageButton } from "@/components/page/PageButton";
 import { PostSearch } from "@/modules/api/post/search/Search";
+import { PostSearchResponse } from "@/modules/api/post/search/Response";
 import { QueryStore } from "@/modules/query/QueryStore";
 import { SubmitButton } from "@/components/app/claim/comment/editor/SubmitButton";
 import { useQuery } from "@tanstack/react-query";
@@ -25,13 +26,27 @@ export default function Page({ params }: { params: { slug: string } }) {
     queryFn: async () => {
       const pos = await PostSearch("", [{ id: params.slug }]);
 
+      // We want to show the claim that is being commented on similar to the way
+      // that users see claims on the timeline. Some claims are standalone like
+      // proposes, some claims are embedded like resolves. If a user comments on
+      // a resolve, then we want to show the resolve and the embedded propose.
+      // In such a case, the propose being embedded becomes the child of the
+      // resolve. This is the opposite of the representation within a claim
+      // tree, where the resolve is the child of the propose.
+      let child: PostSearchResponse | undefined = undefined;
+
       for (const x of pos) {
-        if (x.id === params.slug) {
-          if (x.kind === "claim") {
-            return new ClaimObject(x, EmptyUserSearchResponse(), undefined, []);
-          } else {
-            return undefined;
-          }
+        if (x.kind === "claim" && x.id !== params.slug) {
+          child = x;
+          break;
+        }
+      }
+
+      for (const x of pos) {
+        if (x.kind === "claim" && x.id === params.slug) {
+          return new ClaimObject(x, EmptyUserSearchResponse(), child, []);
+        } else {
+          return undefined;
         }
       }
     },

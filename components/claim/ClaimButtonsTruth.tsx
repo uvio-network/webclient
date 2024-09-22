@@ -41,7 +41,7 @@ export const ClaimButtonsTruth = (props: Props) => {
             setOpen={props.setOpen}
           />
 
-          <div className="flex px-2 h-14">
+          <div className="flex mb-2 px-2 h-14">
             <div className="w-full">
               <ValueField
                 setOpen={props.setOpen}
