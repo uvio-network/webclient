@@ -1,6 +1,8 @@
 import "@/app/effects.css";
 import "@/app/globals.css";
 
+import * as React from "react";
+
 import { Inter } from "next/font/google";
 import { LoadingPage } from "@/components/loading/LoadingPage";
 import { Metadata } from "next";

@@ -9,6 +9,7 @@ const disagreement = "false";
 
 interface Props {
   expired: boolean;
+  selected: boolean;
   setOpen: (open: string) => void;
 }
 
@@ -28,6 +29,11 @@ export const TruthButtons = (props: Props) => {
 
       if (!valid) {
         ToastSender.Info("You need to login to verify the truth!");
+        return;
+      }
+
+      if (!props.selected) {
+        ToastSender.Info("You have not been selected to vote on this claim!");
         return;
       }
 

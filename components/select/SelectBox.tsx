@@ -1,4 +1,3 @@
-import * as React from "react";
 import * as Select from '@radix-ui/react-select';
 
 import { ChevronDownIcon } from "@/components/icon/ChevronDownIcon";

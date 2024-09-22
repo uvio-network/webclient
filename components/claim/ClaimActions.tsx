@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-
+import * as React from "react";
 import * as Separator from "@/components/layout/separator";
 
 import { ClaimButtonsStake } from "@/components/claim/ClaimButtonsStake";

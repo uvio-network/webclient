@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 
 const defaultClass = "flex p-2 rounded items-center";
 const effectClass = "color-effect";
