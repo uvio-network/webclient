@@ -18,11 +18,11 @@ export const ClaimFooter = (props: Props) => {
 
   const token = isClaim ? props.claim.token() : props.claim.parent()!.token();
 
-  const stakeAgree = votNum(isComment, props.claim, true);
-  const stakeDisagree = votNum(isComment, props.claim, false);
+  const stakeAgree = props.claim.votes().agreement;
+  const stakeDisagree = props.claim.votes().disagreement;
 
-  const textAgree = votStr(isResolve, stakeAgree, token);
-  const textDisagree = votStr(isResolve, stakeDisagree, token);
+  const textAgree = votStr(isComment, isResolve, props.claim, stakeAgree, token);
+  const textDisagree = votStr(isComment, isResolve, props.claim, stakeDisagree, token);
 
   const onClick = () => {
     ToastSender.Info("It's comming just chill ok!");
@@ -95,24 +95,22 @@ export const ClaimFooter = (props: Props) => {
   );
 };
 
-const votNum = (com: boolean, cla: ClaimObject, opt: boolean): number => {
-  if (!com) {
-    if (opt) {
-      return cla.votes().agreement;
+const votStr = (com: boolean, res: boolean, cla: ClaimObject, num: number, tok: string): string => {
+  // if isComment on propose, then with token
+  // if isComment on resolve, then without token
+  if (com) {
+    if (cla.parent()!.lifecycle() === "resolve") {
+      return num.toFixed(0);
     } else {
-      return cla.votes().disagreement;
+      return num.toFixed(2) + " " + tok;
     }
   }
 
-  if (opt) {
-    return cla.parent()?.parent()?.votes().agreement || 0;
+  // if isPropose, then with token
+  // if isResolve, then without token
+  if (res) {
+    return num.toFixed(0);
   } else {
-    return cla.parent()?.parent()?.votes().disagreement || 0;
+    return num.toFixed(2) + " " + tok;
   }
-};
-
-const votStr = (res: boolean, num: number, tok: string): string => {
-  if (res) return num.toFixed(0);
-
-  return num.toFixed(2) + " " + tok;
 };

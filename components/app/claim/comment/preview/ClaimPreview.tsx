@@ -7,12 +7,23 @@ interface Props {
 
 export const ClaimPreview = (props: Props) => {
   return (
-    <div className="m-2 px-2 pb-2 background-overlay rounded border border-color">
-      <ClaimContent
-        claim={props.claim}
-        editor={true}
-        embed={true}
-      />
+    <div>
+      <div className="m-2 px-2 pb-2 background-overlay rounded border border-color">
+        <ClaimContent
+          claim={props.claim}
+          editor={true}
+          embed={true}
+        />
+      </div>
+
+      {props.claim.parent() && (
+        <div className="m-2 px-2 pb-2 background-overlay rounded border border-color">
+          <ClaimContent
+            claim={props.claim.parent()!}
+            embed={true}
+          />
+        </div>
+      )}
     </div>
   );
 };
