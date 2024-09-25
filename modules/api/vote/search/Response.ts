@@ -5,7 +5,6 @@ export interface VoteSearchResponse {
   owner: string;
 
   // public
-  chain: string;
   claim: string;
   hash: string;
   kind: string;

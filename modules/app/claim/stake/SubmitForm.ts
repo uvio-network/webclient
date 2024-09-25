@@ -93,7 +93,7 @@ export const SubmitForm = async (err: (ctx: StakeContext) => void, off: (ctx: St
     editor.delete();
     onc(ctx);
   } else if (ctx.receipt.rejected === true) {
-    ToastSender.Info("No biggie darling, we'll take it back!");
+    ToastSender.Info("No biggie darling, we'll take it back.");
     await votDel(ctx);
   } else {
     ToastSender.Error("Ohh, nope, that was not good enough!");

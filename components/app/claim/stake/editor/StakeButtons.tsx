@@ -22,12 +22,12 @@ export const StakeButtons = (props: Props) => {
   const onClick = (act: string) => {
     return () => {
       if (props.expired) {
-        ToastSender.Info("This claim has already expired!");
+        ToastSender.Info("This claim has expired already.");
         return;
       }
 
       if (!valid) {
-        ToastSender.Info("You need to login to stake reputation!");
+        ToastSender.Info("You need to login to stake reputation.");
         return;
       }
 

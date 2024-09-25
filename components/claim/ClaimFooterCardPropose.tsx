@@ -9,11 +9,10 @@ interface Props {
 }
 
 export const ClaimFooterCardPropose = (props: Props) => {
-  const hsitg = props.claim.upside().hsitg;
   const token = props.claim.token();
 
-  const probability = props.claim.votes().probability.toFixed(0);
-  const total = (props.claim.votes().agreement + props.claim.votes().disagreement).toFixed(2);
+  const probability = props.claim.sumary().probability.toFixed(0);
+  const total = (props.claim.sumary().agreement + props.claim.sumary().disagreement).toFixed(2);
 
   const stakeAgree = props.claim.upside().stake[0];
   const stakeDisagree = props.claim.upside().stake[1];
@@ -61,12 +60,22 @@ export const ClaimFooterCardPropose = (props: Props) => {
         </div>
       )}
 
-      {hsitg === false && (
+      {props.claim.upside().hsitg === false && (
         <div>
           <Separator.Horizontal />
 
           <div>
             You have no reputation staked in this market.
+          </div>
+        </div>
+      )}
+
+      {props.claim.expired() === true && (
+        <div>
+          <Separator.Horizontal />
+
+          <div>
+            This claim has expired already.
           </div>
         </div>
       )}

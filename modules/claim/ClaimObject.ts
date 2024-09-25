@@ -2,10 +2,10 @@ import moment from "moment";
 
 import { Address } from "viem";
 import { ClaimUpside } from "@/modules/claim/ClaimUpside";
-import { ClaimVotes } from "@/modules/claim/ClaimVotes";
+import { ClaimSummary } from "@/modules/claim/ClaimSummary";
 import { EmptyUserSearchResponse } from "@/modules/api/user/search/Response";
 import { NewClaimUpside } from "@/modules/claim/ClaimUpside";
-import { NewClaimVotes } from "@/modules/claim/ClaimVotes";
+import { NewClaimSummary } from "@/modules/claim/ClaimSummary";
 import { PostSearchResponse } from "@/modules/api/post/search/Response";
 import { SplitList } from "@/modules/string/SplitList";
 import { UserObject } from "@/modules/user/UserObject";
@@ -23,8 +23,8 @@ export class ClaimObject {
 
   private claimOwner: UserObject;
   private claimParent: ClaimObject | undefined;
+  private claimSummary: ClaimSummary;
   private claimUpside: ClaimUpside;
-  private claimVotes: ClaimVotes;
 
   constructor(post: PostSearchResponse, user: UserSearchResponse, prnt: ClaimObject | PostSearchResponse | undefined, vote: VoteSearchResponse[]) {
     {
@@ -50,8 +50,8 @@ export class ClaimObject {
       } else {
         this.claimParent = new ClaimObject(prnt, EmptyUserSearchResponse(), undefined, []);
       }
-      this.claimVotes = NewClaimVotes(post);
-      this.claimUpside = NewClaimUpside(this.claimVotes, vote.map((x) => (new VoteObject(x))));
+      this.claimSummary = NewClaimSummary(post);
+      this.claimUpside = NewClaimUpside(this.claimSummary, vote.map((x) => (new VoteObject(x))));
     }
   }
 
@@ -187,15 +187,15 @@ export class ClaimObject {
     return false;
   }
 
+  sumary(): ClaimSummary {
+    return this.claimSummary;
+  }
+
   token(): string {
     return this.post.token;
   }
 
   upside(): ClaimUpside {
     return this.claimUpside;
-  }
-
-  votes(): ClaimVotes {
-    return this.claimVotes;
   }
 }

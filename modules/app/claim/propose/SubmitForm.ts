@@ -168,7 +168,7 @@ export const SubmitForm = async (err: (ctx: ProposeContext) => void, off: (ctx: 
     editor.delete();
     onc(ctx);
   } else if (ctx.receipt.rejected === true) {
-    ToastSender.Info("No biggie darling, we'll take it back!");
+    ToastSender.Info("No biggie darling, we'll take it back.");
     // The vote object must be deleted first, because it requires the post
     // object to exist in the backend in order to be deleted.
     await votDel(ctx);

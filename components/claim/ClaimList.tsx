@@ -13,7 +13,6 @@ import { UserStore } from "@/modules/user/UserStore";
 import { useShallow } from "zustand/react/shallow";
 
 interface Props {
-  page?: string;
   query: string[];
   request: PostSearchRequest[];
 }
@@ -48,7 +47,7 @@ export const ClaimList = (props: Props) => {
   // if it is empty. And then, we have to account for pages rendered with or
   // without comments. If we are tasked to render a claims page, and the post to
   // render is in fact a comment, then we only render the comment itself.
-  const list = getLis(posts.data || [], props.page || "");
+  const list = getLis(posts.data || [], props.query);
 
   React.useEffect(() => {
     if (list.length !== 0) {
@@ -104,8 +103,10 @@ export const ClaimList = (props: Props) => {
 
 // getLis ensures the order of post objects according to the page we are
 // supposed to render.
-const getLis = (cla: ClaimObject[], pag: string): ClaimObject[] => {
-  if (!pag || pag === "") {
+const getLis = (cla: ClaimObject[], qry: string[]): ClaimObject[] => {
+  const pag = qry.join("-").startsWith("claim-id") ? qry[2] : "";
+
+  if (pag === "") {
     for (const x of cla) {
       // On the timeline, every claim is allowed to embed once, if a parent
       // exists.

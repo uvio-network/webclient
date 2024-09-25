@@ -19,7 +19,6 @@ export default function Page({ params }: { params: { slug: string } }) {
         titl="Claim Tree"
       />
       <ClaimList
-        page={params.slug}
         query={["claim", "id", params.slug]}
         request={[{ id: params.slug }]}
       />

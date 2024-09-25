@@ -23,17 +23,17 @@ export const TruthButtons = (props: Props) => {
   const onClick = (act: string) => {
     return () => {
       if (props.expired) {
-        ToastSender.Info("This claim has already expired!");
+        ToastSender.Info("This claim has expired already.");
         return;
       }
 
       if (!valid) {
-        ToastSender.Info("You need to login to verify the truth!");
+        ToastSender.Info("You need to login to verify the truth.");
         return;
       }
 
       if (!props.selected) {
-        ToastSender.Info("You have not been selected to vote on this claim!");
+        ToastSender.Info("You have not been selected to vote on this resolution.");
         return;
       }
 
