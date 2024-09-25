@@ -12,7 +12,7 @@ export const SubmitButton = () => {
       }}
       type="button"
     >
-      Create Comment
+      Add Comment
     </button>
   );
 };

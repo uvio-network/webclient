@@ -2,11 +2,15 @@ import { create } from "zustand";
 import { combine } from "zustand/middleware";
 
 export interface EditorMessage {
+  amount: number;
   day: string;
   labels: string;
   markdown: string;
   month: string;
-  stake: string;
+  option: boolean;
+  propose: string;
+  resolve: string;
+  token: string;
   year: string;
 };
 
@@ -19,29 +23,13 @@ export const EditorStore = create(
           return {};
         });
       },
-      getAmount: (): number => {
-        const spl = get().stake.split(" ");
-
-        if (!spl || spl.length !== 2) {
-          return 0;
-        }
-
-        const str = spl[0];
-
-        if (str === "") {
-          return 0;
-        }
-
-        return parseFloat(str);
-      },
-      getToken: (): string => {
-        const spl = get().stake.split(" ");
-
-        if (!spl || spl.length !== 2) {
-          return "";
-        }
-
-        return spl[1];
+      updateAmount: (a: number) => {
+        set((state: EditorMessage) => {
+          return {
+            ...state,
+            amount: a,
+          };
+        });
       },
       updateDay: (d: string) => {
         set((state: EditorMessage) => {
@@ -75,11 +63,35 @@ export const EditorStore = create(
           };
         });
       },
-      updateStake: (s: string) => {
+      updateOption: (o: boolean) => {
         set((state: EditorMessage) => {
           return {
             ...state,
-            stake: s,
+            option: o,
+          };
+        });
+      },
+      updatePropose: (p: string) => {
+        set((state: EditorMessage) => {
+          return {
+            ...state,
+            propose: p,
+          };
+        });
+      },
+      updateResolve: (r: string) => {
+        set((state: EditorMessage) => {
+          return {
+            ...state,
+            resolve: r,
+          };
+        });
+      },
+      updateToken: (t: string) => {
+        set((state: EditorMessage) => {
+          return {
+            ...state,
+            token: t,
           };
         });
       },

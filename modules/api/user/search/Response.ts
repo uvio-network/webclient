@@ -32,7 +32,7 @@ export const SystemUserSearchResponse = (): UserSearchResponse => {
     id: "1",
 
     // public
-    image: "",
+    image: "https://picsum.photos/id/137/48/48",
     name: "Sleeper Service",
   };
 };
