@@ -194,6 +194,10 @@ export class ClaimObject {
     return false;
   }
 
+  side(): boolean {
+    return this.summary().agreement > this.summary().disagreement;
+  }
+
   summary(): ClaimSummary {
     return this.claimSummary;
   }

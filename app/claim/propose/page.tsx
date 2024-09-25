@@ -23,83 +23,75 @@ export default function Page() {
   const router = useRouter();
 
   return (
-    <>
-      {typeof window.crypto === 'undefined' || typeof window.crypto.subtle === 'undefined' ? (
-        <div>
-          Your browser does not support cryptographic hashing algorithms. Try updating your system or use another browser.
-        </div>
+    <div>
+      <div className="flex mb-6 w-full items-center">
+        <PageButton
+          active={edit}
+          onClick={() => setEdit(true)}
+          text="Write"
+        />
+
+        <PageButton
+          active={!edit}
+          onClick={() => setEdit(false)}
+          text="Preview"
+        />
+      </div>
+
+      {edit ? (
+        <>
+          <MarkdownField />
+          <LabelsField />
+        </>
       ) : (
-        <div>
-          <div className="flex mb-6 w-full items-center">
-            <PageButton
-              active={edit}
-              onClick={() => setEdit(true)}
-              text="Write"
-            />
-
-            <PageButton
-              active={!edit}
-              onClick={() => setEdit(false)}
-              text="Preview"
-            />
-          </div>
-
-          {edit ? (
-            <>
-              <MarkdownField />
-              <LabelsField />
-            </>
-          ) : (
-            <>
-              <MarkdownPreview />
-              <LabelsPreview />
-            </>
-          )}
-
-          <div className="flex">
-            <div className="basis-3/4">
-              <ExpiryField />
-            </div>
-            <div className="basis-1/4">
-              <StakeField />
-            </div>
-            <div className="flex-none">
-              <SubmitButton
-                error={(ctx: ProposeContext) => {
-                  TokenStore.getState().updateBalance();
-                }}
-                offchain={(ctx: ProposeContext) => {
-                  router.push(`/claim/${ctx.post.id}`);
-                  TokenStore.getState().updateBalance();
-                }}
-                onchain={(ctx: ProposeContext) => {
-                  QueryStore.getState().claim.refresh();
-                  TokenStore.getState().updateBalance();
-                }}
-                rejected={(ctx: ProposeContext) => {
-                  router.push(`/claim/propose`);
-                  TokenStore.getState().updateBalance();
-                }}
-              />
-            </div>
-          </div>
-
-          <div className="flex my-4 p-4 bg-gray-50 dark:bg-gray-900 rounded">
-            <div className="w-full text-sm text-gray-500 dark:text-gray-400 overflow-auto">
-              You are about to lock up your funds until this new market resolves.
-              There is no guarantee of getting your money back. Please read the docs at&nbsp;
-              <Link
-                className="text-blue-400"
-                href="https://docs.uvio.network"
-                target="_blank"
-              >
-                docs.uvio.network
-              </Link>
-              .
-            </div>
-          </div>
-        </div>
+        <>
+          <MarkdownPreview />
+          <LabelsPreview />
+        </>
       )}
-    </>
+
+      <div className="flex">
+        <div className="basis-3/4">
+          <ExpiryField />
+        </div>
+        <div className="basis-1/4">
+          <StakeField />
+        </div>
+        <div className="flex-none">
+          <SubmitButton
+            error={(ctx: ProposeContext) => {
+              TokenStore.getState().updateBalance();
+            }}
+            offchain={(ctx: ProposeContext) => {
+              router.push(`/claim/${ctx.post.id}`);
+              TokenStore.getState().updateBalance();
+            }}
+            onchain={(ctx: ProposeContext) => {
+              QueryStore.getState().claim.refresh();
+              TokenStore.getState().updateBalance();
+            }}
+            rejected={(ctx: ProposeContext) => {
+              router.push(`/claim/propose`);
+              TokenStore.getState().updateBalance();
+            }}
+          />
+        </div>
+      </div>
+
+      <div className="flex my-4 p-4 bg-gray-50 dark:bg-gray-900 rounded">
+        <div className="w-full text-sm text-gray-500 dark:text-gray-400 overflow-auto">
+          You are about to lock up your funds until this new market resolves.
+          There is no guarantee of getting your money back. Please read the docs at&nbsp;
+          <Link
+            className="text-blue-400"
+            href="https://docs.uvio.network"
+            target="_blank"
+          >
+            docs.uvio.network
+          </Link>
+          .
+        </div>
+      </div>
+    </div>
   );
 };
