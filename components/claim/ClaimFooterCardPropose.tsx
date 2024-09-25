@@ -11,8 +11,8 @@ interface Props {
 export const ClaimFooterCardPropose = (props: Props) => {
   const token = props.claim.token();
 
-  const probability = props.claim.sumary().probability.toFixed(0);
-  const total = (props.claim.sumary().agreement + props.claim.sumary().disagreement).toFixed(2);
+  const probability = props.claim.summary().probability.toFixed(0);
+  const total = (props.claim.summary().agreement + props.claim.summary().disagreement).toFixed(2);
 
   const stakeAgree = props.claim.upside().stake[0];
   const stakeDisagree = props.claim.upside().stake[1];

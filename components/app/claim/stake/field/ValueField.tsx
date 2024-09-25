@@ -5,7 +5,7 @@ import { EditorStore } from "@/components/app/claim/stake/editor/EditorStore";
 
 interface Props {
   setOpen: (open: string) => void;
-  sumary: ClaimSummary;
+  summary: ClaimSummary;
   token: string;
 }
 
@@ -26,7 +26,7 @@ export const ValueField = (props: Props) => {
       onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Escape") props.setOpen("");
       }}
-      placeholder={`${props.sumary.minimum} ${props.token}`}
+      placeholder={`${props.summary.minimum} ${props.token}`}
       autoFocus={true}
       type="text"
     />
