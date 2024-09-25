@@ -71,13 +71,13 @@ export default function Page({ params }: { params: { slug: string } }) {
       const res = posts.data;
       const pro = posts.data.parent()!;
 
-      const amo = pro.summary().minimum * 2;
+      const amo = pro.summary().minimum * 2; // disputes require 2x the minimum of the disputed propose
       const tok = pro.token();
       const pre = chain.tokens[tok]?.precision || 2;
 
       editor.updateAmount(amo)
       editor.updateLabels(pro.labels().join(","))
-      editor.updateOption(res.side())
+      editor.updateOption(!res.side()) // a dispute's intent is to negate the outcome of the resolve
       editor.updatePropose(pro.id())
       editor.updateResolve(res.id())
       editor.updateToken(tok)
