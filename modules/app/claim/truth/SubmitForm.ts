@@ -102,7 +102,6 @@ const txnSim = async (ctx: TruthContext) => {
 
 const votCre = async (ctx: TruthContext): Promise<TruthContext> => {
   const req: VoteCreateRequest = {
-    chain: ctx.chain,
     claim: ctx.claim.resolve,
     hash: "",
     kind: "truth",

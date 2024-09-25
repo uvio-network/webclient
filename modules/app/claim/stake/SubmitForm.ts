@@ -149,7 +149,6 @@ const txnSim = async (ctx: StakeContext) => {
 
 const votCre = async (ctx: StakeContext): Promise<StakeContext> => {
   const req: VoteCreateRequest = {
-    chain: ctx.chain,
     claim: ctx.claim,
     hash: "",
     kind: "stake",
