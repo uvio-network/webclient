@@ -18,8 +18,8 @@ export const ClaimFooter = (props: Props) => {
 
   const token = isClaim ? props.claim.token() : props.claim.parent()!.token();
 
-  const stakeAgree = props.claim.votes().agreement;
-  const stakeDisagree = props.claim.votes().disagreement;
+  const stakeAgree = props.claim.sumary().agreement;
+  const stakeDisagree = props.claim.sumary().disagreement;
 
   const textAgree = votStr(isComment, isResolve, props.claim, stakeAgree, token);
   const textDisagree = votStr(isComment, isResolve, props.claim, stakeDisagree, token);

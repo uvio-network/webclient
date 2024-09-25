@@ -9,7 +9,7 @@ interface Props {
 }
 
 export const ClaimFooterCardResolve = (props: Props) => {
-  const current = props.claim.votes().total;
+  const current = props.claim.sumary().total;
   const selected = props.claim.selected();
   const total = Object.keys(props.claim.samples()).length;
 

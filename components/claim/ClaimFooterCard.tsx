@@ -12,7 +12,7 @@ interface Props {
 }
 
 export const ClaimFooterCard = (props: Props) => {
-  const probability = props.claim.votes().probability.toFixed(0);
+  const probability = props.claim.sumary().probability.toFixed(0);
 
   return (
     <HoverCard.Root

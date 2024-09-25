@@ -1,6 +1,5 @@
 export interface VoteCreateRequest {
   // public
-  chain: string;
   claim: string;
   hash: string;
   kind: string;

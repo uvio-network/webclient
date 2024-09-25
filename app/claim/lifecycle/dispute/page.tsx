@@ -6,7 +6,7 @@ import { PageHeader } from "@/components/page/PageHeader";
 export default function Page() {
   return (
     <>
-      <PageHeader titl={`Claims with lifecycle "dispute"`} />
+      <PageHeader titl="Disputed Claims" />
       <ClaimList
         query={["claim", "lifecycle", "dispute"]}
         request={[{ lifecycle: "dispute" }]}

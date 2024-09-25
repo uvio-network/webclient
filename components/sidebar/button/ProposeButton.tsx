@@ -18,7 +18,7 @@ export const ProposeButton = () => {
   const onClick = (e: React.MouseEvent) => {
     if (!valid) {
       e.preventDefault();
-      ToastSender.Info("You need to login to propose a claim!");
+      ToastSender.Info("You need to login to propose a claim.");
     }
   };
 

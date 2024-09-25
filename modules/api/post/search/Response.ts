@@ -18,9 +18,9 @@ export interface PostSearchResponse {
   lifecycle: string;
   meta: string;
   parent: string;
+  summary: string;
   text: string;
   token: string;
-  votes: string;
 };
 
 export const UniqueOwners = (inp: PostSearchResponse[]): string[] => {

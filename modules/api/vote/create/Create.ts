@@ -9,7 +9,6 @@ export async function VoteCreate(tok: string, req: VoteCreateRequest[]): Promise
         object: req.map((x) => ({
           intern: {},
           public: {
-            chain: x.chain,
             claim: x.claim,
             hash: x.hash,
             kind: x.kind,

@@ -1,12 +1,12 @@
 import * as React from "react";
 
-import { ClaimVotes } from "@/modules/claim/ClaimVotes";
+import { ClaimSummary } from "@/modules/claim/ClaimSummary";
 import { EditorStore } from "@/components/app/claim/stake/editor/EditorStore";
 
 interface Props {
   setOpen: (open: string) => void;
+  sumary: ClaimSummary;
   token: string;
-  votes: ClaimVotes;
 }
 
 export const ValueField = (props: Props) => {
@@ -26,7 +26,7 @@ export const ValueField = (props: Props) => {
       onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Escape") props.setOpen("");
       }}
-      placeholder={`${props.votes.minimum} ${props.token}`}
+      placeholder={`${props.sumary.minimum} ${props.token}`}
       autoFocus={true}
       type="text"
     />

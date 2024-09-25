@@ -1,4 +1,4 @@
-import { ClaimVotes } from "@/modules/claim/ClaimVotes";
+import { ClaimSummary } from "@/modules/claim/ClaimSummary";
 import { VoteObject } from "@/modules/vote/VoteObject";
 
 const agreement = 0;
@@ -26,7 +26,7 @@ export interface ClaimUpside {
 
 // NewClaimUpside returns the callers upside if that very user did in fact
 // participate in the given market.
-export const NewClaimUpside = (sum: ClaimVotes, res: VoteObject[]): ClaimUpside => {
+export const NewClaimUpside = (sum: ClaimSummary, res: VoteObject[]): ClaimUpside => {
   const ups = {
     hsitg: false,
     stake: [0, 0],
@@ -50,7 +50,7 @@ export const NewClaimUpside = (sum: ClaimVotes, res: VoteObject[]): ClaimUpside 
   return ups;
 };
 
-const calSha = (sum: ClaimVotes, use: number, opt: boolean): number => {
+const calSha = (sum: ClaimSummary, use: number, opt: boolean): number => {
   // Calculate the user's share of stake according to the option that the user
   // expressed their opinion on.
   //

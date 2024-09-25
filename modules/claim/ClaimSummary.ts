@@ -1,7 +1,7 @@
 import { PostSearchResponse } from "@/modules/api/post/search/Response";
 import { SplitList } from "@/modules/string/SplitList";
 
-export interface ClaimVotes {
+export interface ClaimSummary {
   agreement: number;
   creator: number;
   disagreement: number;
@@ -10,18 +10,18 @@ export interface ClaimVotes {
   total: number;
 }
 
-// NewClaimVotes takes the apischema formatted vote summary for the given claim
-// and returns an object of relevant voting information in structured form. The
-// received format is "agreement,disagreement,minimum,creator".
+// NewClaimSummary takes the apischema formatted vote summary for the given
+// claim and returns an object of relevant voting information in structured
+// form. The received format is "agreement,disagreement,minimum,creator".
 //
 //     "15.273,2.773,0.5,1.5"
 //
-export const NewClaimVotes = (pos: PostSearchResponse): ClaimVotes => {
-  const num = SplitList(pos.votes).map((x: string) => {
+export const NewClaimSummary = (pos: PostSearchResponse): ClaimSummary => {
+  const num = SplitList(pos.summary).map((x: string) => {
     return parseFloat(x);
   });
 
-  const sum: ClaimVotes = {
+  const sum: ClaimSummary = {
     agreement: num[0] || 0,
     creator: num[3] || 0,
     disagreement: num[1] || 0,

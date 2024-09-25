@@ -27,7 +27,7 @@ export const ClaimHeaderMenu = (props: Props) => {
     if (isStaker || isVoter) {
       router.push(`/claim/${props.claim.id()}/comment`);
     } else {
-      ToastSender.Info("You have no skin in the game to comment on that claim!");
+      ToastSender.Info("You have no skin in the game to comment on that claim.");
     }
   };
 

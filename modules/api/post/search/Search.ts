@@ -49,9 +49,9 @@ export async function PostSearch(tok: string, req: PostSearchRequest[]): Promise
       lifecycle: x.public?.lifecycle || "",
       meta: x.public?.meta || "",
       parent: x.public?.parent || "",
+      summary: x.public?.summary || "",
       text: x.public?.text || "",
       token: x.public?.token || "",
-      votes: x.public?.votes || "",
     }));
   } catch (err) {
     return Promise.reject(err);

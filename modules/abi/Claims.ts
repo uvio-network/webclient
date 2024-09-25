@@ -1,4 +1,4 @@
-// https://github.com/uvio-network/contracts/blob/v0.3.0/contracts/Claims.sol
+// https://github.com/uvio-network/contracts/blob/v0.4.0/contracts/Claims.sol
 export const Claims = [
   {
     "inputs": [
@@ -108,7 +108,20 @@ export const Claims = [
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "cla",
+        "name": "pod",
+        "type": "uint256"
+      }
+    ],
+    "name": "BalanceUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "pod",
         "type": "uint256"
       },
       {
@@ -269,7 +282,7 @@ export const Claims = [
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "pro",
+        "name": "pod",
         "type": "uint256"
       },
       {
@@ -397,6 +410,45 @@ export const Claims = [
   },
   {
     "inputs": [],
+    "name": "BASIS_FEE",
+    "outputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "BASIS_PROPOSER",
+    "outputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "BASIS_PROTOCOL",
+    "outputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "BASIS_TOTAL",
     "outputs": [
       {
@@ -449,33 +501,20 @@ export const Claims = [
   },
   {
     "inputs": [],
-    "name": "CLAIM_BALANCE_P",
-    "outputs": [
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "CLAIM_BALANCE_R",
-    "outputs": [
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "CLAIM_BALANCE_S",
+    "outputs": [
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "CLAIM_BALANCE_V",
     "outputs": [
       {
         "internalType": "uint8",
@@ -760,45 +799,6 @@ export const Claims = [
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "basisFee",
-    "outputs": [
-      {
-        "internalType": "uint16",
-        "name": "",
-        "type": "uint16"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "basisProposer",
-    "outputs": [
-      {
-        "internalType": "uint16",
-        "name": "",
-        "type": "uint16"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "basisProtocol",
-    "outputs": [
-      {
-        "internalType": "uint16",
-        "name": "",
-        "type": "uint16"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -878,7 +878,7 @@ export const Claims = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "pro",
+        "name": "pod",
         "type": "uint256"
       },
       {
@@ -1117,7 +1117,7 @@ export const Claims = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "cla",
+        "name": "pod",
         "type": "uint256"
       }
     ],
@@ -1136,7 +1136,7 @@ export const Claims = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "pro",
+        "name": "pod",
         "type": "uint256"
       }
     ],
@@ -1160,7 +1160,36 @@ export const Claims = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "pro",
+        "name": "pod",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "lef",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "rig",
+        "type": "uint256"
+      }
+    ],
+    "name": "searchHistory",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "pod",
         "type": "uint256"
       }
     ],
@@ -1214,7 +1243,36 @@ export const Claims = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "pro",
+        "name": "pod",
+        "type": "uint256"
+      }
+    ],
+    "name": "searchLatest",
+    "outputs": [
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "pod",
         "type": "uint256"
       }
     ],
@@ -1243,7 +1301,7 @@ export const Claims = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "pro",
+        "name": "pod",
         "type": "uint256"
       },
       {
@@ -1267,7 +1325,36 @@ export const Claims = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "pro",
+        "name": "pod",
+        "type": "uint256"
+      }
+    ],
+    "name": "searchResults",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "pod",
         "type": "uint256"
       },
       {
@@ -1296,7 +1383,7 @@ export const Claims = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "pro",
+        "name": "pod",
         "type": "uint256"
       },
       {
@@ -1344,7 +1431,7 @@ export const Claims = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "pro",
+        "name": "pod",
         "type": "uint256"
       }
     ],
@@ -1400,7 +1487,7 @@ export const Claims = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "cla",
+        "name": "pod",
         "type": "uint256"
       },
       {
@@ -1440,29 +1527,6 @@ export const Claims = [
   {
     "inputs": [
       {
-        "internalType": "uint16",
-        "name": "fee",
-        "type": "uint16"
-      },
-      {
-        "internalType": "uint16",
-        "name": "psr",
-        "type": "uint16"
-      },
-      {
-        "internalType": "uint16",
-        "name": "ptc",
-        "type": "uint16"
-      }
-    ],
-    "name": "updateFees",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "address",
         "name": "own",
         "type": "address"
@@ -1477,7 +1541,7 @@ export const Claims = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "cla",
+        "name": "pod",
         "type": "uint256"
       },
       {
@@ -1505,7 +1569,7 @@ export const Claims = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "pro",
+        "name": "pod",
         "type": "uint256"
       },
       {
