@@ -9,7 +9,7 @@ interface Props {
 }
 
 export const ClaimFooterCardResolve = (props: Props) => {
-  const current = props.claim.sumary().total;
+  const current = props.claim.summary().total;
   const selected = props.claim.selected();
   const total = Object.keys(props.claim.samples()).length;
 
@@ -59,6 +59,22 @@ export const ClaimFooterCardResolve = (props: Props) => {
           </div>
         )}
       </div>
+
+      {props.claim.expired() === true && (
+        <div>
+          <Separator.Horizontal />
+
+          {props.claim.challenge() === true ? (
+            <div>
+              This market expired with a valid resolution, but can still be disputed.
+            </div>
+          ) : (
+            <div>
+              This market expired with {props.claim.valid() ? "a valid" : "an invalid"} resolution, and cannot be disputed anymore.
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

@@ -28,7 +28,7 @@ export const ClaimButtonsStake = (props: Props) => {
     } else {
       editor.updateClaim(props.claim.id())
       editor.updateContract(props.claim.contract())
-      editor.updateMinimum(props.claim.sumary().minimum)
+      editor.updateMinimum(props.claim.summary().minimum)
       editor.updateToken(props.claim.token())
     }
   }, [props.claim, props.open, editor]);
@@ -46,7 +46,7 @@ export const ClaimButtonsStake = (props: Props) => {
             <div className="w-full mr-2">
               <ValueField
                 setOpen={props.setOpen}
-                sumary={props.claim.sumary()}
+                summary={props.claim.summary()}
                 token={props.claim.token()}
               />
             </div>

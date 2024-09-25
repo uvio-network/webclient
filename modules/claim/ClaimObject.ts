@@ -119,6 +119,13 @@ export class ClaimObject {
     return Number(this.post.chain);
   }
 
+  // challenge returns whether this claim is within its own challenge window.
+  // The challenge window is exactly 7 standard days long, starting from the
+  // claim's expiry.
+  challenge(): boolean {
+    return moment().utc().isBefore(this.expiry().add(7, "days")) && this.valid();
+  }
+
   contract(): Address {
     return this.post.contract as Address;
   }
@@ -187,7 +194,7 @@ export class ClaimObject {
     return false;
   }
 
-  sumary(): ClaimSummary {
+  summary(): ClaimSummary {
     return this.claimSummary;
   }
 
@@ -197,5 +204,9 @@ export class ClaimObject {
 
   upside(): ClaimUpside {
     return this.claimUpside;
+  }
+
+  valid(): boolean {
+    return this.summary().agreement !== this.summary().disagreement;
   }
 }
