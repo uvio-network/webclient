@@ -16,7 +16,14 @@ export const EditorStore = create(
     (set, get) => ({
       delete: () => {
         set(() => {
-          return {};
+          return {
+            day: "",
+            labels: "",
+            markdown: "",
+            month: "",
+            stake: "",
+            year: "",
+          };
         });
       },
       getAmount: (): number => {
