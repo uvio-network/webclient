@@ -20,7 +20,18 @@ export const EditorStore = create(
     (set, get) => ({
       delete: () => {
         set(() => {
-          return {};
+          return {
+            amount: 0,
+            day: "",
+            labels: "",
+            markdown: "",
+            month: "",
+            option: false,
+            propose: "",
+            resolve: "",
+            token: "",
+            year: "",
+          };
         });
       },
       updateAmount: (a: number) => {

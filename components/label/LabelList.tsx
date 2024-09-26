@@ -1,7 +1,6 @@
 import Link from "next/link";
 
-import { CategoryLabel } from "@/components/label/CategoryLabel";
-import { LifecycleLabel } from "@/components/label/LifecycleLabel";
+import { BaseLabel } from "@/components/label/BaseLabel";
 import { LabelCard } from "@/components/label/LabelCard";
 
 interface Props {
@@ -13,24 +12,36 @@ interface Props {
 }
 
 export const LabelList = (props: Props) => {
+  let col: "blue" | "rose" | "gray" = "blue";
+
+  if (props.lifecycle === "dispute") {
+    col = "rose";
+  }
+
+  // TODO we need to set green and we need to create those settled objects
+  //
+  // if (props.lifecycle === "settled") {
+  //   col = "green";
+  // }
+
   return (
     <div className="flex">
       {props.comment ? (
-        <LabelCard text="This post comments on the embedded claim.">
-          <LifecycleLabel dashed={false} lifecycle="comment" />
+        <LabelCard text="This post is a comment on the embedded claim.">
+          <BaseLabel colour="blue" text="comment" />
         </LabelCard>
       ) : (
         <>
           {props.pending ? (
-            <LabelCard text="This claim's transaction has not yet finalized onchain.">
-              <LifecycleLabel dashed={true} lifecycle="pending" />
+            <LabelCard text={`Lifecycle "${props.lifecycle}" once the claim's transaction has been finalized onchain.`}>
+              <BaseLabel dashed={true} colour="rose" text="pending" />
             </LabelCard>
           ) : (
             <Link
               href={`/claim/lifecycle/${props.lifecycle}`}
               target={props.target}
             >
-              <LifecycleLabel dashed={false} lifecycle={props.lifecycle} />
+              <BaseLabel colour={col} text={props.lifecycle} />
             </Link>
           )}
         </>
@@ -42,7 +53,7 @@ export const LabelList = (props: Props) => {
           href={`/claim/label/${x}`}
           target={props.target}
         >
-          <CategoryLabel text={x} />
+          <BaseLabel colour="gray" text={x} />
         </Link>
       ))}
     </div>
