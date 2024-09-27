@@ -26,14 +26,14 @@ export const ChainWhitelist: ChainConfig[] = [
     ...baseSepolia,
     biconomyPaymasterApiKey: Config.BaseSepoliaBiconomyPaymasterApiKey,
     contracts: {
-      "Claims-UVX": { abi: Claims, address: "0x48455E0c620D46239BE9358C9B2Bd6D0bf1F3AA6" },
-      "Claims-WETH": { abi: Claims, address: "0x6Ed3CD11d2DeBbc08a2d36D1da57eBF3dFA02a8D" },
+      "Claims-UVX": { abi: Claims, address: "0x537cE8e9F4Cce5a1D8033B63f274187157a966b3" },
+      "Claims-WETH": { abi: Claims, address: "0x057a91c0010f35F3aC937a5a47a2869d477D1937" },
     },
     rpcEndpoints: [
       Config.BaseSepoliaAlchemyRpcEndpoint,
     ],
     tokens: {
-      "UVX": { abi: UVX, address: "0x04Ec0582e2700Db583e3BCb9b913D181Ac2D68A8", decimals: 18, precision: 2 },
+      "UVX": { abi: UVX, address: "0x484C32b1288A88A48F8e7D20173a1048589Df182", decimals: 18, precision: 2 },
       "WETH": { abi: ERC20, address: "0x4200000000000000000000000000000000000006", decimals: 18, precision: 6 },
     },
   },
