@@ -15,11 +15,10 @@ export const SocialButton = () => {
 
   return (
     <>
-      <Link href="">
+      <Link href="https://discord.gg/fbkrSR44hr">
         <BaseButton
           icon={<DiscordLineIcon />}
           text="Discord"
-          onClick={onClick}
         />
       </Link>
 
