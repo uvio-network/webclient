@@ -4,6 +4,7 @@ import { BaseButton } from "@/components/button/BaseButton";
 import { NoButton } from "@/components/button/NoButton";
 import { ClaimFooterCard } from "@/components/claim/ClaimFooterCard";
 import { ClaimObject } from "@/modules/claim/ClaimObject";
+import { Tooltip } from "@/components/tooltip/Tooltip";
 import { TriangleDownIcon } from "@/components/icon/TriangleDownIcon";
 import { TriangleUpIcon } from "@/components/icon/TriangleUpIcon";
 
@@ -45,12 +46,30 @@ export const ClaimFooter = (props: Props) => {
             )}
 
             {(isResolve || isComment) && stakeAgree !== 0 && (
-              <NoButton
-                effect={true}
-                font="font-normal"
-                icon={<TriangleUpIcon className="mb-[1px]" />}
-                position="right"
-                text={textAgree}
+              <Tooltip
+                content={
+                  <>
+                    {isResolve && (
+                      <>
+                        The amount of votes cast on this resolution.
+                      </>
+                    )}
+                    {isComment && (
+                      <>
+                        The amount of skin in the game the commenting user has.
+                      </>
+                    )}
+                  </>
+                }
+                trigger={
+                  <NoButton
+                    effect={true}
+                    font="font-normal"
+                    icon={<TriangleUpIcon className="mb-[1px]" />}
+                    position="right"
+                    text={textAgree}
+                  />
+                }
               />
             )}
           </div>
@@ -80,12 +99,30 @@ export const ClaimFooter = (props: Props) => {
             )}
 
             {(isResolve || isComment) && stakeDisagree !== 0 && (
-              <NoButton
-                effect={true}
-                font="font-normal"
-                icon={<TriangleDownIcon className="mb-[1px]" />}
-                position="left"
-                text={textDisagree}
+              <Tooltip
+                content={
+                  <>
+                    {isResolve && (
+                      <>
+                        The amount of votes cast on this resolution.
+                      </>
+                    )}
+                    {isComment && (
+                      <>
+                        The amount of skin in the game the commenting user has.
+                      </>
+                    )}
+                  </>
+                }
+                trigger={
+                  <NoButton
+                    effect={true}
+                    font="font-normal"
+                    icon={<TriangleDownIcon className="mb-[1px]" />}
+                    position="left"
+                    text={textDisagree}
+                  />
+                }
               />
             )}
           </div>

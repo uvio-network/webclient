@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { BaseLabel } from "@/components/label/BaseLabel";
-import { LabelCard } from "@/components/label/LabelCard";
+import { Tooltip } from "@/components/tooltip/Tooltip";
 
 interface Props {
   comment: boolean;
@@ -27,15 +27,29 @@ export const LabelList = (props: Props) => {
   return (
     <div className="flex">
       {props.comment ? (
-        <LabelCard text="This post is a comment on the embedded claim.">
-          <BaseLabel colour="blue" text="comment" />
-        </LabelCard>
+        <Tooltip
+          content={
+            <>
+              This post is a comment on the embedded claim.
+            </>
+          }
+          trigger={
+            <BaseLabel className="cursor-default" colour="blue" text="comment" />
+          }
+        />
       ) : (
         <>
           {props.pending ? (
-            <LabelCard text={`Lifecycle "${props.lifecycle}" once the claim's transaction has been finalized onchain.`}>
-              <BaseLabel dashed={true} colour="rose" text="pending" />
-            </LabelCard>
+            <Tooltip
+              content={
+                <>
+                  Lifecycle <strong>{props.lifecycle}</strong> once the claim's transaction has been finalized onchain.
+                </>
+              }
+              trigger={
+                <BaseLabel className="cursor-default" dashed={true} colour="rose" text="pending" />
+              }
+            />
           ) : (
             <Link
               href={`/claim/lifecycle/${props.lifecycle}`}

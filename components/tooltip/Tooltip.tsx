@@ -1,21 +1,30 @@
-"use client";
-
 import * as HoverCard from "@radix-ui/react-hover-card";
 import * as React from "react";
 
 interface Props {
-  children: React.ReactNode;
-  text: string;
+  // content is the element that is shown to users when the trigger element
+  // executes.
+  content: React.ReactNode;
+  // trigger is the element that user hover over or click in order to see the
+  // tooltip content.
+  trigger: React.ReactNode;
 }
 
-export const LabelCard = (props: Props) => {
+export const Tooltip = (props: Props) => {
+  const [open, setOpen] = React.useState<boolean>(false);
+
   return (
     <HoverCard.Root
       closeDelay={500}
       openDelay={250}
+      open={open}
+      onOpenChange={setOpen}
     >
-      <HoverCard.Trigger className="cursor-default">
-        {props.children}
+      <HoverCard.Trigger
+        onTouchStart={() => setOpen(true)}
+        onMouseDown={() => setOpen(true)}
+      >
+        {props.trigger}
       </HoverCard.Trigger>
       <HoverCard.Portal>
         <HoverCard.Content
@@ -32,7 +41,7 @@ export const LabelCard = (props: Props) => {
           sideOffset={5}
         >
           <div className="text-gray-500 dark:text-gray-400 text-sm">
-            {props.text}
+            {props.content}
           </div>
         </HoverCard.Content>
       </HoverCard.Portal>

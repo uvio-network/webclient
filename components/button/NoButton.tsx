@@ -32,7 +32,7 @@ export const NoButton = (props: Props) => {
   return (
     <div
       className={`
-        flex w-full h-fit rounded outline-none
+        flex w-full h-fit rounded outline-none cursor-default
         text-sm sm:text-base text-gray-400 dark:text-gray-500 whitespace-nowrap
         ${props.font ? props.font : "font-medium"}
       `}
