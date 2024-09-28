@@ -19,7 +19,6 @@ export const ClaimContainer = (props: Props) => {
           claim={props.claim}
           editor={false}
           embed={false}
-          limit={70}
         />
       </div>
 
@@ -29,7 +28,6 @@ export const ClaimContainer = (props: Props) => {
             claim={props.claim.parent()!}
             editor={false}
             embed={true}
-            limit={25}
           />
         </div>
       )}
@@ -40,7 +38,6 @@ export const ClaimContainer = (props: Props) => {
             claim={props.claim.parent()!.parent()!}
             editor={false}
             embed={true}
-            limit={25}
           />
         </div>
       )}

@@ -12,7 +12,6 @@ interface Props {
   claim: ClaimObject;
   editor: boolean;
   embed: boolean;
-  limit: number;
 }
 
 export const ClaimContent = (props: Props) => {
@@ -20,13 +19,14 @@ export const ClaimContent = (props: Props) => {
 
   const claimPage = "/claim/" + props.claim.id();
   const isPage = usePathname() === "/claim/" + props.claim.id() ? true : false;
+  const limit = props.embed === true ? 25 : 70;
 
   const process = (txt: string): string => {
     if (isPage) {
       return txt;
     }
 
-    const lim = LimitMarkdown(txt, props.limit);
+    const lim = LimitMarkdown(txt, limit);
 
     if (lim.cut === true) {
       return lim.txt + `[ ... show more](${claimPage})`;

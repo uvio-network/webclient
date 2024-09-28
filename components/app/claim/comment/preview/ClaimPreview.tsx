@@ -13,7 +13,6 @@ export const ClaimPreview = (props: Props) => {
           claim={props.claim}
           editor={true}
           embed={true}
-          limit={25}
         />
       </div>
 
@@ -23,7 +22,6 @@ export const ClaimPreview = (props: Props) => {
             claim={props.claim.parent()!}
             editor={false}
             embed={true}
-            limit={25}
           />
         </div>
       )}
