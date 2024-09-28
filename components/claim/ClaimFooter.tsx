@@ -56,7 +56,7 @@ export const ClaimFooter = (props: Props) => {
                     )}
                     {isComment && (
                       <>
-                        The user's skin in the game.
+                        The user&apos;s skin in the game.
                       </>
                     )}
                   </>
@@ -109,7 +109,7 @@ export const ClaimFooter = (props: Props) => {
                     )}
                     {isComment && (
                       <>
-                        The user's skin in the game.
+                        The user&apos;s skin in the game.
                       </>
                     )}
                   </>

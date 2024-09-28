@@ -29,7 +29,7 @@ export const Tooltip = (props: Props) => {
       <HoverCard.Portal>
         <HoverCard.Content
           className={`
-            p-2 w-[300px]
+            p-2 max-w-[300px]
             background border-color border rounded
             data-[state=open]:transition-all
             data-[side=bottom]:animate-slideUpAndFade
