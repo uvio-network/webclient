@@ -43,7 +43,7 @@ export const LabelList = (props: Props) => {
             <Tooltip
               content={
                 <>
-                  Lifecycle <strong>{props.lifecycle}</strong> once the claim's transaction has been finalized onchain.
+                  Lifecycle <strong>{props.lifecycle}</strong> once the claim&apos;s transaction has been finalized onchain.
                 </>
               }
               trigger={
