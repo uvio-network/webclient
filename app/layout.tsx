@@ -12,7 +12,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Uvio | See What's Real",
-  description: "Uvio is the social network for prediction markets!",
+  description: "Uvio is the social network for information markets!",
   keywords: ["prediction market", "social network"],
   twitter: { card: "summary", site: "@uvio.network" }
 }
