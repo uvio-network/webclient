@@ -12,15 +12,21 @@ interface Props {
 export const ClaimContainer = (props: Props) => {
   return (
     <div className={`${props.claim.kind() === "claim" ? "mb-6" : "mb-2"}`}>
-      <div className="p-2 w-full">
+      <div className="p-2">
         <ClaimHeader claim={props.claim} />
-        <ClaimContent claim={props.claim} embed={false} />
+
+        <ClaimContent
+          claim={props.claim}
+          editor={false}
+          embed={false}
+        />
       </div>
 
       {props.claim.embed() > 0 && props.claim.parent() && (
         <div className="m-2 px-2 pb-2 background-overlay rounded border border-color">
           <ClaimContent
             claim={props.claim.parent()!}
+            editor={false}
             embed={true}
           />
         </div>
@@ -30,6 +36,7 @@ export const ClaimContainer = (props: Props) => {
         <div className="m-2 px-2 pb-2 background-overlay rounded border border-color">
           <ClaimContent
             claim={props.claim.parent()!.parent()!}
+            editor={false}
             embed={true}
           />
         </div>
