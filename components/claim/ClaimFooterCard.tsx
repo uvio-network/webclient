@@ -1,6 +1,7 @@
 "use client";
 
 import * as HoverCard from "@radix-ui/react-hover-card";
+import * as React from "react";
 
 import { ClaimObject } from "@/modules/claim/ClaimObject";
 import { ClaimFooterCardPropose } from "@/components/claim/ClaimFooterCardPropose";
@@ -12,14 +13,22 @@ interface Props {
 }
 
 export const ClaimFooterCard = (props: Props) => {
+  const [open, setOpen] = React.useState<boolean>(false);
+
   const probability = props.claim.summary().probability.toFixed(0);
 
   return (
     <HoverCard.Root
       closeDelay={500}
       openDelay={250}
+      open={open}
+      onOpenChange={setOpen}
     >
-      <HoverCard.Trigger className="text-gray-400 dark:text-gray-500">
+      <HoverCard.Trigger
+        onTouchStart={() => setOpen(true)}
+        onMouseDown={() => setOpen(true)}
+        className="text-gray-400 dark:text-gray-500"
+      >
         <EffectButton value={probability}>
           <div className="underline underline-offset-4 decoration-dashed cursor-default">
             {`${probability} %`}
