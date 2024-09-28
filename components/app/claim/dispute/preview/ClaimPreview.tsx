@@ -13,6 +13,7 @@ export const ClaimPreview = (props: Props) => {
           claim={props.claim}
           editor={true}
           embed={true}
+          limit={25}
         />
       </div>
 
@@ -20,7 +21,9 @@ export const ClaimPreview = (props: Props) => {
         <div className="m-2 px-2 pb-2 background-overlay rounded border border-color">
           <ClaimContent
             claim={props.claim.parent()!}
+            editor={false}
             embed={true}
+            limit={25}
           />
         </div>
       )}

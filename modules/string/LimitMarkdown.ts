@@ -1,6 +1,4 @@
-const lim = 70;
-
-export const LimitMarkdown = (txt: string): { txt: string; cut: boolean } => {
+export const LimitMarkdown = (txt: string, lim: number): { txt: string; cut: boolean } => {
   let tot = 0;
   let out = "";
 

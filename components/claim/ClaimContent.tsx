@@ -10,8 +10,9 @@ import { useRouter } from "next/navigation";
 
 interface Props {
   claim: ClaimObject;
-  editor?: boolean;
-  embed?: boolean;
+  editor: boolean;
+  embed: boolean;
+  limit: number;
 }
 
 export const ClaimContent = (props: Props) => {
@@ -25,7 +26,7 @@ export const ClaimContent = (props: Props) => {
       return txt;
     }
 
-    const lim = LimitMarkdown(txt);
+    const lim = LimitMarkdown(txt, props.limit);
 
     if (lim.cut === true) {
       return lim.txt + `[ ... show more](${claimPage})`;
@@ -53,7 +54,12 @@ export const ClaimContent = (props: Props) => {
   };
 
   return (
-    <div className="" onClick={onClick}>
+    <div
+      className={`
+        ${!isPage || props.embed ? "cursor-pointer" : ""}
+      `}
+      onClick={onClick}
+    >
       <RenderMarkdown
         editor={props.editor}
         embed={props.embed}
