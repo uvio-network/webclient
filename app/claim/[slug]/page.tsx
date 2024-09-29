@@ -2,11 +2,14 @@ import fs from "fs";
 import satori from "satori";
 import sharp from "sharp";
 
+import * as Config from "@/modules/config";
+
 import { Client } from "@/app/claim/[slug]/client";
 import { Metadata } from "next";
 import { NewClaimSummary } from "@/modules/claim/ClaimSummary";
 import { PostSearch } from "@/modules/api/post/search/Search";
 import React from "react";
+import { PostSearchResponse } from "@/modules/api/post/search/Response";
 
 const font = fs.readFileSync("public/fonts/Inter-Regular.ttf");
 
@@ -15,7 +18,11 @@ interface Props {
 }
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
-  const [pos] = await PostSearch("", [{ id: props.params.slug }]);
+  const pos = await getPos(props.params.slug);
+
+  if (!pos) {
+    return {};
+  }
 
   const sum = NewClaimSummary(pos);
   const tot = sum.agreement + sum.disagreement;
@@ -48,7 +55,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
       "fc:frame:image:aspect_ratio": "1.91:1",
       "fc:frame:button:1": "Stake",
       "fc:frame:button:1:action": "link",
-      "fc:frame:button:1:target": process.env.__NEXT_PRIVATE_ORIGIN + "/claim/" + props.params.slug,
+      "fc:frame:button:1:target": Config.WebclientAppEndpoint + "/claim/" + props.params.slug,
       "og:title": tit,
       "og:image": img,
     },
@@ -59,6 +66,16 @@ export default function Page(props: Props) {
   return (
     <Client slug={props.params.slug} />
   );
+};
+
+const getPos = async (oid: string): Promise<PostSearchResponse | undefined> => {
+  try {
+    const [pos] = await PostSearch("", [{ id: oid }]);
+    return pos;
+  } catch (err) {
+    console.log(err);
+    return undefined;
+  }
 };
 
 const imgDiv = (tit: string, per: number): React.ReactNode => {
