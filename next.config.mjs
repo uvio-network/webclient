@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: false,
   images: {
     remotePatterns: [
       {
@@ -8,6 +7,14 @@ const nextConfig = {
         hostname: "picsum.photos",
       },
     ],
+  },
+  reactStrictMode: false,
+  webpack: {
+    // Treat sharp as an external module so we can do this.
+    //
+    //     import sharp from "sharp";
+    //
+    sharp: "commonjs sharp",
   },
 };
 

@@ -6,6 +6,7 @@
     "build": "next build",
     "compile": "./node_modules/.bin/tsc --noEmit",
     "dev": "next dev",
+    "frames": "./node_modules/.bin/frames",
     "lint": "next lint",
     "start": "next start",
     "test": "./node_modules/.bin/jest"
@@ -26,10 +27,13 @@
     "react-dom": "^18",
     "react-markdown": "^9.0.1",
     "remark-gfm": "^4.0.0",
+    "satori": "^0.11.1",
+    "sharp": "^0.33.5",
     "viem": "^2.21.11",
     "zustand": "^4.5.5"
   },
   "devDependencies": {
+    "@frames.js/debugger": "^0.3.14",
     "@types/jest": "^29.5.13",
     "@types/node": "^22.5.5",
     "@types/react": "^18.3.8",
