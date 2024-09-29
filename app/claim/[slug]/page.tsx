@@ -8,7 +8,7 @@ import { NewClaimSummary } from "@/modules/claim/ClaimSummary";
 import { PostSearch } from "@/modules/api/post/search/Search";
 import React from "react";
 
-const font = fs.readFileSync("fonts/Inter-Regular.ttf");
+const font = fs.readFileSync("public/fonts/Inter-Regular.ttf");
 
 interface Props {
   params: { slug: string };
