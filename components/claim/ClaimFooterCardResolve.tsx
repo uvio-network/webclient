@@ -14,6 +14,7 @@ export const ClaimFooterCardResolve = (props: Props) => {
   const total = Object.keys(props.claim.samples()).length;
 
   const percentage = ((current / total) * 100).toFixed(0);
+  const probability = props.claim.summary().probability.toFixed(0);
 
   const voteTrue = props.claim.upside().stake[0];
   const voteFalse = props.claim.upside().stake[1];
@@ -26,7 +27,7 @@ export const ClaimFooterCardResolve = (props: Props) => {
         </div>
       ) : (
         <div>
-          This resolution was voted to be true by <strong>{percentage}%</strong> of the voters, based on a total of {total} votes.
+          <strong>{percentage}%</strong> of the voters say the associated claim has a <strong>{probability}%</strong> chance to be true.
         </div>
       )}
 

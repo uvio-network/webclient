@@ -1,6 +1,7 @@
 import fs from "fs";
 import satori from "satori";
 import sharp from "sharp";
+import React from "react";
 
 import * as Config from "@/modules/config";
 
@@ -8,8 +9,8 @@ import { Client } from "@/app/claim/[slug]/client";
 import { Metadata } from "next";
 import { NewClaimSummary } from "@/modules/claim/ClaimSummary";
 import { PostSearch } from "@/modules/api/post/search/Search";
-import React from "react";
 import { PostSearchResponse } from "@/modules/api/post/search/Response";
+import { SatoriOptions } from "satori";
 
 const font = fs.readFileSync("public/fonts/Inter-Regular.ttf");
 
@@ -31,18 +32,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
   const svg = await satori(
     imgDiv(tit, per),
-    {
-      width: 764,
-      height: 400,
-      fonts: [
-        {
-          name: "Inter-Regular",
-          data: font,
-          weight: 400,
-          style: "normal",
-        },
-      ],
-    },
+    imgOpt(),
   );
 
   const png = await sharp(Buffer.from(svg)).png().toBuffer();
@@ -123,4 +113,19 @@ const imgDiv = (tit: string, per: number): React.ReactNode => {
       </div>
     </div>
   );
-}
+};
+
+const imgOpt = (): SatoriOptions => {
+  return {
+    width: 764,
+    height: 400,
+    fonts: [
+      {
+        name: "Inter-Regular",
+        data: font,
+        weight: 400,
+        style: "normal",
+      },
+    ],
+  };
+};
