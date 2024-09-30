@@ -55,7 +55,10 @@ export const ClaimActions = (props: Props) => {
       )}
 
       <div className="px-2">
-        <Separator.Horizontal margin={!isPage ? "mt-0 mb-2" : !isClaim ? "mt-4 mb-2" : ""} />
+        <Separator.Horizontal
+          margin={!isPage ? "mt-0 mb-2" : !isClaim ? "mt-4 mb-2" : ""}
+          progress={props.claim.progress()}
+        />
       </div>
 
       {isClaim && isPage && !isPending && (

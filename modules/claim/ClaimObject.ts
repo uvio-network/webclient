@@ -135,6 +135,17 @@ export class ClaimObject {
   }
 
   expired(): boolean {
+    // We adjust the expired flag for every propose because of the staking
+    // threshold in the smart contracts. Before the set expiry, there is a
+    // moment in time when staking is not possible anymore.
+    if (this.lifecycle() === "propose") {
+      const exp = this.expiry().unix();
+      const now = moment().utc().unix();
+      const end = exp - this.threshold();
+
+      return now > end;
+    }
+
     return moment().utc().isAfter(this.expiry());
   }
 
@@ -160,7 +171,14 @@ export class ClaimObject {
   }
 
   markdown(): string {
-    return this.post.text;
+    let text = this.post.text;
+
+    if (this.selected()) {
+      // If the user has been selected, personalize the message
+      text += " And **you** have been selected too!";
+    }
+
+    return text;
   }
 
   meta(): string[] {
@@ -178,6 +196,27 @@ export class ClaimObject {
 
     const spl = SplitList(this.post.lifecycle, ":");
     return spl[1].toLowerCase() === "pending";
+  }
+
+  progress(): number {
+    if (this.post.expiry === "") {
+      return -1;
+    }
+
+    const cre = this.created().unix();
+    const exp = this.expiry().unix();
+    const now = moment().utc().unix();
+    const end = exp - this.threshold();
+
+    if (now > end) {
+      return 100;
+    }
+
+    const tot = end - cre;
+    const ela = now - cre;
+    const per = ela / tot * 100;
+
+    return Math.ceil(per);
   }
 
   selected(): boolean {
@@ -200,6 +239,29 @@ export class ClaimObject {
 
   summary(): ClaimSummary {
     return this.claimSummary;
+  }
+
+  threshold(): number {
+    if (this.post.expiry === "") {
+      return 0;
+    }
+
+    const cre = this.created().unix();
+    const exp = this.expiry().unix();
+
+    const bas = 250;              // 2.5% in basis points
+    const max = 7 * 24 * 60 * 60; // 7 days in seconds
+    const min = 60 * 60 * 1;      // 60 minutes in seconds
+
+    const thr = ((exp - cre) * bas) / 10_000;
+
+    if (thr > max) {
+      return max;
+    } else if (thr < min) {
+      return min;
+    }
+
+    return thr;
   }
 
   token(): string {
