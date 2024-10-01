@@ -39,7 +39,7 @@ export const TruthButtons = (props: Props) => {
       }
 
       if (props.voted) {
-        ToastSender.Info("And you have cast your vote already.");
+        ToastSender.Info("You have cast your vote already.");
         return;
       }
 
