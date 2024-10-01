@@ -15,7 +15,7 @@ interface Props {
 export const ClaimFooterCard = (props: Props) => {
   const [open, setOpen] = React.useState<boolean>(false);
 
-  const probability = props.claim.summary().probability.toFixed(0);
+  const probability = props.claim.summary().post.probability.toFixed(0);
 
   return (
     <HoverCard.Root

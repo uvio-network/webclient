@@ -15,7 +15,10 @@ export const LoadingPage = ({ children }: { children: React.ReactNode }) => {
 
       {loading ? (
         <div className="flex items-center justify-center min-h-screen">
-          <AppLogo />
+          <AppLogo
+            height="54px"
+            width="336px"
+          />
           {children}
         </div>
       ) : (

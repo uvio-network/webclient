@@ -29,7 +29,7 @@ export const ClaimHeaderMenu = (props: Props) => {
   const isClaim = props.claim.kind() === "claim";
   const isResolve = props.claim.lifecycle() === "resolve";
   const isChallenge = props.claim.expired() && props.claim.challenge();
-  const isStaker = props.claim.upside().hsitg;
+  const isStaker = props.claim.summary().vote.hsitg;
   const isVoter = props.claim.selected();
 
   const addComment = () => {

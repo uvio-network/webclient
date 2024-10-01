@@ -28,7 +28,7 @@ export const RenderMarkdown = (props: Props) => {
 };
 
 const allowedElements = [
-  "h1", "h3", "h5",
+  "h1", "h3",
   "a", "p",
   "ol", "ul", "li",
   "hr",
@@ -48,8 +48,8 @@ const components = (edi: boolean, emb: boolean): Components => {
     h1(props) {
       return <h1
         className={`
-          my-4 text-black dark:text-white
-          ${emb === true ? "text-2xl" : "text-3xl"}
+          text-black dark:text-white
+          ${emb === true ? "my-2 text-xl" : "my-4 text-2xl"}
         `}
         {...getRst(props)}
       />;
@@ -57,17 +57,8 @@ const components = (edi: boolean, emb: boolean): Components => {
     h3(props) {
       return <h3
         className={`
-          my-4 text-black dark:text-white
-          ${emb === true ? "text-1xl" : "text-2xl"}
-        `}
-        {...getRst(props)}
-      />;
-    },
-    h5(props) {
-      return <h5
-        className={`
-          my-4 text-black dark:text-white
-          ${emb === true ? "text-lg" : "text-xl"}
+          text-black dark:text-white
+          ${emb === true ? "my-2 text-lg" : "my-4 text-xl"}
         `}
         {...getRst(props)}
       />;
@@ -98,7 +89,7 @@ const components = (edi: boolean, emb: boolean): Components => {
     p(props) {
       return <p
         className={`
-          mt-4
+          ${emb === true ? "mt-2" : "mt-4"}
         `}
         {...getRst(props)}
       />;
@@ -106,7 +97,8 @@ const components = (edi: boolean, emb: boolean): Components => {
     ol(props) {
       return <ol
         className={`
-          mt-4 list-decimal list-inside
+          list-decimal list-inside
+          ${emb === true ? "mt-2" : "mt-4"}
         `}
         {...getRst(props)}
       />;
@@ -114,7 +106,8 @@ const components = (edi: boolean, emb: boolean): Components => {
     ul(props) {
       return <ul
         className={`
-          mt-4 list-disc list-inside
+          list-disc list-inside
+          ${emb === true ? "mt-2" : "mt-4"}
         `}
         {...getRst(props)}
       />;
@@ -128,7 +121,8 @@ const components = (edi: boolean, emb: boolean): Components => {
     hr(props) {
       return <hr
         className={`
-          my-4 border-color
+          border-color
+          ${emb === true ? "my-2" : "my-4"}
         `}
         {...getRst(props)}
       />;
@@ -136,7 +130,8 @@ const components = (edi: boolean, emb: boolean): Components => {
     blockquote(props) {
       return <blockquote
         className={`
-          my-4 px-4 border-l-4 border-blue-400 text-gray-500 dark:text-gray-400 font-mono
+          px-4 border-l-4 border-blue-400 text-sm text-gray-500 dark:text-gray-400 font-mono
+          ${emb === true ? "my-2" : "my-4"}
         `}
         {...getRst(props)}
       />;

@@ -7,7 +7,7 @@ import * as Config from "@/modules/config";
 
 import { Client } from "@/app/claim/[slug]/client";
 import { Metadata } from "next";
-import { NewClaimSummary } from "@/modules/claim/ClaimSummary";
+import { NewPostSummary } from "@/modules/summary/PostSummary";
 import { PostSearch } from "@/modules/api/post/search/Search";
 import { PostSearchResponse } from "@/modules/api/post/search/Response";
 import { SatoriOptions } from "satori";
@@ -25,7 +25,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     return {};
   }
 
-  const sum = NewClaimSummary(pos);
+  const sum = NewPostSummary(pos);
   const tot = sum.agreement + sum.disagreement;
   const tit = `${tot.toFixed(2)} ${pos.token} staked on Uvio, do you agree?`;
   const per = (sum.agreement / tot) * 100;
@@ -47,7 +47,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
       "fc:frame:button:1:action": "link",
       "fc:frame:button:1:target": Config.WebclientAppEndpoint + "/claim/" + props.params.slug,
       "og:title": tit,
-      "og:image": img,
+      "og:image": Config.WebclientAppEndpoint + "/logos/Uvio-Base-Frame-Logo.png",
     },
   };
 };

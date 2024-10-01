@@ -11,6 +11,7 @@ interface Props {
   expired: boolean;
   selected: boolean;
   setOpen: (open: string) => void;
+  voted: boolean;
 }
 
 export const TruthButtons = (props: Props) => {
@@ -37,6 +38,11 @@ export const TruthButtons = (props: Props) => {
         return;
       }
 
+      if (props.voted) {
+        ToastSender.Info("You have cast your vote already.");
+        return;
+      }
+
       {
         editor.updateOption(act === agreement ? "true" : "false")
         props.setOpen(act);
@@ -50,7 +56,7 @@ export const TruthButtons = (props: Props) => {
         <button
           className={`
             p-4 w-full rounded
-            ${props.expired || !props.selected ? "text-gray-400 dark:text-gray-500 bg-gray-200 dark:bg-gray-700 cursor-default" : "text-gray-800 hover:text-black bg-emerald-400 hover:bg-emerald-500"}
+            ${props.expired || !props.selected || props.voted ? "text-gray-400 dark:text-gray-500 bg-gray-200 dark:bg-gray-700 cursor-default" : "text-gray-800 hover:text-black bg-emerald-400 hover:bg-emerald-500"}
           `}
           onClick={onClick(agreement)}
           type="button"
@@ -63,7 +69,7 @@ export const TruthButtons = (props: Props) => {
         <button
           className={`
             p-4 w-full rounded
-            ${props.expired || !props.selected ? "text-gray-400 dark:text-gray-500 bg-gray-200 dark:bg-gray-700 cursor-default" : "text-gray-900 hover:text-black bg-rose-400 hover:bg-rose-500"}
+            ${props.expired || !props.selected || props.voted ? "text-gray-400 dark:text-gray-500 bg-gray-200 dark:bg-gray-700 cursor-default" : "text-gray-900 hover:text-black bg-rose-400 hover:bg-rose-500"}
           `}
           onClick={onClick(disagreement)}
           type="button"

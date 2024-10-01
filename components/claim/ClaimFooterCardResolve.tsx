@@ -9,15 +9,15 @@ interface Props {
 }
 
 export const ClaimFooterCardResolve = (props: Props) => {
-  const current = props.claim.summary().total;
+  const current = props.claim.summary().post.total;
   const selected = props.claim.selected();
   const total = Object.keys(props.claim.samples()).length;
 
   const percentage = ((current / total) * 100).toFixed(0);
-  const probability = props.claim.summary().probability.toFixed(0);
+  const probability = props.claim.summary().post.probability.toFixed(0);
 
-  const voteTrue = props.claim.upside().stake[0];
-  const voteFalse = props.claim.upside().stake[1];
+  const voteTrue = props.claim.summary().vote.stake[0];
+  const voteFalse = props.claim.summary().vote.stake[1];
 
   return (
     <div>

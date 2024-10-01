@@ -9,16 +9,17 @@ interface Props {
 }
 
 export const ClaimFooterCardPropose = (props: Props) => {
+  const isStaker = props.claim.summary().vote.hsitg;
   const token = props.claim.token();
 
-  const probability = props.claim.summary().probability.toFixed(0);
-  const total = (props.claim.summary().agreement + props.claim.summary().disagreement).toFixed(2);
+  const probability = props.claim.summary().post.probability.toFixed(0);
+  const total = props.claim.summary().post.total.toFixed(2);
 
-  const stakeAgree = props.claim.upside().stake[0];
-  const stakeDisagree = props.claim.upside().stake[1];
+  const stakeAgree = props.claim.summary().vote.stake[0];
+  const stakeDisagree = props.claim.summary().vote.stake[1];
 
-  const shareAgree = props.claim.upside().share[0].toFixed(0);
-  const shareDisagree = props.claim.upside().share[1].toFixed(0);
+  const shareAgree = props.claim.summary().vote.share[0].toFixed(0);
+  const shareDisagree = props.claim.summary().vote.share[1].toFixed(0);
 
   return (
     <div>
@@ -60,7 +61,7 @@ export const ClaimFooterCardPropose = (props: Props) => {
         </div>
       )}
 
-      {props.claim.upside().hsitg === false && (
+      {isStaker === false && (
         <div>
           <Separator.Horizontal />
 

@@ -28,7 +28,7 @@ export const ClaimButtonsStake = (props: Props) => {
     } else {
       editor.updateClaim(props.claim.id())
       editor.updateContract(props.claim.contract())
-      editor.updateMinimum(props.claim.summary().minimum)
+      editor.updateMinimum(props.claim.summary().post.minimum)
       editor.updateToken(props.claim.token())
     }
   }, [props.claim, props.open, editor]);

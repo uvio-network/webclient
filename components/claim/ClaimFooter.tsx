@@ -19,11 +19,11 @@ export const ClaimFooter = (props: Props) => {
 
   const token = isClaim ? props.claim.token() : props.claim.parent()!.token();
 
-  const stakeAgree = props.claim.summary().agreement;
-  const stakeDisagree = props.claim.summary().disagreement;
+  const postAgree = props.claim.summary().post.agreement;
+  const postDisagree = props.claim.summary().post.disagreement;
 
-  const textAgree = votStr(isComment, isResolve, props.claim, stakeAgree, token);
-  const textDisagree = votStr(isComment, isResolve, props.claim, stakeDisagree, token);
+  const textAgree = votStr(isComment, isResolve, props.claim, postAgree, token);
+  const textDisagree = votStr(isComment, isResolve, props.claim, postDisagree, token);
 
   const onClick = () => {
     ToastSender.Info("It's comming just chill ok!");
@@ -45,7 +45,7 @@ export const ClaimFooter = (props: Props) => {
               />
             )}
 
-            {(isResolve || isComment) && stakeAgree !== 0 && (
+            {(isResolve || isComment) && postAgree !== 0 && (
               <Tooltip
                 content={
                   <>
@@ -98,7 +98,7 @@ export const ClaimFooter = (props: Props) => {
               />
             )}
 
-            {(isResolve || isComment) && stakeDisagree !== 0 && (
+            {(isResolve || isComment) && postDisagree !== 0 && (
               <Tooltip
                 content={
                   <>
