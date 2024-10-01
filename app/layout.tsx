@@ -1,20 +1,32 @@
 import "@/app/effects.css";
 import "@/app/globals.css";
 
+import * as Config from "@/modules/config";
 import * as React from "react";
 
 import { Inter } from "next/font/google";
 import { LoadingPage } from "@/components/loading/LoadingPage";
 import { Metadata } from "next";
-import type { Viewport } from "next";
+import { Viewport } from "next";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Uvio | See What's Real",
-  description: "Uvio is the social network for information markets!",
-  keywords: ["prediction market", "social network"],
-  twitter: { card: "summary", site: "@uvio.network" }
+  description: "Information Markets for Everyone",
+  keywords: [
+    "information market",
+    "prediction market",
+    "social network",
+  ],
+  twitter: {
+    card: "summary",
+    title: "Uvio | See What's Real",
+    description: "Information Markets for Everyone",
+    images: [{
+      url: Config.WebclientAppEndpoint + "/logos/Uvio-Base-Frame-Logo.png",
+    }],
+  }
 }
 
 export const viewport: Viewport = {

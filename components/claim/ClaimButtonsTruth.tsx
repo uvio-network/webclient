@@ -70,6 +70,7 @@ export const ClaimButtonsTruth = (props: Props) => {
           expired={props.claim.expired()}
           selected={props.claim.selected()}
           setOpen={props.setOpen}
+          voted={props.claim.voted()}
         />
       )}
     </>

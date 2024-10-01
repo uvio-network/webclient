@@ -25,7 +25,7 @@ export const LabelList = (props: Props) => {
   // }
 
   return (
-    <div className="flex">
+    <div className="flex flex-wrap gap-x-2 gap-y-2">
       {props.comment ? (
         <Tooltip
           content={

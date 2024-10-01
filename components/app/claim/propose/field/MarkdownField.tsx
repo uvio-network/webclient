@@ -12,7 +12,7 @@ export const MarkdownField = () => {
       onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
         editor.updateMarkdown(e.currentTarget.value);
       }}
-      placeholder="# Title"
+      placeholder="### Title"
     />
   );
 };

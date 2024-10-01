@@ -1,13 +1,11 @@
 import moment from "moment";
 
 import { Address } from "viem";
-import { ClaimUpside } from "@/modules/claim/ClaimUpside";
-import { ClaimSummary } from "@/modules/claim/ClaimSummary";
 import { EmptyUserSearchResponse } from "@/modules/api/user/search/Response";
-import { NewClaimUpside } from "@/modules/claim/ClaimUpside";
-import { NewClaimSummary } from "@/modules/claim/ClaimSummary";
+import { NewSummary } from "@/modules/summary/Summary";
 import { PostSearchResponse } from "@/modules/api/post/search/Response";
 import { SplitList } from "@/modules/string/SplitList";
+import { Summary } from "@/modules/summary/Summary";
 import { UserObject } from "@/modules/user/UserObject";
 import { UserSearchResponse } from "@/modules/api/user/search/Response";
 import { UserStore } from "@/modules/user/UserStore";
@@ -23,8 +21,7 @@ export class ClaimObject {
 
   private claimOwner: UserObject;
   private claimParent: ClaimObject | undefined;
-  private claimSummary: ClaimSummary;
-  private claimUpside: ClaimUpside;
+  private claimSummary: Summary;
 
   constructor(post: PostSearchResponse, user: UserSearchResponse, prnt: ClaimObject | PostSearchResponse | undefined, vote: VoteSearchResponse[]) {
     {
@@ -50,8 +47,8 @@ export class ClaimObject {
       } else {
         this.claimParent = new ClaimObject(prnt, EmptyUserSearchResponse(), undefined, []);
       }
-      this.claimSummary = NewClaimSummary(post);
-      this.claimUpside = NewClaimUpside(this.claimSummary, vote.map((x) => (new VoteObject(x))));
+
+      this.claimSummary = NewSummary(post, vote.map((x) => (new VoteObject(x))));
     }
   }
 
@@ -174,8 +171,11 @@ export class ClaimObject {
     let text = this.post.text;
 
     if (this.selected()) {
-      // If the user has been selected, personalize the message
-      text += " And **you** have been selected too!";
+      if (this.voted()) {
+        text += " And you have cast your vote already. Thank you for participating!";
+      } else {
+        text += " And **you** have been selected too. Make sure to cast your vote in time!";
+      }
     }
 
     return text;
@@ -234,10 +234,10 @@ export class ClaimObject {
   }
 
   side(): boolean {
-    return this.summary().agreement > this.summary().disagreement;
+    return this.summary().post.agreement > this.summary().post.disagreement;
   }
 
-  summary(): ClaimSummary {
+  summary(): Summary {
     return this.claimSummary;
   }
 
@@ -268,11 +268,11 @@ export class ClaimObject {
     return this.post.token;
   }
 
-  upside(): ClaimUpside {
-    return this.claimUpside;
+  valid(): boolean {
+    return this.summary().post.agreement !== this.summary().post.disagreement;
   }
 
-  valid(): boolean {
-    return this.summary().agreement !== this.summary().disagreement;
+  voted(): boolean {
+    return this.lifecycle() === "resolve" && this.selected() && this.summary().vote.hsitg
   }
 }

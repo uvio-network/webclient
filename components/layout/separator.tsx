@@ -26,7 +26,7 @@ export const Horizontal = (props: Props) => {
           >
             <Separator.Root
               className={`
-                border-t-[1px] border-sky-400
+                border-t-[1px] border-blue-400
                 data-[orientation=horizontal]:h-px
                 data-[orientation=horizontal]:w-full
               `}

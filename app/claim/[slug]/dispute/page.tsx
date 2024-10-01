@@ -71,7 +71,7 @@ export default function Page({ params }: { params: { slug: string } }) {
       const res = posts.data;
       const pro = posts.data.parent()!;
 
-      const amo = pro.summary().minimum * 2; // disputes require 2x the minimum of the disputed propose
+      const amo = pro.summary().post.minimum * 2; // disputes require 2x the minimum of the disputed propose
       const tok = pro.token();
       const pre = chain.tokens[tok]?.precision || 2;
 
