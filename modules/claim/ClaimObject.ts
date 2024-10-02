@@ -135,7 +135,7 @@ export class ClaimObject {
     // We adjust the expired flag for every propose because of the staking
     // threshold in the smart contracts. Before the set expiry, there is a
     // moment in time when staking is not possible anymore.
-    if (this.lifecycle() === "propose") {
+    if (this.lifecycle() === "propose" || this.lifecycle() === "dispute") {
       const exp = this.expiry().unix();
       const now = moment().utc().unix();
       const end = exp - this.threshold();
