@@ -4,7 +4,9 @@ import * as ToastSender from "@/components/toast/ToastSender";
 
 import { BaseButton } from "@/components/button/BaseButton";
 import { ClaimObject } from "@/modules/claim/ClaimObject";
+import { InfoCircleIcon } from "@/components/icon/InfoCircleIcon";
 import { MenuHorizontalIcon } from "@/components/icon/MenuHorizontalIcon";
+import { Tooltip } from "@/components/tooltip/Tooltip";
 import { useRouter } from "next/navigation";
 import { UserStore } from "@/modules/user/UserStore";
 import { useShallow } from "zustand/react/shallow";
@@ -14,9 +16,10 @@ interface Props {
 }
 
 const itemClassName = `
-  p-2
+  flex p-2
   rounded items-center outline-none cursor-pointer
   data-[highlighted]:bg-gray-200 dark:data-[highlighted]:bg-gray-700
+  data-[disabled]:text-gray-400 data-[disabled]:dark:text-gray-500
 `;
 
 export const ClaimHeaderMenu = (props: Props) => {
@@ -27,16 +30,20 @@ export const ClaimHeaderMenu = (props: Props) => {
   const router = useRouter();
 
   const isClaim = props.claim.kind() === "claim";
+  const isPropose = props.claim.lifecycle() === "propose";
+  const isDispute = props.claim.lifecycle() === "dispute";
   const isResolve = props.claim.lifecycle() === "resolve";
   const isChallenge = props.claim.expired() && props.claim.challenge();
   const isStaker = props.claim.summary().vote.hsitg;
   const isVoter = props.claim.selected();
 
+  const disabled = !isStaker && !isVoter;
+
   const addComment = () => {
-    if (isStaker || isVoter) {
-      router.push(`/claim/${props.claim.id()}/comment`);
+    if (disabled) {
+      ToastSender.Info("You have no skin in the game to comment on this claim.");
     } else {
-      ToastSender.Info("You have no skin in the game to comment on that claim.");
+      router.push(`/claim/${props.claim.id()}/comment`);
     }
   };
 
@@ -81,12 +88,44 @@ export const ClaimHeaderMenu = (props: Props) => {
 
           {isClaim && (
             <>
-              <DropdownMenu.Item className={itemClassName} onSelect={addComment}>
-                Add a Comment
+              <DropdownMenu.Item
+                disabled={disabled}
+                className={itemClassName}
+                onSelect={addComment}
+              >
+                <span className="w-fit whitespace-nowrap">
+                  Add a Comment
+                </span>
+                {disabled && (
+                  <span className="w-full grid place-content-end">
+                    <Tooltip
+                      content={
+                        <>
+                          {isResolve && (
+                            <>
+                              You cannot comment because you have not been selected to vote on this claim. You can still comment on the associated claim if you staked reputation there.
+                            </>
+                          )}
+                          {(isDispute || isPropose) && (
+                            <>
+                              You cannot comment because you have no reputation staked on this claim.
+                            </>
+                          )}
+                        </>
+                      }
+                      trigger={
+                        <InfoCircleIcon />
+                      }
+                    />
+                  </span>
+                )}
               </DropdownMenu.Item>
 
               {isResolve && isChallenge && (
-                <DropdownMenu.Item className={itemClassName} onSelect={addDispute}>
+                <DropdownMenu.Item
+                  className={itemClassName}
+                  onSelect={addDispute}
+                >
                   Dispute this Outcome
                 </DropdownMenu.Item>
               )}
@@ -95,7 +134,10 @@ export const ClaimHeaderMenu = (props: Props) => {
             </>
           )}
 
-          <DropdownMenu.Item className={itemClassName} onSelect={onSelect}>
+          <DropdownMenu.Item
+            className={itemClassName}
+            onSelect={onSelect}
+          >
             Send us Feedback
           </DropdownMenu.Item>
 
