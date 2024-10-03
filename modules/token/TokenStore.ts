@@ -35,19 +35,20 @@ export const TokenStore = create(
 
         await Promise.all(
           Object.entries(chn.tokens).map(async ([key, val]: [string, TokenConfig]) => {
-            const [bal, erc] = await Promise.all([
-              SearchBalance(wal, chn.contracts["Claims-" + key], val),
+            const [v40, v50, erc] = await Promise.all([
+              SearchBalance(wal, chn.contracts["Claims-" + key][0], val), // v0.4.0
+              SearchBalance(wal, chn.contracts["Claims-" + key][1], val), // v0.5.0
               TokenBalance(wal, val),
             ]);
 
             alo[key] = {
               ...val,
-              balance: bal.alo,
+              balance: v40.alo + v50.alo,
             };
 
             avl[key] = {
               ...val,
-              balance: bal.avl + erc,
+              balance: v40.avl + v50.avl + erc,
             };
           })
         );

@@ -1,5 +1,5 @@
-// https://github.com/uvio-network/contracts/blob/v0.4.0/contracts/Claims.sol
-export const Claims = [
+// https://github.com/uvio-network/contracts/blob/v0.5.0/contracts/Claims.sol
+export const ClaimsV050 = [
   {
     "inputs": [
       {
@@ -1196,44 +1196,9 @@ export const Claims = [
     "name": "searchIndices",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint256[8]",
         "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        "type": "uint256[8]"
       }
     ],
     "stateMutability": "view",
@@ -1345,6 +1310,11 @@ export const Claims = [
         "internalType": "bool",
         "name": "",
         "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -1371,9 +1341,9 @@ export const Claims = [
     "name": "searchSamples",
     "outputs": [
       {
-        "internalType": "address[]",
+        "internalType": "uint8[]",
         "name": "",
-        "type": "address[]"
+        "type": "uint8[]"
       }
     ],
     "stateMutability": "view",
@@ -1433,19 +1403,24 @@ export const Claims = [
         "internalType": "uint256",
         "name": "pod",
         "type": "uint256"
-      }
-    ],
-    "name": "searchVotes",
-    "outputs": [
+      },
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "lef",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "rig",
         "type": "uint256"
+      }
+    ],
+    "name": "searchVoters",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
       }
     ],
     "stateMutability": "view",

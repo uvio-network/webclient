@@ -5,6 +5,7 @@ import * as ToastSender from "@/components/toast/ToastSender";
 import * as TokenApprove from "@/modules/transaction/token/write/TokenApprove";
 
 import { ChainStore } from "@/modules/chain/ChainStore";
+import { ClaimsWithSymbol } from "@/modules/chain/ChainConfig";
 import { EditorMessage } from "@/components/app/claim/dispute/editor/EditorStore";
 import { EditorStore } from "@/components/app/claim/dispute/editor/EditorStore";
 import { EmptyReceipt } from "@/modules/wallet/WalletInterface";
@@ -104,7 +105,7 @@ export const SubmitForm = async (err: (ctx: DisputeContext) => void, off: (ctx: 
     },
     auth: user.token,
     chain: chain.id.toString(),
-    claims: chain.contracts["Claims-" + editor.token],
+    claims: ClaimsWithSymbol(editor.token, chain),
     expiry: newExp(editor),
     from: wallet.object.address(),
     labels: editor.labels,
