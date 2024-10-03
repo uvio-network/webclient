@@ -35,7 +35,8 @@ export const ChainWhitelist: ChainConfig[] = [
         { abi: ClaimsV050, address: "0x206ab72edea55819a9a90622873976A79d3419E3", latest: true },
       ],
       "Claims-WETH": [
-        { abi: ClaimsV040, address: "0x057a91c0010f35F3aC937a5a47a2869d477D1937", latest: true },
+        { abi: ClaimsV040, address: "0x057a91c0010f35F3aC937a5a47a2869d477D1937", latest: false },
+        { abi: ClaimsV050, address: "0xf30593ffe830780fE969CB5Ddb1201A2F3281aE9", latest: true },
       ],
     },
     rpcEndpoints: [

@@ -34,6 +34,7 @@ export const TokenStore = create(
         const avl = get().available;
 
         await Promise.all(
+          // Note that this goes through all tokens, e.g. UVX, WETH.
           Object.entries(chn.tokens).map(async ([key, val]: [string, TokenConfig]) => {
             const [v40, v50, erc] = await Promise.all([
               SearchBalance(wal, chn.contracts["Claims-" + key][0], val), // v0.4.0
