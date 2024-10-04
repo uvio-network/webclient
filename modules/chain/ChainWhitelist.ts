@@ -15,7 +15,7 @@ export const ChainWhitelist: ChainConfig[] = [
     contracts: {
       "Claims-UVX": [
         { abi: ClaimsV040, address: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0", latest: false },
-        { abi: ClaimsV050, address: "0x0165878A594ca255338adfa4d48449f69242Eb8F", latest: true },
+        { abi: ClaimsV050, address: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0", latest: true },
       ],
     },
     rpcEndpoints: [

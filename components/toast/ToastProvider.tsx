@@ -8,40 +8,53 @@ export const ToastProvider = () => {
   const { toasts } = ToastStore();
 
   return (
-    <RadixToast.Provider duration={10 * 1000} swipeDirection="right">
+    <RadixToast.Provider
+      duration={10 * 1000}
+      swipeDirection="right"
+    >
       {toasts.map((mes: ToastMessage) => {
         return (
           <RadixToast.Root
             key={mes.unix}
             className={`
-              p-4 text-black rounded-md items-center
-              data-[state=open]:animate-slideIn data-[state=closed]:animate-hide data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=cancel]:translate-x-0 data-[swipe=cancel]:transition-[transform_200ms_ease-out] data-[swipe=end]:animate-swipeOut
+              p-2 text-black rounded items-center
+              data-[state=open]:animate-slideIn
+              data-[state=closed]:animate-hide
+              data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)]
+              data-[swipe=cancel]:translate-x-0
+              data-[swipe=cancel]:transition-[transform_200ms_ease-out]
+              data-[swipe=end]:animate-swipeOut
               ${mes.clss}
             `}
             onOpenChange={(open: boolean) => {
-              if (open === false) {
-                ToastStore.getState().delete(mes);
+              if (open === false && mes.spin !== true) {
+                ToastStore.getState().delete(mes.unix);
               }
             }}
           >
             <div className="flex">
-              <RadixToast.Title className="grow font-medium">{mes.titl}</RadixToast.Title>
+              <RadixToast.Title className="flex-1 font-medium">{mes.titl}</RadixToast.Title>
               <RadixToast.Close className="flex-none" aria-label="Close">
-                <div className="h-fit items-center rounded-md hover:bg-black outline-none group">
-                  <XMarkIcon
-                    className="w-5 h-5 text-black group-hover:text-white dark:text-black dark:group-hover:text-white"
-                    overwrite={true}
-                  />
-                </div>
+                <XMarkIcon
+                  className="w-5 h-5 text-black hover:text-gray-600 dark:text-black dark:hover:text-gray-600"
+                  overwrite={true}
+                />
               </RadixToast.Close>
             </div>
-            <RadixToast.Description>{mes.text}</RadixToast.Description>
+            <RadixToast.Description className="mt-2 ">
+              {mes.text}
+            </RadixToast.Description>
+
+            {mes.spin && (
+              <div className="w-full h-1 bg-transparent rounded overflow-hidden mt-2">
+                <div className="h-full bg-blue-600 progress-effect" />
+              </div>
+            )}
           </RadixToast.Root>
         );
       })}
 
-      <RadixToast.Viewport className="[--viewport-padding:_25px] fixed top-0 right-0 flex flex-col p-[var(--viewport-padding)] gap-[10px] w-[390px] max-w-[100vw] m-0 list-none z-[2147483647] outline-none" />
-
+      <RadixToast.Viewport className="fixed top-0 right-0 p-4 grid gap-4 w-full sm:w-[350px] list-none z-[2147483647] outline-none" />
     </RadixToast.Provider >
   );
 };
