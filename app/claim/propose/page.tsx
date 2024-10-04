@@ -81,7 +81,7 @@ export default function Page() {
       <div className="flex my-4 p-4 bg-gray-50 dark:bg-gray-900 rounded">
         <div className="w-full text-sm text-gray-500 dark:text-gray-400 overflow-auto">
           You are about to lock up your funds until this new market resolves.
-          There is no guarantee of getting your money back. Please read the docs at&nbsp;
+          There is no guarantee of repayment. Learn more at&nbsp;
           <Link
             className="text-blue-400"
             href="https://docs.uvio.network"

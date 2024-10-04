@@ -6,12 +6,16 @@ export const LabelsPreview = () => {
   const editor = EditorStore.getState();
 
   return (
-    <LabelList
-      comment={false}
-      labels={SplitList(editor.labels).map((str) => str.toLowerCase().replace(/\s+/g, "-"))}
-      lifecycle="propose"
-      pending={false}
-      target="_blank"
-    />
+    <div className="flex h-8">
+      <div className="my-auto">
+        <LabelList
+          comment={false}
+          labels={SplitList(editor.labels).map((str) => str.toLowerCase().replace(/\s+/g, "-"))}
+          lifecycle="propose"
+          pending={false}
+          target="_blank"
+        />
+      </div>
+    </div>
   );
 };
