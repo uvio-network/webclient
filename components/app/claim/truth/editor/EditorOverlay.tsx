@@ -12,8 +12,8 @@ export const EditorOverlay = (props: Props) => {
   return (
     <div className="absolute top-0 flex w-full h-12 rounded-t background-overlay">
       <div className="flex-1 p-2 text-xs">
-        You are about to verify that the proposed claim was in fact <strong>{props.open}</strong>.
-        Your vote is binding and cannot be undone. Please read the docs at&nbsp;
+        You are verifing that this claim was in fact <strong>{props.open}</strong>.
+        Your vote cannot be undone. Learn more at&nbsp;
         <Link
           className="text-blue-400"
           href="https://docs.uvio.network"
