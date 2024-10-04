@@ -35,3 +35,33 @@
     color: inherit;
   }
 }
+
+.progress-effect {
+  animation: infiniteProgressSpinner 2s ease-in-out infinite;
+}
+
+@keyframes infiniteProgressSpinner {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  15% {
+    transform: translateX(-100%);
+  }
+
+  40% {
+    transform: translateX(0);
+  }
+
+  60% {
+    transform: translateX(0);
+  }
+
+  85% {
+    transform: translateX(100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}

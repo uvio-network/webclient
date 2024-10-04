@@ -12,7 +12,7 @@ interface Props {
 export const SubmitButton = (props: Props) => {
   return (
     <button
-      className="p-4 w-full rounded text-gray-900 hover:text-black bg-blue-400 hover:bg-blue-500"
+      className="px-2 py-1 sm:py-4 w-full rounded text-gray-900 hover:text-black bg-blue-400 hover:bg-blue-500"
       type="button"
       onClick={() => {
         SubmitForm(props.error, props.offchain, props.onchain);

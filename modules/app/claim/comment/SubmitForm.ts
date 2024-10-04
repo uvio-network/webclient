@@ -28,7 +28,7 @@ export const SubmitForm = async (suc: (cla: string, com: string) => void) => {
   const com = await posCre(user, editor);
 
   {
-    ToastSender.Success("Best comment ever, mi amor!");
+    ToastSender.Success("Best comment ever!");
     editor.delete();
     suc(editor.claim, com.id);
   }

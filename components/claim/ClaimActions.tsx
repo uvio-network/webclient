@@ -31,7 +31,7 @@ export const ClaimActions = (props: Props) => {
     <div
       className={`
         relative w-full
-        py-2
+        mt-2
         border
         ${open !== "" ? "background-overlay border-color rounded" : "border-background"}
       `}

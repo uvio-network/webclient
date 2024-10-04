@@ -7,7 +7,7 @@ export const LoadingStore = create(
       authorizing: true,
       loading: true,
     },
-    (set) => ({
+    (set, get) => ({
       authorized: () => {
         set(() => {
           return {
@@ -16,6 +16,10 @@ export const LoadingStore = create(
         });
       },
       loaded: () => {
+        if (get().loading === false) {
+          return;
+        }
+
         set(() => {
           return {
             loading: false,

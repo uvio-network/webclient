@@ -49,8 +49,8 @@ export const SubmitForm = async (err: (ctx: DisputeContext) => void, off: (ctx: 
     if (!editor.markdown || editor.markdown === "") {
       return ToastSender.Error("The provided markdown must not be empty.");
     }
-    if (editor.markdown.length < 100) {
-      return ToastSender.Error("The provided markdown must at least have 100 characters.");
+    if (editor.markdown.length < 20) {
+      return ToastSender.Error("The provided markdown must at least have 20 characters.");
     }
     if (editor.markdown.length > 5000) {
       return ToastSender.Error("The provided markdown must not be longer than 5000 characters.");
@@ -136,7 +136,7 @@ export const SubmitForm = async (err: (ctx: DisputeContext) => void, off: (ctx: 
   }
 
   {
-    ToastSender.Success("That's a dispute for the history books!");
+    ToastSender.Processing("Waiting for onchain confirmation.");
     off(ctx);
   }
 
@@ -147,17 +147,18 @@ export const SubmitForm = async (err: (ctx: DisputeContext) => void, off: (ctx: 
   if (ctx.receipt.success === true) {
     await posUpd(ctx);
     await votUpd(ctx);
+    ToastSender.Success("That's a dispute for the history books!", true);
     editor.delete();
     onc(ctx);
   } else if (ctx.receipt.rejected === true) {
-    ToastSender.Info("No biggie darling, we'll take it back.");
+    ToastSender.Info("No biggie darling, we'll take it back.", true);
     // The vote object must be deleted first, because it requires the post
     // object to exist in the backend in order to be deleted.
     await votDel(ctx);
     await posDel(ctx);
     rej(ctx);
   } else {
-    ToastSender.Error("Ohh, nope, that was not good enough!");
+    ToastSender.Error("Ohh, nope, that was not good enough!", true);
     err(ctx);
   }
 

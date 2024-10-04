@@ -52,7 +52,7 @@ export const SubmitForm = async (err: (ctx: TruthContext) => void, off: (ctx: Tr
   }
 
   {
-    ToastSender.Success("Heareth heareth, let there truth be told!");
+    ToastSender.Processing("Waiting for onchain confirmation.");
     off(ctx);
   }
 
@@ -62,13 +62,14 @@ export const SubmitForm = async (err: (ctx: TruthContext) => void, off: (ctx: Tr
 
   if (ctx.receipt.success === true) {
     await votUpd(ctx);
+    ToastSender.Success("Heareth heareth, let there truth be told!", true);
     editor.delete();
     onc(ctx);
   } else if (ctx.receipt.rejected === true) {
-    ToastSender.Info("No biggie darling, we'll take it back.");
+    ToastSender.Info("No biggie darling, we'll take it back.", true);
     await votDel(ctx);
   } else {
-    ToastSender.Error("Ohh, nope, that was not good enough!");
+    ToastSender.Error("Ohh, nope, that was not good enough!", true);
     err(ctx);
   }
 

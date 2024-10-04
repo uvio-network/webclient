@@ -80,7 +80,7 @@ export const SubmitForm = async (err: (ctx: StakeContext) => void, off: (ctx: St
   }
 
   {
-    ToastSender.Success("Certified, you staked the shit out of that claim!");
+    ToastSender.Processing("Waiting for onchain confirmation.");
     off(ctx);
   }
 
@@ -90,13 +90,14 @@ export const SubmitForm = async (err: (ctx: StakeContext) => void, off: (ctx: St
 
   if (ctx.receipt.success === true) {
     await votUpd(ctx);
+    ToastSender.Success("Certified, you staked the shit out of that claim!", true);
     editor.delete();
     onc(ctx);
   } else if (ctx.receipt.rejected === true) {
-    ToastSender.Info("No biggie darling, we'll take it back.");
+    ToastSender.Info("No biggie darling, we'll take it back.", true);
     await votDel(ctx);
   } else {
-    ToastSender.Error("Ohh, nope, that was not good enough!");
+    ToastSender.Error("Ohh, nope, that was not good enough!", true);
     err(ctx);
   }
 
