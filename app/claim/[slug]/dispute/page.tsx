@@ -86,7 +86,7 @@ export default function Page({ params }: { params: { slug: string } }) {
       setPrecision(pre);
       setToken(tok);
     }
-  }, [params.slug, posts.data, editor]);
+  }, [chain.tokens, editor, params.slug, posts.data]);
 
   return (
     <>

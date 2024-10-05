@@ -120,11 +120,13 @@ export const SubmitForm = async (err: (ctx: ProposeContext) => void, off: (ctx: 
   }
 
   let ctx: ProposeContext = {
+    after: () => { },
     amount: {
       num: editor.getAmount(),
       big: parseUnits(String(editor.getAmount()), chain.tokens[editor.getToken()].decimals),
     },
     auth: user.token,
+    before: () => { },
     chain: chain.id.toString(),
     claims: ClaimsWithSymbol(editor.getToken(), chain),
     expiry: newExp(editor),
@@ -242,7 +244,7 @@ const conCre = async (ctx: ProposeContext, wal: WalletMessage): Promise<ProposeC
   ];
 
   try {
-    const res = await wal.object.sendTransaction(txn);
+    const res = await wal.object.sendTransaction(txn, ctx.before, ctx.after);
     ctx.receipt = res;
     return ctx;
   } catch (err) {
