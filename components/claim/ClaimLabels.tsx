@@ -9,7 +9,7 @@ interface Props {
 
 export const ClaimLabels = (props: Props) => {
   return (
-    <div className="px-2">
+    <div className="mt-4 px-2">
       <LabelList
         comment={props.comment}
         labels={props.labels}

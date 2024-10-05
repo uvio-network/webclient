@@ -63,7 +63,7 @@ const getPos = async (oid: string): Promise<PostSearchResponse | undefined> => {
     const [pos] = await PostSearch("", [{ id: oid }]);
     return pos;
   } catch (err) {
-    console.log(err);
+    console.error(err);
     return undefined;
   }
 };

@@ -51,7 +51,7 @@ export const TruthButtons = (props: Props) => {
   };
 
   return (
-    <div className="flex mb-2 px-2">
+    <div className="flex my-2 px-2">
       <div className="w-full mr-2">
         <button
           className={`

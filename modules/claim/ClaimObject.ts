@@ -219,6 +219,10 @@ export class ClaimObject {
     return Math.ceil(per);
   }
 
+  remaining(): moment.Moment {
+    return moment.unix(this.expiry().unix() - this.threshold()).utc();
+  }
+
   selected(): boolean {
     const user = UserStore.getState().user;
 

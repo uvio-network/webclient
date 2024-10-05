@@ -8,6 +8,7 @@ import { ClaimButtonsTruth } from "@/components/claim/ClaimButtonsTruth";
 import { ClaimFooter } from "@/components/claim/ClaimFooter";
 import { ClaimLabels } from "@/components/claim/ClaimLabels";
 import { ClaimObject } from "@/modules/claim/ClaimObject";
+import { TrimWhitespace } from "@/modules/string/TrimWhitespace";
 import { usePathname } from "next/navigation";
 
 interface Props {
@@ -29,12 +30,10 @@ export const ClaimActions = (props: Props) => {
     // the overlay does only work properly when this div wrapper here provides
     // the anchor with its relative position.
     <div
-      className={`
-        relative w-full
-        mt-2
-        border
+      className={TrimWhitespace(`
+        relative w-full border
         ${open !== "" ? "background-overlay border-color rounded" : "border-background"}
-      `}
+      `)}
     >
       {isClaim && isPage && (
         <ClaimLabels
@@ -55,9 +54,9 @@ export const ClaimActions = (props: Props) => {
       )}
 
       <div className="px-2">
-        <Separator.Horizontal
-          margin={!isPage ? "mt-0 mb-2" : !isClaim ? "mt-4 mb-2" : ""}
+        <Separator.Claim
           progress={props.claim.pending() ? undefined : props.claim.progress()}
+          remaining={props.claim.pending() ? undefined : props.claim.remaining()}
         />
       </div>
 
