@@ -11,7 +11,7 @@ interface Props {
 export const SubmitButton = (props: Props) => {
   return (
     <button
-      className="px-2 py-1 bg-blue-500 text-white rounded"
+      className="px-2 py-1 text-gray-900 bg-sky-400 hover:text-black hover:bg-sky-500 rounded"
       onClick={() => {
         SubmitForm(props.error, props.offchain, props.onchain, props.rejected);
       }}

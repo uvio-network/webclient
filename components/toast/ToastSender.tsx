@@ -24,7 +24,7 @@ export const Info = (text: string, repl: boolean = false) => {
 
 export const Processing = (text: string) => {
   ToastStore.getState().create({
-    clss: "bg-sky-300 ",
+    clss: "bg-sky-300",
     repl: false,
     spin: true,
     titl: "Processing",

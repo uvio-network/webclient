@@ -26,5 +26,5 @@ export const RejectedReceipt = (): Receipt => {
 export interface Signer {
   address(): Address;
   connectorType(): string;
-  sendTransaction(txn: Transaction[]): Promise<Receipt>;
+  sendTransaction(txn: Transaction[], bef: () => void, aft: () => void): Promise<Receipt>;
 }

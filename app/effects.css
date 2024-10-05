@@ -37,10 +37,10 @@
 }
 
 .progress-effect {
-  animation: infiniteProgressSpinner 2s ease-in-out infinite;
+  animation: infiniteProgressLine 2s ease-in-out infinite;
 }
 
-@keyframes infiniteProgressSpinner {
+@keyframes infiniteProgressLine {
   0% {
     transform: translateX(-100%);
   }
@@ -64,4 +64,27 @@
   100% {
     transform: translateX(100%);
   }
+}
+
+@keyframes infiniteProgressSpinner {
+  0% {
+    stroke-dashoffset: 0;
+  }
+
+  15% {
+    stroke-dashoffset: 0;
+  }
+
+  50% {
+    stroke-dashoffset: -24;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.spinner-effect {
+  stroke-dasharray: 96;
+  animation: infiniteProgressSpinner 3s ease-in-out infinite;
 }

@@ -48,11 +48,11 @@ export class WalletObject implements Signer {
     return this.pub;
   }
 
-  async sendTransaction(txn: Transaction[]): Promise<Receipt> {
+  async sendTransaction(txn: Transaction[], bef: () => void, aft: () => void): Promise<Receipt> {
     try {
       console.log("SendTransaction.txn", txn);
 
-      const rec = await this.sig.sendTransaction(txn);
+      const rec = await this.sig.sendTransaction(txn, bef, aft);
 
       console.log("SendTransaction.hash", rec.hash);
       console.log("SendTransaction.success", rec.success);

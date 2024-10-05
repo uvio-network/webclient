@@ -7,11 +7,13 @@ import { TokenConfig } from "@/modules/token/TokenConfig";
 import { VoteCreateResponse } from "@/modules/api/vote/create/Response";
 
 export interface ProposeContext {
+  after: () => void;
   amount: {
     num: number;
     big: bigint;
   };
   auth: string;
+  before: () => void;
   chain: string;
   claims: ContractConfig;
   expiry: number;

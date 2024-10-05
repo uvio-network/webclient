@@ -4,8 +4,8 @@ import { EditorStore } from "@/components/app/claim/stake/editor/EditorStore";
 import { UserStore } from "@/modules/user/UserStore";
 import { useShallow } from "zustand/react/shallow";
 
-const agreement = "agreement";
-const disagreement = "disagreement";
+const agreement = "agree";
+const disagreement = "disagree";
 
 interface Props {
   expired: boolean;
@@ -44,7 +44,7 @@ export const StakeButtons = (props: Props) => {
         <button
           className={`
             p-4 w-full rounded
-            ${props.expired ? "text-gray-400 dark:text-gray-500 bg-gray-200 dark:bg-gray-700 cursor-default" : "text-gray-800 hover:text-black bg-emerald-400 hover:bg-emerald-500"}
+            ${props.expired ? "text-gray-400 dark:text-gray-500 bg-gray-200 dark:bg-gray-700 cursor-default" : "text-gray-900 hover:text-black bg-emerald-400 hover:bg-emerald-500"}
           `}
           onClick={onClick(agreement)}
           type="button"

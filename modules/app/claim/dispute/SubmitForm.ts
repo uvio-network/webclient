@@ -99,11 +99,13 @@ export const SubmitForm = async (err: (ctx: DisputeContext) => void, off: (ctx: 
   }
 
   let ctx: DisputeContext = {
+    after: () => { },
     amount: {
       num: editor.amount,
       big: parseUnits(String(editor.amount), chain.tokens[editor.token].decimals),
     },
     auth: user.token,
+    before: () => { },
     chain: chain.id.toString(),
     claims: ClaimsWithSymbol(editor.token, chain),
     expiry: newExp(editor),
@@ -207,7 +209,7 @@ const conCre = async (ctx: DisputeContext, wal: WalletMessage): Promise<DisputeC
   ];
 
   try {
-    const res = await wal.object.sendTransaction(txn);
+    const res = await wal.object.sendTransaction(txn, ctx.before, ctx.after);
     ctx.receipt = res;
     return ctx;
   } catch (err) {
