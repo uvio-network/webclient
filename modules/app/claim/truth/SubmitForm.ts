@@ -16,7 +16,6 @@ import { VoteUpdate } from "@/modules/api/vote/update/Update";
 import { VoteUpdateRequest } from "@/modules/api/vote/update/Request";
 import { WalletMessage } from "@/modules/wallet/WalletStore";
 import { WalletStore } from "@/modules/wallet/WalletStore";
-import { Sleep } from "@/modules/sleep/Sleep";
 
 interface Props {
   before: () => void;
