@@ -46,7 +46,7 @@ export const ClaimButtonsStake = (props: Props) => {
             setOpen={props.setOpen}
           />
 
-          <div className="flex mb-2 px-2 h-14">
+          <div className="flex my-2 px-2 h-14">
             <div className="w-full mr-2">
               <ValueField
                 setOpen={props.setOpen}
