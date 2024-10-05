@@ -7,10 +7,12 @@ import { EditorOverlay } from "@/components/app/claim/stake/editor/EditorOverlay
 import { EditorStore } from "@/components/app/claim/stake/editor/EditorStore";
 import { QueryStore } from "@/modules/query/QueryStore";
 import { StakeButtons } from "@/components/app/claim/stake/editor/StakeButtons";
-import { SubmitButton } from "@/components/app/claim/stake/editor/SubmitButton";
+import { SubmitForm } from "@/modules/app/claim/stake/SubmitForm";
 import { TokenStore } from "@/modules/token/TokenStore";
+import { ToTitle } from "@/modules/string/ToTitle";
 import { ValueField } from "@/components/app/claim/stake/field/ValueField";
 import { StakeContext } from "@/modules/context/StakeContext";
+import { SpinnerIcon } from "../icon/SpinnerIcon";
 
 interface Props {
   claim: ClaimObject;
@@ -19,8 +21,10 @@ interface Props {
 }
 
 export const ClaimButtonsStake = (props: Props) => {
+  const [disabled, setDisabled] = React.useState<boolean>(false);
+  const [processing, setProcessing] = React.useState<string>("");
+
   const editor = EditorStore.getState();
-  const query = QueryStore.getState();
 
   React.useEffect(() => {
     if (props.open === "") {
@@ -52,21 +56,60 @@ export const ClaimButtonsStake = (props: Props) => {
             </div>
 
             <div className="w-full ml-2">
-              <SubmitButton
-                open={props.open}
-                error={(ctx: StakeContext) => {
-                  TokenStore.getState().updateBalance();
+              <button
+                className={`
+                  flex items-center justify-center px-2 py-1 sm:py-4 w-full min-h-14 rounded
+                  ${disabled ? "text-gray-700 bg-sky-300 cursor-not-allowed" : "text-gray-900 bg-sky-400 hover:text-black hover:bg-sky-500"}
+                `}
+                disabled={disabled}
+                type="button"
+                onClick={() => {
+                  SubmitForm({
+                    after: () => {
+                      setProcessing("Confirming Onchain");
+                    },
+                    before: () => {
+                      //
+                    },
+                    valid: (ctx: StakeContext) => {
+                      setDisabled(true);
+                      setProcessing("Signing Transaction");
+                    },
+                    error: (ctx: StakeContext) => {
+                      setDisabled(false);
+                      setProcessing("");
+                    },
+                    offchain: (ctx: StakeContext) => {
+                      //
+                    },
+                    onchain: (ctx: StakeContext) => {
+                      setDisabled(false);
+                      setProcessing("");
+                      props.setOpen("");
+                      QueryStore.getState().claim.refresh();
+                      TokenStore.getState().updateBalance();
+                    },
+                  });
                 }}
-                offchain={(ctx: StakeContext) => {
-                  props.setOpen("");
-                  query.claim.refresh(); // TODO why do we use the different query scope here?
-                  TokenStore.getState().updateBalance();
-                }}
-                onchain={(ctx: StakeContext) => {
-                  QueryStore.getState().claim.refresh();
-                  TokenStore.getState().updateBalance();
-                }}
-              />
+              >
+                <>
+                  {processing ? (
+                    <div className="flex gap-x-2">
+                      <div className="flex my-auto">
+                        <SpinnerIcon textColour="text-gray-700" />
+                      </div>
+
+                      <div className="flex">
+                        {processing}
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      Stake to {ToTitle(props.open)}
+                    </div>
+                  )}
+                </>
+              </button>
             </div>
           </div>
         </>

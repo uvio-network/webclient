@@ -48,12 +48,17 @@ class Embedded implements Signer {
     return "embedded";
   }
 
-  async sendTransaction(txn: Transaction[]): Promise<Receipt> {
+  async sendTransaction(txn: Transaction[], bef: () => void, aft: () => void): Promise<Receipt> {
     const opt = {
       paymasterServiceData: { mode: PaymasterMode.SPONSORED },
     }
 
+    bef();
+
     const res = await this.con.sendTransaction(txn, opt);
+
+    aft();
+
     const { receipt, success } = await res.wait();
 
     return {

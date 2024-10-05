@@ -48,10 +48,12 @@ class Injected implements Signer {
     return "injected";
   }
 
-  async sendTransaction(txn: Transaction[]): Promise<Receipt> {
+  async sendTransaction(txn: Transaction[], bef: () => void, aft: () => void): Promise<Receipt> {
     const rec: TransactionReceipt[] = [];
 
     for (const x of txn) {
+      bef();
+
       const has = await this.cli.sendTransaction({
         account: this.address(),
         data: x.data as Hex,
@@ -60,6 +62,8 @@ class Injected implements Signer {
         maxFeePerGas: parseGwei("6"),
         maxPriorityFeePerGas: parseGwei("0.3"),
       });
+
+      aft();
 
       rec.push(await this.pub.waitForTransactionReceipt({
         hash: has,

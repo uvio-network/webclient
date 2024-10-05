@@ -56,7 +56,7 @@ export const TruthButtons = (props: Props) => {
         <button
           className={`
             p-4 w-full rounded
-            ${props.expired || !props.selected || props.voted ? "text-gray-400 dark:text-gray-500 bg-gray-200 dark:bg-gray-700 cursor-default" : "text-gray-800 hover:text-black bg-emerald-400 hover:bg-emerald-500"}
+            ${props.expired || !props.selected || props.voted ? "text-gray-400 dark:text-gray-500 bg-gray-200 dark:bg-gray-700 cursor-default" : "text-gray-900 hover:text-black bg-emerald-400 hover:bg-emerald-500"}
           `}
           onClick={onClick(agreement)}
           type="button"

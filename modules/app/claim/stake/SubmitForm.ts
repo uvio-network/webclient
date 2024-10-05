@@ -21,8 +21,17 @@ import { VoteUpdateRequest } from "@/modules/api/vote/update/Request";
 import { WalletMessage } from "@/modules/wallet/WalletStore";
 import { WalletStore } from "@/modules/wallet/WalletStore";
 
+interface Props {
+  before: () => void;
+  after: () => void;
+  valid: (ctx: StakeContext) => void;
+  error: (ctx: StakeContext) => void;
+  offchain: (ctx: StakeContext) => void;
+  onchain: (ctx: StakeContext) => void;
+}
+
 // SubmitForm validates user input and then performs the vote creation.
-export const SubmitForm = async (err: (ctx: StakeContext) => void, off: (ctx: StakeContext) => void, onc: (ctx: StakeContext) => void) => {
+export const SubmitForm = async (props: Props) => {
   const chain = ChainStore.getState().getActive();
   const editor = EditorStore.getState();
   const token = TokenStore.getState().available;
@@ -50,11 +59,13 @@ export const SubmitForm = async (err: (ctx: StakeContext) => void, off: (ctx: St
   }
 
   let ctx: StakeContext = {
+    after: props.after,
     amount: {
       num: parseFloat(editor.value),
       big: parseUnits(String(parseFloat(editor.value)), chain.tokens[editor.token].decimals),
     },
     auth: user.token,
+    before: props.before,
     chain: chain.id.toString(),
     claim: editor.claim,
     claims: ContractWithAddress(editor.contract, chain),
@@ -67,41 +78,59 @@ export const SubmitForm = async (err: (ctx: StakeContext) => void, off: (ctx: St
     vote: EmptyVoteCreateResponse(),
   };
 
-  // Before we create any resources, whether it is offchain or onchain, we
-  // create the required transactions and simulate them to the best of our
-  // abilities. If we cannot even simulate transactions, we have no business
-  // creating any resources on behalf of the user.
-  {
-    await txnSim(ctx);
+  try {
+    // Before we create any resources, whether it is offchain or onchain, we
+    // create the required transactions and simulate them to the best of our
+    // abilities. If we cannot even simulate transactions, we have no business
+    // creating any resources on behalf of the user.
+    {
+      await txnSim(ctx);
+    }
+
+    {
+      props.valid(ctx);
+    }
+
+    {
+      ctx = await votCre(ctx);
+    }
+
+    {
+      props.offchain(ctx);
+    }
+
+    {
+      ctx = await conCre(ctx, wallet);
+    }
+
+    if (ctx.receipt.success === true) {
+      await votUpd(ctx);
+      ToastSender.Success("Certified, you staked the shit out of that claim!");
+      editor.delete();
+      props.onchain(ctx);
+    } else if (ctx.receipt.rejected === true) {
+      ToastSender.Info("No biggie darling, we'll take it back.");
+      await votDel(ctx);
+      props.error(ctx);
+    } else {
+      ToastSender.Error("Ohh, nope, that was not good enough!");
+      props.error(ctx);
+    }
+  } catch (err) {
+    props.error(ctx);
+  }
+};
+
+const errMsg = (err: any): string => {
+  if (err instanceof Error) {
+    if (err.message.includes(".")) {
+      return err.message.split(".")[0] + ".";
+    }
+
+    return err.message;
   }
 
-  {
-    ctx = await votCre(ctx);
-  }
-
-  {
-    ToastSender.Processing("Waiting for onchain confirmation.");
-    off(ctx);
-  }
-
-  {
-    ctx = await conCre(ctx, wallet);
-  }
-
-  if (ctx.receipt.success === true) {
-    await votUpd(ctx);
-    ToastSender.Success("Certified, you staked the shit out of that claim!", true);
-    editor.delete();
-    onc(ctx);
-  } else if (ctx.receipt.rejected === true) {
-    ToastSender.Info("No biggie darling, we'll take it back.", true);
-    await votDel(ctx);
-  } else {
-    ToastSender.Error("Ohh, nope, that was not good enough!", true);
-    err(ctx);
-  }
-
-  // TODO prevent duplicated submits
+  return String(err);
 };
 
 const inpBal = (num: string, sym: string, tok: TokenMessage): boolean => {
@@ -127,12 +156,12 @@ const conCre = async (ctx: StakeContext, wal: WalletMessage): Promise<StakeConte
   ];
 
   try {
-    const res = await wal.object.sendTransaction(txn);
+    const res = await wal.object.sendTransaction(txn, ctx.before, ctx.after);
     ctx.receipt = res;
     return ctx;
   } catch (err) {
     console.error(err);
-    ToastSender.Error(err instanceof Error ? err.message : String(err));
+    ToastSender.Error(errMsg(err));
     return Promise.reject(err);
   }
 }
@@ -143,7 +172,7 @@ const txnSim = async (ctx: StakeContext) => {
     await UpdatePropose.Simulate(ctx);
   } catch (err) {
     console.error(err);
-    ToastSender.Error(err instanceof Error ? err.message : String(err));
+    ToastSender.Error(errMsg(err));
     return Promise.reject(err);
   }
 };
@@ -165,7 +194,7 @@ const votCre = async (ctx: StakeContext): Promise<StakeContext> => {
     return ctx;
   } catch (err) {
     console.error(err);
-    ToastSender.Error(err instanceof Error ? err.message : String(err));
+    ToastSender.Error(errMsg(err));
     return Promise.reject(err);
   }
 }
@@ -180,7 +209,7 @@ const votDel = async (ctx: StakeContext) => {
     const [res] = await VoteDelete(ctx.auth, [req]);
   } catch (err) {
     console.error(err);
-    ToastSender.Error(err instanceof Error ? err.message : String(err));
+    ToastSender.Error(errMsg(err));
     return Promise.reject(err);
   }
 }
@@ -198,7 +227,7 @@ const votUpd = async (ctx: StakeContext) => {
     const [res] = await VoteUpdate(ctx.auth, [req]);
   } catch (err) {
     console.error(err);
-    ToastSender.Error(err instanceof Error ? err.message : String(err));
+    ToastSender.Error(errMsg(err));
     return Promise.reject(err);
   }
 }

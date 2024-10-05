@@ -6,8 +6,10 @@ import { ClaimObject } from "@/modules/claim/ClaimObject";
 import { EditorOverlay } from "@/components/app/claim/truth/editor/EditorOverlay";
 import { EditorStore } from "@/components/app/claim/truth/editor/EditorStore";
 import { QueryStore } from "@/modules/query/QueryStore";
+import { SpinnerIcon } from "../icon/SpinnerIcon";
+import { SubmitForm } from "@/modules/app/claim/truth/SubmitForm";
+import { ToTitle } from "@/modules/string/ToTitle";
 import { TruthButtons } from "@/components/app/claim/truth/editor/TruthButtons";
-import { SubmitButton } from "@/components/app/claim/truth/editor/SubmitButton";
 import { TruthContext } from "@/modules/context/TruthContext";
 import { ValueField } from "@/components/app/claim/truth/field/ValueField";
 
@@ -18,8 +20,10 @@ interface Props {
 }
 
 export const ClaimButtonsTruth = (props: Props) => {
+  const [disabled, setDisabled] = React.useState<boolean>(false);
+  const [processing, setProcessing] = React.useState<string>("");
+
   const editor = EditorStore.getState();
-  const query = QueryStore.getState();
 
   React.useEffect(() => {
     if (props.open === "") {
@@ -47,19 +51,59 @@ export const ClaimButtonsTruth = (props: Props) => {
                 setOpen={props.setOpen}
               />
 
-              <SubmitButton
-                open={props.open}
-                error={(ctx: TruthContext) => {
-                  //
+              <button
+                className={`
+                  flex items-center justify-center px-2 py-1 sm:py-4 w-full min-h-14 rounded
+                  ${disabled ? "text-gray-700 bg-sky-300 cursor-not-allowed" : "text-gray-900 bg-sky-400 hover:text-black hover:bg-sky-500"}
+                `}
+                disabled={disabled}
+                type="button"
+                onClick={() => {
+                  SubmitForm({
+                    after: () => {
+                      setProcessing("Confirming Onchain");
+                    },
+                    before: () => {
+                      //
+                    },
+                    valid: (ctx: TruthContext) => {
+                      setDisabled(true);
+                      setProcessing("Signing Transaction");
+                    },
+                    error: (ctx: TruthContext) => {
+                      setDisabled(false);
+                      setProcessing("");
+                    },
+                    offchain: (ctx: TruthContext) => {
+                      //
+                    },
+                    onchain: (ctx: TruthContext) => {
+                      setDisabled(false);
+                      setProcessing("");
+                      props.setOpen("");
+                      QueryStore.getState().claim.refresh();
+                    },
+                  });
                 }}
-                offchain={(ctx: TruthContext) => {
-                  props.setOpen("");
-                  query.claim.refresh(); // TODO why do we use the different query scope here?
-                }}
-                onchain={(ctx: TruthContext) => {
-                  QueryStore.getState().claim.refresh();
-                }}
-              />
+              >
+                <>
+                  {processing ? (
+                    <div className="flex gap-x-2">
+                      <div className="flex my-auto">
+                        <SpinnerIcon textColour="text-gray-700" />
+                      </div>
+
+                      <div className="flex">
+                        {processing}
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      Verify with {ToTitle(props.open)}
+                    </div>
+                  )}
+                </>
+              </button>
             </div>
           </div>
         </>

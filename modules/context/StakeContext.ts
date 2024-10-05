@@ -6,11 +6,13 @@ import { TokenConfig } from "@/modules/token/TokenConfig";
 import { VoteCreateResponse } from "@/modules/api/vote/create/Response";
 
 export interface StakeContext {
+  after: () => void;
   amount: {
     num: number;
     big: bigint;
   };
   auth: string;
+  before: () => void;
   chain: string;
   claim: string;
   claims: ContractConfig;
