@@ -13,7 +13,6 @@ interface Props {
 }
 
 export const Claim = (props: Props) => {
-  console.log("pro", props.progress, "rem", props.remaining)
   return (
     <>
       {props.progress !== undefined && props.progress >= 0 && props.progress < 100 ? (
