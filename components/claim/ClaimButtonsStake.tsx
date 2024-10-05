@@ -6,13 +6,13 @@ import { ClaimObject } from "@/modules/claim/ClaimObject";
 import { EditorOverlay } from "@/components/app/claim/stake/editor/EditorOverlay";
 import { EditorStore } from "@/components/app/claim/stake/editor/EditorStore";
 import { QueryStore } from "@/modules/query/QueryStore";
+import { StakeContext } from "@/modules/context/StakeContext";
 import { StakeButtons } from "@/components/app/claim/stake/editor/StakeButtons";
+import { SpinnerIcon } from "@/components/icon/SpinnerIcon";
 import { SubmitForm } from "@/modules/app/claim/stake/SubmitForm";
 import { TokenStore } from "@/modules/token/TokenStore";
 import { ToTitle } from "@/modules/string/ToTitle";
 import { ValueField } from "@/components/app/claim/stake/field/ValueField";
-import { StakeContext } from "@/modules/context/StakeContext";
-import { SpinnerIcon } from "../icon/SpinnerIcon";
 
 interface Props {
   claim: ClaimObject;

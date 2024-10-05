@@ -6,7 +6,7 @@ import { ClaimObject } from "@/modules/claim/ClaimObject";
 import { EditorOverlay } from "@/components/app/claim/truth/editor/EditorOverlay";
 import { EditorStore } from "@/components/app/claim/truth/editor/EditorStore";
 import { QueryStore } from "@/modules/query/QueryStore";
-import { SpinnerIcon } from "../icon/SpinnerIcon";
+import { SpinnerIcon } from "@/components/icon/SpinnerIcon";
 import { SubmitForm } from "@/modules/app/claim/truth/SubmitForm";
 import { ToTitle } from "@/modules/string/ToTitle";
 import { TruthButtons } from "@/components/app/claim/truth/editor/TruthButtons";
