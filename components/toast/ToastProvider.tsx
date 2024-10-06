@@ -33,7 +33,9 @@ export const ToastProvider = () => {
             }}
           >
             <div className="flex">
-              <RadixToast.Title className="flex-1 font-medium">{mes.titl}</RadixToast.Title>
+              <RadixToast.Title className="flex-1 font-medium">
+                {mes.titl}
+              </RadixToast.Title>
               <RadixToast.Close className="flex-none" aria-label="Close">
                 <XMarkIcon
                   className="w-5 h-5 text-black hover:text-gray-600 dark:text-black dark:hover:text-gray-600"

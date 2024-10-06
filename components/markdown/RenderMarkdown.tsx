@@ -49,7 +49,7 @@ const components = (edi: boolean, emb: boolean): Components => {
       return <h1
         className={`
           text-black dark:text-white
-          ${emb === true ? "my-2 text-xl" : "my-4 text-2xl"}
+          ${emb === true ? "mt-2 text-xl" : "mt-4 text-2xl"}
         `}
         {...getRst(props)}
       />;
@@ -58,7 +58,7 @@ const components = (edi: boolean, emb: boolean): Components => {
       return <h3
         className={`
           text-black dark:text-white
-          ${emb === true ? "my-2 text-lg" : "my-4 text-xl"}
+          ${emb === true ? "mt-2 text-lg" : "mt-4 text-xl"}
         `}
         {...getRst(props)}
       />;
@@ -122,7 +122,7 @@ const components = (edi: boolean, emb: boolean): Components => {
       return <hr
         className={`
           border-color
-          ${emb === true ? "my-2" : "my-4"}
+          ${emb === true ? "mt-2" : "mt-4"}
         `}
         {...getRst(props)}
       />;
@@ -131,7 +131,7 @@ const components = (edi: boolean, emb: boolean): Components => {
       return <blockquote
         className={`
           px-4 border-l-4 border-blue-400 text-sm text-gray-500 dark:text-gray-400 font-mono
-          ${emb === true ? "my-2" : "my-4"}
+          ${emb === true ? "mt-2" : "mt-4"}
         `}
         {...getRst(props)}
       />;

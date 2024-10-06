@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { EditorStore } from "@/components/app/claim/stake/editor/EditorStore";
 import { Summary } from "@/modules/summary/Summary";
+import { TrimWhitespace } from "@/modules/string/TrimWhitespace";
 
 interface Props {
   setOpen: (open: string) => void;
@@ -14,12 +15,12 @@ export const ValueField = (props: Props) => {
 
   return (
     <input
-      className={`
-        w-full h-full
-        background-overlay outline-none
+      className={TrimWhitespace(`
+        w-full h-full p-2 bg-transparent
+        border-b-2 border-sky-400 outline-none
         placeholder:text-gray-400 placeholder:dark:text-gray-500
-        text-2xl sm:text-4xl font-light text-right caret-blue-400
-      `}
+        text-2xl sm:text-4xl font-light text-right caret-sky-400
+      `)}
       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
         editor.updateValue(e.currentTarget.value);
       }}

@@ -12,11 +12,11 @@ interface Props {
   remaining?: moment.Moment;
 }
 
-export const Claim = (props: Props) => {
+export const Horizontal = (props: Props) => {
   return (
     <>
       {props.progress !== undefined && props.progress >= 0 && props.progress < 100 ? (
-        <div className="relative flex w-full h-6 mt-2">
+        <div className="absolute left-0 bottom-[-16px] flex w-full h-8">
           <div
             className="flex my-auto"
             style={{ width: `${props.progress}%` }}
@@ -62,34 +62,18 @@ export const Claim = (props: Props) => {
 
         </div >
       ) : (
-        <div className="flex w-full h-6 mt-2">
-          <Separator.Root
-            className={TrimWhitespace(`
-              w-full my-auto border-t-[1px] border-color
-              data-[orientation=horizontal]:h-px
-              data-[orientation=horizontal]:w-full
-            `)}
-            decorative
-            orientation="horizontal"
-          />
-        </div>
+        <Separator.Root
+          className={TrimWhitespace(`
+            border-t-[1px] border-color
+            ${props.margin ? props.margin : "my-4"}
+            data-[orientation=horizontal]:h-px
+            data-[orientation=horizontal]:w-full
+          `)}
+          decorative
+          orientation="horizontal"
+        />
       )}
     </>
-  );
-};
-
-export const Horizontal = (props: Props) => {
-  return (
-    <Separator.Root
-      className={TrimWhitespace(`
-        border-t-[1px] border-color
-        ${props.margin ? props.margin : "my-4"}
-        data-[orientation=horizontal]:h-px
-        data-[orientation=horizontal]:w-full
-      `)}
-      decorative
-      orientation="horizontal"
-    />
   );
 };
 

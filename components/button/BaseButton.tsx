@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { CheckMarkIcon } from "@/components/icon/CheckMarkIcon";
 import { EffectButton } from "@/components/button/EffectButton";
+import { TrimWhitespace } from "@/modules/string/TrimWhitespace";
 
 interface Props {
   background?: string;
@@ -72,14 +73,14 @@ export const BaseButton = React.forwardRef<HTMLDivElement, Props>(function BaseB
 
   return (
     <div
-      className={`
+      className={TrimWhitespace(`
         flex w-full h-fit rounded outline-none group
         text-sm sm:text-base text-gray-400 dark:text-gray-500 whitespace-nowrap
         ${disabled ? "cursor-default" : "cursor-pointer"}
         ${props.font ? props.font : "font-medium"}
         ${props.hover ? props.hover : ((props.confirm === true && click) || disabled) ? "" : "hover:text-black dark:hover:text-white"}
         ${props.background ? props.background : "hover:bg-gray-200 dark:hover:bg-gray-700"}
-      `}
+      `)}
       onClick={disabled ? undefined : onClick}
       ref={ref}
     >

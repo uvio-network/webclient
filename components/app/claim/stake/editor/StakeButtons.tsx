@@ -39,8 +39,8 @@ export const StakeButtons = (props: Props) => {
   };
 
   return (
-    <div className="flex my-2 px-2">
-      <div className="w-full mr-2">
+    <div className="flex gap-x-2 mt-4 mb-2">
+      <div className="flex-1 w-full">
         <button
           className={`
             p-4 w-full rounded
@@ -53,7 +53,7 @@ export const StakeButtons = (props: Props) => {
         </button>
       </div>
 
-      <div className="w-full ml-2">
+      <div className="flex-1 w-full">
         <button
           className={`
             p-4 w-full rounded
