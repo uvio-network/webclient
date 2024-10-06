@@ -13,6 +13,7 @@ import { UserStore } from "@/modules/user/UserStore";
 import { useShallow } from "zustand/react/shallow";
 
 interface Props {
+  filter?: (cla: ClaimObject) => boolean;
   query: string[];
   request: PostSearchRequest[];
 }
@@ -47,7 +48,7 @@ export const ClaimList = (props: Props) => {
   // if it is empty. And then, we have to account for pages rendered with or
   // without comments. If we are tasked to render a claims page, and the post to
   // render is in fact a comment, then we only render the comment itself.
-  const list = getLis(posts.data || [], props.query);
+  const list = filLis(getLis(posts.data || [], props.query), props.filter);
 
   React.useEffect(() => {
     if (list.length !== 0) {
@@ -99,6 +100,16 @@ export const ClaimList = (props: Props) => {
       ))}
     </div>
   );
+};
+
+// filLis applies a filter function to the given list of claims, if such a
+// filter is provided. If not, the given list of claims is returned as is.
+const filLis = (cla: ClaimObject[], fil: ((cla: ClaimObject) => boolean) | undefined): ClaimObject[] => {
+  if (fil !== undefined) {
+    return cla.filter(fil);
+  }
+
+  return cla;
 };
 
 // getLis ensures the order of post objects according to the page we are
