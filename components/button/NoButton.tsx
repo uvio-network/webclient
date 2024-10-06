@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { EffectButton } from "@/components/button/EffectButton";
+import { TrimWhitespace } from "@/modules/string/TrimWhitespace";
 
 interface Props {
   font?: string;
@@ -31,11 +32,11 @@ export const NoButton = (props: Props) => {
 
   return (
     <div
-      className={`
+      className={TrimWhitespace(`
         flex w-full h-fit rounded outline-none cursor-default
         text-sm sm:text-base text-gray-400 dark:text-gray-500 whitespace-nowrap
         ${props.font ? props.font : "font-medium"}
-      `}
+      `)}
     >
       {props.effect === true && props.text ? (
         <EffectButton value={props.text}>

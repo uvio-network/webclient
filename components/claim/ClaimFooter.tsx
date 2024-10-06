@@ -30,7 +30,7 @@ export const ClaimFooter = (props: Props) => {
   };
 
   return (
-    <div className="flex px-2">
+    <div className="flex">
       <div className="flex-1 w-full">
         <div className="grid place-content-start w-full">
           <div className="grid place-content-start">

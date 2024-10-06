@@ -30,7 +30,7 @@ export const ClaimFooterCardPropose = (props: Props) => {
           <Separator.Horizontal />
 
           <div>
-            You have {stakeAgree} {token} staked in <strong>agreement</strong> with the claim&apos;s statement.
+            You have {stakeAgree.toFixed(2)} {token} staked in <strong>agreement</strong> with the claim&apos;s statement.
 
             {shareAgree !== "0" && (
               <div>
@@ -48,7 +48,7 @@ export const ClaimFooterCardPropose = (props: Props) => {
           <Separator.Horizontal />
 
           <div>
-            You have {stakeDisagree} {token} staked in <strong>disagreement</strong> with the claim&apos;s statement.
+            You have {stakeDisagree.toFixed(2)} {token} staked in <strong>disagreement</strong> with the claim&apos;s statement.
 
             {shareDisagree !== "0" && (
               <div>

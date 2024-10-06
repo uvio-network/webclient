@@ -14,7 +14,6 @@ export const ChainWhitelist: ChainConfig[] = [
     biconomyPaymasterApiKey: "",
     contracts: {
       "Claims-UVX": [
-        { abi: ClaimsV040, address: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0", latest: false },
         { abi: ClaimsV050, address: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0", latest: true },
       ],
     },
