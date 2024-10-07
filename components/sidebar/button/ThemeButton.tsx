@@ -86,9 +86,13 @@ export const ThemeButton = () => {
     }
   }, []);
 
+  if (!mntd) {
+    return <></>;
+  }
+
   return (
     <>
-      {mntd && them == thmDrk && (
+      {them == thmDrk && (
         <BaseButton
           onClick={() => {
             localStorage.setItem(thmKey, thmSys);
@@ -99,7 +103,7 @@ export const ThemeButton = () => {
         />
       )}
 
-      {mntd && them == thmSys && (
+      {them == thmSys && syst === thmDrk && (
         <BaseButton
           onClick={() => {
             localStorage.setItem(thmKey, thmLgt);
@@ -110,7 +114,18 @@ export const ThemeButton = () => {
         />
       )}
 
-      {mntd && them == thmLgt && (
+      {them == thmSys && syst === thmLgt && (
+        <BaseButton
+          onClick={() => {
+            localStorage.setItem(thmKey, thmDrk);
+            setThem(thmDrk);
+          }}
+          icon={<ThemeDarkIcon />}
+          text="Dark Mode"
+        />
+      )}
+
+      {them == thmLgt && (
         <BaseButton
           onClick={() => {
             localStorage.setItem(thmKey, thmDrk);
