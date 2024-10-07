@@ -90,20 +90,13 @@ export const ThemeButton = () => {
     return <></>;
   }
 
+  const drk = (them == thmSys && syst === thmLgt) || (them == thmLgt && syst === thmLgt);
+  const lgt = (them == thmSys && syst === thmDrk) || (them == thmDrk && syst === thmDrk);
+  const sys = (them == thmLgt && syst === thmDrk) || (them == thmDrk && syst === thmLgt);
+
   return (
     <>
-      {them == thmDrk && (
-        <BaseButton
-          onClick={() => {
-            localStorage.setItem(thmKey, thmSys);
-            setThem(thmSys);
-          }}
-          icon={<ThemeSystemIcon />}
-          text="System Theme"
-        />
-      )}
-
-      {them == thmSys && syst === thmDrk && (
+      {lgt && (
         <BaseButton
           onClick={() => {
             localStorage.setItem(thmKey, thmLgt);
@@ -114,7 +107,7 @@ export const ThemeButton = () => {
         />
       )}
 
-      {them == thmSys && syst === thmLgt && (
+      {drk && (
         <BaseButton
           onClick={() => {
             localStorage.setItem(thmKey, thmDrk);
@@ -125,14 +118,14 @@ export const ThemeButton = () => {
         />
       )}
 
-      {them == thmLgt && (
+      {sys && (
         <BaseButton
           onClick={() => {
-            localStorage.setItem(thmKey, thmDrk);
-            setThem(thmDrk);
+            localStorage.setItem(thmKey, thmSys);
+            setThem(thmSys);
           }}
-          icon={<ThemeDarkIcon />}
-          text="Dark Mode"
+          icon={<ThemeSystemIcon />}
+          text="System Theme"
         />
       )}
     </>
