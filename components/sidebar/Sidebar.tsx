@@ -17,6 +17,15 @@ import { WalletButton } from "@/components/sidebar/button/WalletButton";
 
 export const Sidebar = () => {
   const [show, setShow] = React.useState<boolean>(false);
+  const [width, setWidth] = React.useState<boolean>(false);
+
+  const onClick = () => {
+    // Hide the sidebar if the user clicks a button while the user's screen
+    // width is below the lg breakpoint.
+    if (width) {
+      setShow(false);
+    }
+  };
 
   const tglShow = () => {
     setShow((old: boolean) => !old);
@@ -29,11 +38,13 @@ export const Sidebar = () => {
     // page load.
     {
       setShow(qry.matches);
+      setWidth(!qry.matches);
     }
 
     // Toggle the show state as the screen width changes.
     const onChange = (eve: MediaQueryListEvent) => {
       setShow(eve.matches);
+      setWidth(!qry.matches);
     };
 
     {
@@ -63,28 +74,28 @@ export const Sidebar = () => {
         className="flex-none w-full p-4 h-full border-r border-color overflow-y-auto"
       >
         {/* All sidebar content goes here. */}
-        <AppLogo />
+        <AppLogo onClick={onClick} />
 
         <Separator.Horizontal />
 
         {/* lists */}
-        <ProposeButton />
+        <ProposeButton onClick={onClick} />
 
         <Separator.Horizontal />
 
-        <LifecycleButton />
+        <LifecycleButton onClick={onClick} />
 
         <Separator.Horizontal />
 
-        <UserButton />
-        <WalletButton />
-        <ThemeButton />
+        <UserButton onClick={onClick} />
+        <WalletButton onClick={onClick} />
+        <ThemeButton onClick={onClick} />
         {/* settings */}
-        <AuthButton />
+        <AuthButton onClick={onClick} />
 
         <Separator.Horizontal />
 
-        <SocialButton />
+        <SocialButton onClick={onClick} />
       </div>
 
       {/* This is the button that controls the visibility of the sidebar. */}

@@ -2,12 +2,16 @@ import Link from "next/link";
 
 interface Props {
   height?: string;
+  onClick?: () => void;
   width?: string;
 }
 
 export const AppLogo = (props: Props) => {
   return (
-    <Link href="/">
+    <Link
+      href="/"
+      onClick={props.onClick}
+    >
       <svg
         className="bg-white text-black dark:bg-black dark:text-white"
         viewBox="0 810 3840 540"

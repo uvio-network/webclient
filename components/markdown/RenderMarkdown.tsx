@@ -15,7 +15,7 @@ export const RenderMarkdown = (props: Props) => {
     <Markdown
       allowedElements={allowedElements}
       className={`
-        w-full
+        w-full font-light
         ${props.embed === true ? "text-sm" : "text-base"}
       `}
       components={components(props.editor || false, props.embed || false)}
@@ -48,7 +48,7 @@ const components = (edi: boolean, emb: boolean): Components => {
     h1(props) {
       return <h1
         className={`
-          text-black dark:text-white
+          text-black dark:text-white font-normal
           ${emb === true ? "mt-2 text-xl" : "mt-4 text-2xl"}
         `}
         {...getRst(props)}
@@ -57,7 +57,7 @@ const components = (edi: boolean, emb: boolean): Components => {
     h3(props) {
       return <h3
         className={`
-          text-black dark:text-white
+          text-black dark:text-white font-normal
           ${emb === true ? "mt-2 text-lg" : "mt-4 text-xl"}
         `}
         {...getRst(props)}
@@ -124,6 +124,12 @@ const components = (edi: boolean, emb: boolean): Components => {
           border-color
           ${emb === true ? "mt-2" : "mt-4"}
         `}
+        {...getRst(props)}
+      />;
+    },
+    strong(props) {
+      return <strong
+        className={`font-bold`}
         {...getRst(props)}
       />;
     },
