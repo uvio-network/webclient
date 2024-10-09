@@ -6,7 +6,11 @@ import { LogoutIcon } from "@/components/icon/LogoutIcon";
 import { UserStore } from "@/modules/user/UserStore";
 import { useShallow } from "zustand/react/shallow";
 
-export const AuthButton = () => {
+interface Props {
+  onClick: () => void;
+}
+
+export const AuthButton = (props: Props) => {
   const { valid } = UserStore(useShallow((state) => ({
     valid: state.user.valid,
   })));
@@ -17,14 +21,20 @@ export const AuthButton = () => {
     <>
       {valid ? (
         <BaseButton
-          onClick={logout}
           icon={<LogoutIcon />}
+          onClick={() => {
+            logout();
+            props.onClick();
+          }}
           text="Logout"
         />
       ) : (
         <BaseButton
-          onClick={login}
           icon={<LoginIcon />}
+          onClick={() => {
+            login();
+            props.onClick();
+          }}
           text="Login"
         />
       )}

@@ -10,7 +10,11 @@ import { AddSquareIcon } from "@/components/icon/AddSquareIcon";
 import { UserStore } from "@/modules/user/UserStore";
 import { useShallow } from "zustand/react/shallow";
 
-export const ProposeButton = () => {
+interface Props {
+  onClick: () => void;
+}
+
+export const ProposeButton = (props: Props) => {
   const { valid } = UserStore(useShallow((state) => ({
     valid: state.user.valid,
   })));
@@ -20,6 +24,8 @@ export const ProposeButton = () => {
       e.preventDefault();
       ToastSender.Info("You need to login to propose a claim.");
     }
+
+    props.onClick();
   };
 
   return (

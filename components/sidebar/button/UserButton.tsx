@@ -5,7 +5,11 @@ import { BaseButton } from "@/components/button/BaseButton";
 import { UserStore } from "@/modules/user/UserStore";
 import { useShallow } from "zustand/react/shallow";
 
-export const UserButton = () => {
+interface Props {
+  onClick: () => void;
+}
+
+export const UserButton = (props: Props) => {
   const { object } = UserStore(useShallow((state) => ({
     object: state.user.object,
   })));
@@ -16,6 +20,7 @@ export const UserButton = () => {
         <Link href={"/user/" + object.id()}>
           <BaseButton
             icon={<AccountIcon />}
+            onClick={props.onClick}
             text={object.name()}
           />
         </Link>

@@ -39,7 +39,7 @@ export const SubmitForm = async (props: Props) => {
   const wallet = WalletStore.getState().wallet;
 
   // Remove the token suffix if the user added it.
-  {
+  if (editor.value) {
     editor.value = editor.value.replace(" " + editor.token, "");
   }
 

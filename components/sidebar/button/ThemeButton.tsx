@@ -11,7 +11,11 @@ const thmSys = "system";
 const thmLgt = "light";
 const thmDrk = "dark";
 
-export const ThemeButton = () => {
+interface Props {
+  onClick: () => void;
+}
+
+export const ThemeButton = (props: Props) => {
   const [mntd, setMntd] = React.useState<boolean>(false);
   const [syst, setSyst] = React.useState<string>(getThm());
   const [them, setThem] = React.useState<string>(getThm());
@@ -101,6 +105,7 @@ export const ThemeButton = () => {
           onClick={() => {
             localStorage.setItem(thmKey, thmLgt);
             setThem(thmLgt);
+            props.onClick();
           }}
           icon={<ThemeLightIcon />}
           text="Lights On"
@@ -112,6 +117,7 @@ export const ThemeButton = () => {
           onClick={() => {
             localStorage.setItem(thmKey, thmDrk);
             setThem(thmDrk);
+            props.onClick();
           }}
           icon={<ThemeDarkIcon />}
           text="Dark Mode"
@@ -123,6 +129,7 @@ export const ThemeButton = () => {
           onClick={() => {
             localStorage.setItem(thmKey, thmSys);
             setThem(thmSys);
+            props.onClick();
           }}
           icon={<ThemeSystemIcon />}
           text="System Theme"

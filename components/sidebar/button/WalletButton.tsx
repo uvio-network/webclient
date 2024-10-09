@@ -16,7 +16,11 @@ import moment from "moment";
 // T is the currently hard coded default token.
 const T = "UVX";
 
-export const WalletButton = () => {
+interface Props {
+  onClick: () => void;
+}
+
+export const WalletButton = (props: Props) => {
   const { allocated, available } = TokenStore();
   const { wallet } = WalletStore();
 
@@ -94,6 +98,7 @@ export const WalletButton = () => {
           <BaseButton
             effect={true}
             icon={<CurrentPulseIcon />}
+            onClick={props.onClick}
             text={allocated[T].balance.toFixed(allocated[T].precision)}
           />
         </Link>
@@ -104,6 +109,7 @@ export const WalletButton = () => {
           <BaseButton
             effect={true}
             icon={<CurrencyDollarIcon />}
+            onClick={props.onClick}
             text={available[T].balance.toFixed(available[T].precision)}
           />
         </Link>
