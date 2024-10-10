@@ -11,6 +11,7 @@ import { DisputeContext } from "@/modules/context/DisputeContext";
 import { EditorStore } from "@/components/app/claim/dispute/editor/EditorStore";
 import { EmptyUserSearchResponse } from "@/modules/api/user/search/Response";
 import { ExpiryField } from "@/components/app/claim/dispute/field/ExpiryField";
+import { InfoCircleIcon } from "@/components/icon/InfoCircleIcon";
 import { MarkdownField } from "@/components/app/claim/dispute/field/MarkdownField";
 import { MarkdownPreview } from "@/components/app/claim/dispute/preview/MarkdownPreview";
 import { PageButton } from "@/components/page/PageButton";
@@ -20,6 +21,7 @@ import { QueryStore } from "@/modules/query/QueryStore";
 import { StakeField } from "@/components/app/claim/dispute/field/StakeField";
 import { SubmitButton } from "@/components/app/claim/dispute/editor/SubmitButton";
 import { TokenStore } from "@/modules/token/TokenStore";
+import { Tooltip } from "@/components/tooltip/Tooltip";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
@@ -109,6 +111,31 @@ export default function Page({ params }: { params: { slug: string } }) {
               active={!edit}
               onClick={() => setEdit(false)}
               text="Preview"
+              tooltip={
+                <Tooltip
+                  content={
+                    <>
+                      You can write your dispute in markdown.
+                      Learn more at&nbsp;
+
+                      <Link
+                        className="text-blue-600 dark:text-blue-400"
+                        href="https://docs.uvio.network/markdown"
+                        target="_blank"
+                      >
+                        docs.uvio.network
+                      </Link>
+
+                      .
+                    </>
+                  }
+                  trigger={
+                    <InfoCircleIcon
+                      className={`${edit && "text-gray-400 dark:text-gray-500"}`}
+                    />
+                  }
+                />
+              }
             />
           </div>
 

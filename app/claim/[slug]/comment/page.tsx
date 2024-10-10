@@ -1,11 +1,14 @@
 "use client";
 
+import Link from "next/link";
+
 import * as React from "react";
 
 import { ClaimObject } from "@/modules/claim/ClaimObject";
 import { ClaimPreview } from "@/components/app/claim/comment/preview/ClaimPreview";
 import { EditorStore } from "@/components/app/claim/comment/editor/EditorStore";
 import { EmptyUserSearchResponse } from "@/modules/api/user/search/Response";
+import { InfoCircleIcon } from "@/components/icon/InfoCircleIcon";
 import { MarkdownField } from "@/components/app/claim/comment/field/MarkdownField";
 import { MarkdownPreview } from "@/components/app/claim/comment/preview/MarkdownPreview";
 import { PageButton } from "@/components/page/PageButton";
@@ -13,6 +16,7 @@ import { PostSearch } from "@/modules/api/post/search/Search";
 import { PostSearchResponse } from "@/modules/api/post/search/Response";
 import { QueryStore } from "@/modules/query/QueryStore";
 import { SubmitButton } from "@/components/app/claim/comment/editor/SubmitButton";
+import { Tooltip } from "@/components/tooltip/Tooltip";
 import { useQuery } from "@tanstack/react-query";
 
 export default function Page({ params }: { params: { slug: string } }) {
@@ -77,6 +81,31 @@ export default function Page({ params }: { params: { slug: string } }) {
               active={!edit}
               onClick={() => setEdit(false)}
               text="Preview"
+              tooltip={
+                <Tooltip
+                  content={
+                    <>
+                      You can write your comment in markdown.
+                      Learn more at&nbsp;
+
+                      <Link
+                        className="text-blue-600 dark:text-blue-400"
+                        href="https://docs.uvio.network/markdown"
+                        target="_blank"
+                      >
+                        docs.uvio.network
+                      </Link>
+
+                      .
+                    </>
+                  }
+                  trigger={
+                    <InfoCircleIcon
+                      className={`${edit && "text-gray-400 dark:text-gray-500"}`}
+                    />
+                  }
+                />
+              }
             />
           </div>
 

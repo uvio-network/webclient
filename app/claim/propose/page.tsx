@@ -7,6 +7,7 @@ import * as React from "react";
 import { ExpiryField } from "@/components/app/claim/propose/field/ExpiryField";
 import { LabelsField } from "@/components/app/claim/propose/field/LabelsField";
 import { LabelsPreview } from "@/components/app/claim/propose/preview/LabelsPreview";
+import { InfoCircleIcon } from "@/components/icon/InfoCircleIcon";
 import { MarkdownField } from "@/components/app/claim/propose/field/MarkdownField";
 import { MarkdownPreview } from "@/components/app/claim/propose/preview/MarkdownPreview";
 import { PageButton } from "@/components/page/PageButton";
@@ -15,6 +16,7 @@ import { QueryStore } from "@/modules/query/QueryStore";
 import { StakeField } from "@/components/app/claim/propose/field/StakeField";
 import { SubmitButton } from "@/components/app/claim/propose/editor/SubmitButton";
 import { TokenStore } from "@/modules/token/TokenStore";
+import { Tooltip } from "@/components/tooltip/Tooltip";
 import { useRouter } from "next/navigation";
 
 export default function Page() {
@@ -35,6 +37,31 @@ export default function Page() {
           active={!edit}
           onClick={() => setEdit(false)}
           text="Preview"
+          tooltip={
+            <Tooltip
+              content={
+                <>
+                  You can write your claim in markdown.
+                  Learn more at&nbsp;
+
+                  <Link
+                    className="text-blue-600 dark:text-blue-400"
+                    href="https://docs.uvio.network/markdown"
+                    target="_blank"
+                  >
+                    docs.uvio.network
+                  </Link>
+
+                  .
+                </>
+              }
+              trigger={
+                <InfoCircleIcon
+                  className={`${edit && "text-gray-400 dark:text-gray-500"}`}
+                />
+              }
+            />
+          }
         />
       </div>
 
