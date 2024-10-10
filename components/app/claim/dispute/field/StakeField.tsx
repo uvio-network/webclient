@@ -9,7 +9,7 @@ interface Props {
 export const StakeField = (props: Props) => {
   return (
     <input
-      className="block w-full mr-2 p-2 py-1 background placeholder outline-none"
+      className="block w-full mr-2 p-2 py-1 background placeholder outline-none cursor-not-allowed"
       disabled={true}
       placeholder={`${props.amount.toFixed(props.precision)} ${props.token}`}
       type="text"
