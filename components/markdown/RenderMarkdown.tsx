@@ -15,7 +15,7 @@ export const RenderMarkdown = (props: Props) => {
     <Markdown
       allowedElements={allowedElements}
       className={`
-        w-full font-light
+        w-full dark:font-light
         ${props.embed === true ? "text-sm" : "text-base"}
       `}
       components={components(props.editor || false, props.embed || false)}
