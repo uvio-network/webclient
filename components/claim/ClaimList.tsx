@@ -23,8 +23,9 @@ export const ClaimList = (props: Props) => {
     authorizing: state.authorizing,
   })));
 
-  const { token, valid } = UserStore(useShallow((state) => ({
+  const { token, user, valid } = UserStore(useShallow((state) => ({
     token: state.user.token,
+    user: state.user.object,
     valid: state.user.valid,
   })));
 
@@ -85,6 +86,7 @@ export const ClaimList = (props: Props) => {
         <div key={x.id()}>
           <ClaimContainer
             claim={x}
+            user={user}
           />
 
           {/*

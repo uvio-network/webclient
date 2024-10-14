@@ -4,10 +4,10 @@ export interface PostCreateResponse {
   id: string;
 }
 
-export const EmptyPostCreateResponse = (): PostCreateResponse => {
+export const EmptyPostCreateResponse = (id?: string): PostCreateResponse => {
   return {
     // intern
     created: "",
-    id: "",
+    id: id || "",
   };
 };

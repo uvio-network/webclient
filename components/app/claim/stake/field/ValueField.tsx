@@ -3,6 +3,7 @@ import * as React from "react";
 import { EditorStore } from "@/components/app/claim/stake/editor/EditorStore";
 import { Summary } from "@/modules/summary/Summary";
 import { TrimWhitespace } from "@/modules/string/TrimWhitespace";
+import { useShallow } from "zustand/react/shallow";
 
 interface Props {
   setOpen: (open: string) => void;
@@ -11,6 +12,10 @@ interface Props {
 }
 
 export const ValueField = (props: Props) => {
+  const { minimum } = EditorStore(useShallow((state) => ({
+    minimum: state.minimum,
+  })));
+
   const editor = EditorStore.getState();
 
   return (
@@ -27,7 +32,8 @@ export const ValueField = (props: Props) => {
       onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Escape") props.setOpen("");
       }}
-      placeholder={`${props.summary.post.minimum} ${props.token}`}
+      placeholder={`${props.summary.post.minimum || minimum || 10} ${props.token}`}
+      defaultValue={minimum}
       autoFocus={true}
       type="text"
     />

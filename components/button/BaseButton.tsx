@@ -6,6 +6,7 @@ import { TrimWhitespace } from "@/modules/string/TrimWhitespace";
 
 interface Props {
   background?: string;
+  color?: string;
   confirm?: boolean;
   effect?: boolean;
   font?: string;
@@ -75,8 +76,9 @@ export const BaseButton = React.forwardRef<HTMLDivElement, Props>(function BaseB
     <div
       className={TrimWhitespace(`
         flex w-full h-fit rounded outline-none group
-        text-sm sm:text-base text-gray-400 dark:text-gray-500 whitespace-nowrap
+        text-sm sm:text-base whitespace-nowrap
         ${disabled ? "cursor-default" : "cursor-pointer"}
+        ${props.color ? props.color : "text-gray-400 dark:text-gray-500"}
         ${props.font ? props.font : "font-medium"}
         ${props.hover ? props.hover : ((props.confirm === true && click) || disabled) ? "" : "hover:text-black dark:hover:text-white"}
         ${props.background ? props.background : "hover:bg-gray-200 dark:hover:bg-gray-700"}
