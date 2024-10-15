@@ -2,6 +2,7 @@ import moment from "moment";
 
 import { Address } from "viem";
 import { EmptyUserSearchResponse } from "@/modules/api/user/search/Response";
+import { EmptyVoteCreateResponse } from "@/modules/api/vote/create/Response";
 import { NewSummary } from "@/modules/summary/Summary";
 import { PostSearchResponse } from "@/modules/api/post/search/Response";
 import { SplitList } from "@/modules/string/SplitList";
@@ -9,6 +10,7 @@ import { Summary } from "@/modules/summary/Summary";
 import { UserObject } from "@/modules/user/UserObject";
 import { UserSearchResponse } from "@/modules/api/user/search/Response";
 import { UserStore } from "@/modules/user/UserStore";
+import { VoteCreateResponse } from "@/modules/api/vote/create/Response";
 import { VoteObject } from "@/modules/vote/VoteObject";
 import { VoteSearchResponse } from "@/modules/api/vote/search/Response";
 
@@ -196,6 +198,14 @@ export class ClaimObject {
 
     const spl = SplitList(this.post.lifecycle, ":");
     return spl[1].toLowerCase() === "pending";
+  }
+
+  pendingVote(): VoteCreateResponse {
+    if (this.pending() && this.getVote().length === 1) {
+      return this.getVote()[0];
+    }
+
+    return EmptyVoteCreateResponse();
   }
 
   progress(): number {

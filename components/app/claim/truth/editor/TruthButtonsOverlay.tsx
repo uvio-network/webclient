@@ -59,6 +59,7 @@ export const TruthButtonsOverlay = (props: Props) => {
         <div className="absolute top-0 right-0">
           <BaseButton
             background="none"
+            color="text-gray-500 dark:text-gray-400"
             icon={<XMarkIcon />}
             onClick={() => props.setOpen("")}
           />

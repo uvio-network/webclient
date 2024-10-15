@@ -4,10 +4,10 @@ export interface VoteCreateResponse {
   id: string;
 }
 
-export const EmptyVoteCreateResponse = (): VoteCreateResponse => {
+export const EmptyVoteCreateResponse = (id?: string): VoteCreateResponse => {
   return {
     // intern
     created: "",
-    id: "",
+    id: id || "",
   };
 };

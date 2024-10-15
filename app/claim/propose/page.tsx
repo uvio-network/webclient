@@ -12,14 +12,16 @@ import { MarkdownField } from "@/components/app/claim/propose/field/MarkdownFiel
 import { MarkdownPreview } from "@/components/app/claim/propose/preview/MarkdownPreview";
 import { PageButton } from "@/components/page/PageButton";
 import { ProposeContext } from "@/modules/context/ProposeContext";
-import { QueryStore } from "@/modules/query/QueryStore";
+import { SpinnerIcon } from "@/components/icon/SpinnerIcon";
 import { StakeField } from "@/components/app/claim/propose/field/StakeField";
-import { SubmitButton } from "@/components/app/claim/propose/editor/SubmitButton";
+import { SubmitForm } from "@/modules/app/claim/propose/SubmitForm";
 import { TokenStore } from "@/modules/token/TokenStore";
 import { Tooltip } from "@/components/tooltip/Tooltip";
 import { useRouter } from "next/navigation";
 
 export default function Page() {
+  const [disabled, setDisabled] = React.useState<boolean>(false);
+  const [processing, setProcessing] = React.useState<string>("");
   const [edit, setEdit] = React.useState<boolean>(true);
 
   const router = useRouter();
@@ -84,26 +86,64 @@ export default function Page() {
         <div className="basis-1/4">
           <StakeField />
         </div>
-        <div className="flex-none">
-          <SubmitButton
-            error={(ctx: ProposeContext) => {
-              TokenStore.getState().updateBalance();
-            }}
-            offchain={(ctx: ProposeContext) => {
+      </div>
+
+      <button
+        className={`
+          flex items-center justify-center my-1 px-2 py-1 sm:py-4 w-full h-full rounded
+          ${disabled ? "text-gray-700 bg-sky-300 cursor-not-allowed" : "text-gray-900 bg-sky-400 hover:text-black hover:bg-sky-500"}
+        `}
+        disabled={disabled}
+        type="button"
+        onClick={() => {
+          SubmitForm({
+            after: () => {
+              setProcessing("Confirming Onchain");
+            },
+            before: () => {
+              //
+            },
+            valid: (ctx: ProposeContext) => {
+              setDisabled(true);
+              setProcessing("Signing Transaction");
+            },
+            error: (ctx: ProposeContext) => {
+              setDisabled(false);
+              setProcessing("");
+              if (ctx.post.id !== "") {
+                router.push(`/claim/${ctx.post.id}`);
+              }
+            },
+            offchain: (ctx: ProposeContext) => {
+              //
+            },
+            onchain: (ctx: ProposeContext) => {
+              setDisabled(false);
+              setProcessing("");
               router.push(`/claim/${ctx.post.id}`);
               TokenStore.getState().updateBalance();
-            }}
-            onchain={(ctx: ProposeContext) => {
-              QueryStore.getState().claim.refresh();
-              TokenStore.getState().updateBalance();
-            }}
-            rejected={(ctx: ProposeContext) => {
-              router.push(`/claim/propose`);
-              TokenStore.getState().updateBalance();
-            }}
-          />
-        </div>
-      </div>
+            },
+          });
+        }}
+      >
+        <>
+          {processing ? (
+            <div className="flex gap-x-2">
+              <div className="flex my-auto">
+                <SpinnerIcon textColour="text-gray-700" />
+              </div>
+
+              <div className="flex">
+                {processing}
+              </div>
+            </div>
+          ) : (
+            <div>
+              Propose Claim
+            </div>
+          )}
+        </>
+      </button>
 
       <div className="my-4 p-4 w-full text-sm background-overlay rounded">
         You are about to lock up your funds until this new market resolves.
@@ -119,6 +159,6 @@ export default function Page() {
 
         .
       </div>
-    </div>
+    </div >
   );
 };

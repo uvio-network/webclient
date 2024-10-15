@@ -14,15 +14,18 @@ import { TrimWhitespace } from "@/modules/string/TrimWhitespace";
 import { TruthButtons } from "@/components/app/claim/truth/editor/TruthButtons";
 import { TruthButtonsOverlay } from "@/components/app/claim/truth/editor/TruthButtonsOverlay";
 import { usePathname } from "next/navigation";
+import { UserObject } from "@/modules/user/UserObject";
 
 interface Props {
   claim: ClaimObject;
+  user: UserObject | undefined;
 }
 
 export const ClaimContainer = (props: Props) => {
   const [open, setOpen] = React.useState<string>("");
 
   const isClaim = props.claim.kind() === "claim" ? true : false;
+  const isOwner = props.user && props.claim.owner().id() === props.user.id() ? true : false;
   const isPage = usePathname() === "/claim/" + props.claim.id() ? true : false;
   const isPending = props.claim.pending();
   const isResolve = props.claim.lifecycle() === "resolve";
@@ -91,9 +94,9 @@ export const ClaimContainer = (props: Props) => {
         />
       </div>
 
-      {isClaim && isPage && !isPending && (
+      {isClaim && isPage && (
         <>
-          {isResolve ? (
+          {isResolve && !isPending ? (
             <>
               <TruthButtons
                 expired={props.claim.expired()}
@@ -112,15 +115,18 @@ export const ClaimContainer = (props: Props) => {
             </>
           ) : (
             <>
-              <StakeButtons
-                expired={props.claim.expired()}
-                setOpen={setOpen}
-              />
+              {!isPending && (
+                <StakeButtons
+                  expired={props.claim.expired()}
+                  setOpen={setOpen}
+                />
+              )}
 
-              {open && (
+              {(open || (isPending && isOwner)) && (
                 <StakeButtonsOverlay
                   claim={props.claim}
                   open={open}
+                  pending={isPending}
                   setOpen={setOpen}
                 />
               )}

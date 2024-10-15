@@ -4,15 +4,16 @@ import { encodeFunctionData } from "viem";
 import { EncodeFunctionDataParameters } from "viem";
 import { ProposeContext } from "@/modules/context/ProposeContext";
 import { Transaction } from "@biconomy/account";
+import { StakeContext } from "@/modules/context/StakeContext";
 
-export const Encode = (ctx: ProposeContext): Transaction => {
+export const Encode = (ctx: ProposeContext | StakeContext): Transaction => {
   return {
     to: ctx.claims.address,
     data: encodeFunctionData(encPar(ctx)),
   };
 };
 
-export const Simulate = async (ctx: ProposeContext) => {
+export const Simulate = async (ctx: ProposeContext | StakeContext) => {
   await ctx.public.simulateContract({
     ...encPar(ctx),
     address: ctx.claims.address,
@@ -26,7 +27,7 @@ export const Simulate = async (ctx: ProposeContext) => {
   });
 };
 
-const encPar = (ctx: ProposeContext): Required<EncodeFunctionDataParameters> => {
+const encPar = (ctx: ProposeContext | StakeContext): Required<EncodeFunctionDataParameters> => {
   return {
     abi: [
       ...ctx.claims.abi, // Claims ABI for contract write

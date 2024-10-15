@@ -32,7 +32,7 @@ export const StakeButtons = (props: Props) => {
       }
 
       {
-        editor.updateOption(act === agreement ? "true" : "false")
+        editor.updateOption(act === agreement ? "true" : "false");
         props.setOpen(act);
       }
     };

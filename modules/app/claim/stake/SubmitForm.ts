@@ -1,13 +1,18 @@
+import * as CreatePropose from "@/modules/transaction/claims/write/CreatePropose";
 import * as ToastSender from "@/components/toast/ToastSender";
 import * as TokenApprove from "@/modules/transaction/token/write/TokenApprove";
 import * as UpdatePropose from "@/modules/transaction/claims/write/UpdatePropose";
 
 import { ChainStore } from "@/modules/chain/ChainStore";
+import { ClaimObject } from "@/modules/claim/ClaimObject";
 import { ContractWithAddress } from "@/modules/chain/ChainConfig";
 import { EditorStore } from "@/components/app/claim/stake/editor/EditorStore";
+import { EmptyPostCreateResponse } from "@/modules/api/post/create/Response";
 import { EmptyReceipt } from "@/modules/wallet/WalletInterface";
 import { EmptyVoteCreateResponse } from "@/modules/api/vote/create/Response";
 import { parseUnits } from "viem";
+import { PostUpdate } from "@/modules/api/post/update/Update";
+import { PostUpdateRequest } from "@/modules/api/post/update/Request";
 import { StakeContext } from "@/modules/context/StakeContext";
 import { TokenMessage } from "@/modules/token/TokenStore";
 import { TokenStore } from "@/modules/token/TokenStore";
@@ -22,8 +27,9 @@ import { WalletMessage } from "@/modules/wallet/WalletStore";
 import { WalletStore } from "@/modules/wallet/WalletStore";
 
 interface Props {
-  before: () => void;
+  pending: ClaimObject | undefined;
   after: () => void;
+  before: () => void;
   valid: (ctx: StakeContext) => void;
   error: (ctx: StakeContext) => void;
   offchain: (ctx: StakeContext) => void;
@@ -69,13 +75,17 @@ export const SubmitForm = async (props: Props) => {
     chain: chain.id.toString(),
     claim: editor.claim,
     claims: ContractWithAddress(editor.contract, chain),
+    expiry: props.pending ? props.pending.expiry().unix() : 0, // if we got a pending claim, then we use its existing expiry
     from: wallet.object.address(),
     option: editor.option,
+    pending: props.pending,
+    post: EmptyPostCreateResponse(props.pending ? props.pending.id() : ""),
     public: wallet.object.public(),
     receipt: EmptyReceipt(),
+    reference: props.pending ? await newHsh(props.pending.markdown()) : "",
     symbol: editor.token,
     token: chain.tokens[editor.token],
-    vote: EmptyVoteCreateResponse(),
+    vote: props.pending ? props.pending.pendingVote() : EmptyVoteCreateResponse(), // if we got a pending claim, then we assign its pending vote, if any
   };
 
   try {
@@ -104,8 +114,13 @@ export const SubmitForm = async (props: Props) => {
     }
 
     if (ctx.receipt.success === true) {
+      await posUpd(ctx);
       await votUpd(ctx);
-      ToastSender.Success("Certified, you staked the shit out of that claim!");
+      if (ctx.pending !== undefined) {
+        ToastSender.Success("Hooray, thy claim proposed milady!");
+      } else {
+        ToastSender.Success("Certified, you staked the shit out of that claim!");
+      }
       editor.delete();
       props.onchain(ctx);
     } else if (ctx.receipt.rejected === true) {
@@ -149,10 +164,19 @@ const inpNum = (str: string): boolean => {
   return !isNaN(Number(str)) && parseFloat(str) > 0;
 };
 
+const newHsh = async (str: string): Promise<string> => {
+  const enc = new TextEncoder().encode(str);
+  const buf = await window.crypto.subtle.digest("SHA-256", enc);
+  const unt = Array.from(new Uint8Array(buf));
+  const hsh = unt.map((b) => b.toString(16).padStart(2, "0")).join("");
+
+  return hsh;
+};
+
 const conCre = async (ctx: StakeContext, wal: WalletMessage): Promise<StakeContext> => {
   const txn = [
     TokenApprove.Encode(ctx.amount.big, ctx.claims.address, ctx.token),
-    UpdatePropose.Encode(ctx),
+    ctx.pending !== undefined ? CreatePropose.Encode(ctx) : UpdatePropose.Encode(ctx),
   ];
 
   try {
@@ -166,10 +190,40 @@ const conCre = async (ctx: StakeContext, wal: WalletMessage): Promise<StakeConte
   }
 }
 
+const posUpd = async (ctx: StakeContext) => {
+  // We set the post ID during staking if there is a pending claim that the
+  // proposer still has to confirm onchain. So if there is a post ID, then we
+  // want to update that claim with the transaction hash. Otherwise, during
+  // normal staking activity, we must not update any post object.
+  if (ctx.post.id === "") {
+    return;
+  }
+
+  const req: PostUpdateRequest = {
+    // intern
+    id: ctx.post.id,
+    // public
+    hash: ctx.receipt.hash,
+    meta: "",
+  };
+
+  try {
+    const [res] = await PostUpdate(ctx.auth, [req]);
+  } catch (err) {
+    console.error(err);
+    ToastSender.Error(err instanceof Error ? err.message : String(err));
+    return Promise.reject(err);
+  }
+};
+
 const txnSim = async (ctx: StakeContext) => {
   try {
     await TokenApprove.Simulate(ctx.public, ctx.from, ctx.amount.big, ctx.claims.address, ctx.token);
-    await UpdatePropose.Simulate(ctx);
+    if (ctx.pending !== undefined) {
+      await CreatePropose.Simulate(ctx);
+    } else {
+      await UpdatePropose.Simulate(ctx);
+    }
   } catch (err) {
     console.error(err);
     ToastSender.Error(errMsg(err));
@@ -178,6 +232,15 @@ const txnSim = async (ctx: StakeContext) => {
 };
 
 const votCre = async (ctx: StakeContext): Promise<StakeContext> => {
+  // If the pending claim object exists, and if the existing claim object has
+  // already a vote object associated with it, then we do not want to create
+  // another vote object. We only want to create vote objects for pending claims
+  // that have no votes, or for normal claims that users want to stake
+  // reputation on.
+  if (ctx.vote.id !== "") {
+    return ctx;
+  }
+
   const req: VoteCreateRequest = {
     claim: ctx.claim,
     hash: "",

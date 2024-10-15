@@ -60,7 +60,7 @@ class Injected implements Signer {
         to: x.to as Address,
         chain: this.cli.chain,
         maxFeePerGas: parseGwei("6"),
-        maxPriorityFeePerGas: parseGwei("0.3"),
+        maxPriorityFeePerGas: parseGwei("0.5"),
       });
 
       aft();

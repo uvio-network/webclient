@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Separator from "@/components/layout/separator";
 import * as ToastSender from "@/components/toast/ToastSender";
@@ -136,9 +138,13 @@ export const ClaimHeaderMenu = (props: Props) => {
 
           <DropdownMenu.Item
             className={itemClassName}
-            onSelect={onSelect}
           >
-            Send us Feedback
+            <Link
+              href="https://warpcast.com/xh3b4sd.eth"
+              target="_blank"
+            >
+              Send us Feedback
+            </Link>
           </DropdownMenu.Item>
 
         </DropdownMenu.Content>
