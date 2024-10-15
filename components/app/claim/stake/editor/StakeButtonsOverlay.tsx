@@ -103,6 +103,7 @@ export const StakeButtonsOverlay = (props: Props) => {
       <div className="flex gap-x-2 h-14">
         <div className="flex-1 w-full">
           <ValueField
+            pending={props.pending}
             setOpen={props.setOpen}
             summary={props.claim.summary()}
             token={props.claim.token()}

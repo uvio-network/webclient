@@ -34,8 +34,17 @@ import { VoteUpdateRequest } from "@/modules/api/vote/update/Request";
 import { WalletMessage } from "@/modules/wallet/WalletStore";
 import { WalletStore } from "@/modules/wallet/WalletStore";
 
+interface Props {
+  after: () => void;
+  before: () => void;
+  valid: (ctx: ProposeContext) => void;
+  error: (ctx: ProposeContext) => void;
+  offchain: (ctx: ProposeContext) => void;
+  onchain: (ctx: ProposeContext) => void;
+}
+
 // SubmitForm validates user input and then performs the claim creation.
-export const SubmitForm = async (err: (ctx: ProposeContext) => void, off: (ctx: ProposeContext) => void, onc: (ctx: ProposeContext) => void, rej: (ctx: ProposeContext) => void) => {
+export const SubmitForm = async (props: Props) => {
   const chain = ChainStore.getState().getActive();
   const editor = EditorStore.getState();
   const token = TokenStore.getState().available;
@@ -120,13 +129,13 @@ export const SubmitForm = async (err: (ctx: ProposeContext) => void, off: (ctx: 
   }
 
   let ctx: ProposeContext = {
-    after: () => { },
+    after: props.after,
     amount: {
       num: editor.getAmount(),
       big: parseUnits(String(editor.getAmount()), chain.tokens[editor.getToken()].decimals),
     },
     auth: user.token,
-    before: () => { },
+    before: props.before,
     chain: chain.id.toString(),
     claims: ClaimsWithSymbol(editor.getToken(), chain),
     expiry: newExp(editor),
@@ -143,47 +152,52 @@ export const SubmitForm = async (err: (ctx: ProposeContext) => void, off: (ctx: 
     vote: EmptyVoteCreateResponse(),
   };
 
-  // Before we create any resources, whether it is offchain or onchain, we
-  // create the required transactions and simulate them to the best of our
-  // abilities. If we cannot even simulate transactions, we have no business
-  // creating any resources on behalf of the user.
-  {
-    await txnSim(ctx);
-  }
+  try {
+    // Before we create any resources, whether it is offchain or onchain, we
+    // create the required transactions and simulate them to the best of our
+    // abilities. If we cannot even simulate transactions, we have no business
+    // creating any resources on behalf of the user.
+    {
+      await txnSim(ctx);
+    }
 
-  {
-    ctx = await posCre(ctx);
-    ctx = await votCre(ctx);
-  }
+    {
+      props.valid(ctx);
+    }
 
-  {
-    ToastSender.Processing("Waiting for onchain confirmation.");
-    off(ctx);
-  }
+    {
+      ctx = await posCre(ctx);
+      ctx = await votCre(ctx);
+    }
 
-  {
-    ctx = await conCre(ctx, wallet);
-  }
+    {
+      props.offchain(ctx);
+    }
 
-  if (ctx.receipt.success === true) {
-    await posUpd(ctx);
-    await votUpd(ctx);
-    ToastSender.Success("Hooray, thy claim proposed milady!", true);
-    editor.delete();
-    onc(ctx);
-  } else if (ctx.receipt.rejected === true) {
-    ToastSender.Info("No biggie darling, we'll take it back.", true);
-    // The vote object must be deleted first, because it requires the post
-    // object to exist in the backend in order to be deleted.
-    await votDel(ctx);
-    await posDel(ctx);
-    rej(ctx);
-  } else {
-    ToastSender.Error("Ohh, nope, that was not good enough!", true);
-    err(ctx);
-  }
+    {
+      ctx = await conCre(ctx, wallet);
+    }
 
-  // TODO prevent duplicated submits
+    if (ctx.receipt.success === true) {
+      await posUpd(ctx);
+      await votUpd(ctx);
+      ToastSender.Success("Hooray, thy claim proposed milady!");
+      editor.delete();
+      props.onchain(ctx);
+    } else if (ctx.receipt.rejected === true) {
+      ToastSender.Info("No biggie darling, we'll take it back.");
+      // The vote object must be deleted first, because it requires the post
+      // object to exist in the backend in order to be deleted.
+      await votDel(ctx);
+      await posDel(ctx);
+      props.error(ctx);
+    } else {
+      ToastSender.Error("Ohh, nope, that was not good enough!");
+      props.error(ctx);
+    }
+  } catch (err) {
+    props.error(ctx);
+  }
 };
 
 const inpBal = (num: number, sym: string, tok: TokenMessage): boolean => {
@@ -191,15 +205,6 @@ const inpBal = (num: number, sym: string, tok: TokenMessage): boolean => {
   const cur = tok[sym]?.balance || 0;
 
   return cur >= des;
-};
-
-// inpPrt returns true if the given input is a two part string separated by a
-// single whitespace. We use this to ensure we get user input like shown below.
-//
-//     "0.003 ETH"
-//
-const inpPrt = (inp: string): boolean => {
-  return inp.split(" ").length === 2;
 };
 
 // inpNum returns true if the given input number is valid and greater than zero.

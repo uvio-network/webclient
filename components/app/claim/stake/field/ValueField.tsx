@@ -6,6 +6,7 @@ import { TrimWhitespace } from "@/modules/string/TrimWhitespace";
 import { useShallow } from "zustand/react/shallow";
 
 interface Props {
+  pending: boolean;
   setOpen: (open: string) => void;
   summary: Summary;
   token: string;
@@ -33,7 +34,7 @@ export const ValueField = (props: Props) => {
         if (e.key === "Escape") props.setOpen("");
       }}
       placeholder={`${props.summary.post.minimum || minimum || 10} ${props.token}`}
-      defaultValue={minimum}
+      defaultValue={props.pending && minimum ? `${minimum} ${props.token}` : undefined}
       autoFocus={true}
       type="text"
     />

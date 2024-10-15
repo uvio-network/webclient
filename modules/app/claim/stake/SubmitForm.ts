@@ -85,7 +85,7 @@ export const SubmitForm = async (props: Props) => {
     reference: props.pending ? await newHsh(props.pending.markdown()) : "",
     symbol: editor.token,
     token: chain.tokens[editor.token],
-    vote: EmptyVoteCreateResponse(),
+    vote: props.pending ? props.pending.pendingVote() : EmptyVoteCreateResponse(), // if we got a pending claim, then we assign its pending vote, if any
   };
 
   try {
@@ -116,7 +116,11 @@ export const SubmitForm = async (props: Props) => {
     if (ctx.receipt.success === true) {
       await posUpd(ctx);
       await votUpd(ctx);
-      ToastSender.Success("Certified, you staked the shit out of that claim!");
+      if (ctx.pending !== undefined) {
+        ToastSender.Success("Hooray, thy claim proposed milady!");
+      } else {
+        ToastSender.Success("Certified, you staked the shit out of that claim!");
+      }
       editor.delete();
       props.onchain(ctx);
     } else if (ctx.receipt.rejected === true) {
@@ -187,16 +191,17 @@ const conCre = async (ctx: StakeContext, wal: WalletMessage): Promise<StakeConte
 }
 
 const posUpd = async (ctx: StakeContext) => {
-  // If the pending claim object does not exist, then we cannot update it. If
-  // the pending claim object exists though, then we want to update it with the
-  // transaction hash that we just obtained.
-  if (ctx.pending === undefined) {
+  // We set the post ID during staking if there is a pending claim that the
+  // proposer still has to confirm onchain. So if there is a post ID, then we
+  // want to update that claim with the transaction hash. Otherwise, during
+  // normal staking activity, we must not update any post object.
+  if (ctx.post.id === "") {
     return;
   }
 
   const req: PostUpdateRequest = {
     // intern
-    id: ctx.pending.id(),
+    id: ctx.post.id,
     // public
     hash: ctx.receipt.hash,
     meta: "",
@@ -232,7 +237,7 @@ const votCre = async (ctx: StakeContext): Promise<StakeContext> => {
   // another vote object. We only want to create vote objects for pending claims
   // that have no votes, or for normal claims that users want to stake
   // reputation on.
-  if (ctx.pending !== undefined && ctx.pending.getVote().length > 0) {
+  if (ctx.vote.id !== "") {
     return ctx;
   }
 
