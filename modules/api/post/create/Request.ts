@@ -12,3 +12,20 @@ export interface PostCreateRequest {
   text: string;
   token: string;
 }
+
+export const EmptyPostCreateRequest = (): PostCreateRequest => {
+  // public
+  return {
+    chain: "",
+    contract: "",
+    expiry: "",
+    hash: "",
+    kind: "",
+    labels: "",
+    lifecycle: "",
+    meta: "",
+    parent: "",
+    text: "",
+    token: "",
+  };
+};

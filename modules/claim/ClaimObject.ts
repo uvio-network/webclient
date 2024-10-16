@@ -3,6 +3,7 @@ import moment from "moment";
 import { Address } from "viem";
 import { EmptyUserSearchResponse } from "@/modules/api/user/search/Response";
 import { EmptyVoteCreateResponse } from "@/modules/api/vote/create/Response";
+import { EmptyPostSearchResponse } from "@/modules/api/post/search/Response";
 import { NewSummary } from "@/modules/summary/Summary";
 import { PostSearchResponse } from "@/modules/api/post/search/Response";
 import { SplitList } from "@/modules/string/SplitList";
@@ -13,6 +14,10 @@ import { UserStore } from "@/modules/user/UserStore";
 import { VoteCreateResponse } from "@/modules/api/vote/create/Response";
 import { VoteObject } from "@/modules/vote/VoteObject";
 import { VoteSearchResponse } from "@/modules/api/vote/search/Response";
+
+export const EmptyClaimObject = (): ClaimObject => {
+  return new ClaimObject(EmptyPostSearchResponse(), EmptyUserSearchResponse(), undefined, []);
+};
 
 export class ClaimObject {
   private embd: number;
@@ -201,8 +206,15 @@ export class ClaimObject {
   }
 
   pendingVote(): VoteCreateResponse {
-    if (this.pending() && this.getVote().length === 1) {
-      return this.getVote()[0];
+    const vot = this.getVote();
+
+    if (vot.length !== 0) {
+      const lat = vot[vot.length - 1];
+      const obj = new VoteObject(lat);
+
+      if (obj.pending()) {
+        return lat;
+      }
     }
 
     return EmptyVoteCreateResponse();

@@ -1,46 +1,66 @@
 import * as TokenApprove from "@/modules/transaction/token/write/TokenApprove";
 
+import { EditorStore } from "@/modules/editor/EditorStore";
 import { encodeFunctionData } from "viem";
 import { EncodeFunctionDataParameters } from "viem";
-import { ProposeContext } from "@/modules/context/ProposeContext";
 import { Transaction } from "@biconomy/account";
-import { StakeContext } from "@/modules/context/StakeContext";
+import { WalletStore } from "@/modules/wallet/WalletStore";
 
-export const Encode = (ctx: ProposeContext | StakeContext): Transaction => {
+export const Encode = (): Transaction => {
+  const edi = EditorStore.getState();
+
   return {
-    to: ctx.claims.address,
-    data: encodeFunctionData(encPar(ctx)),
+    to: edi.claims.address,
+    data: encodeFunctionData(encPar()),
   };
 };
 
-export const Simulate = async (ctx: ProposeContext | StakeContext) => {
-  await ctx.public.simulateContract({
-    ...encPar(ctx),
-    address: ctx.claims.address,
-    account: ctx.from,
+export const Simulate = async () => {
+  const edi = EditorStore.getState();
+  const wal = WalletStore.getState();
+
+  const amo = edi.getAmount().big;
+  const cla = edi.claims.address;
+  const frm = wal.wallet.object.address();
+  const tok = edi.getToken().address;
+
+  await wal.wallet.object.public().simulateContract({
+    ...encPar(),
+    address: cla,
+    account: frm,
     stateOverride: [
       {
-        address: ctx.token.address,
-        stateDiff: TokenApprove.State(ctx.from, ctx.claims.address, ctx.amount.big),
+        address: tok,
+        stateDiff: TokenApprove.State(frm, cla, amo),
       },
     ],
   });
 };
 
-const encPar = (ctx: ProposeContext | StakeContext): Required<EncodeFunctionDataParameters> => {
+const encPar = (): Required<EncodeFunctionDataParameters> => {
+  const edi = EditorStore.getState();
+
+  const amo = edi.getAmount().big;
+  const cla = edi.claims.abi;
+  const exp = edi.getExpiry();
+  const opt = edi.getOption();
+  const pro = edi.post.id;
+  const ref = edi.reference;
+  const tok = edi.getToken().abi;
+
   return {
     abi: [
-      ...ctx.claims.abi, // Claims ABI for contract write
-      ...ctx.token.abi,  // UVX ABI for contract simulation
+      ...cla, // Claims ABI for contract write
+      ...tok, // UVX ABI for contract simulation
     ],
     functionName: "createPropose",
     args: [
-      ctx.post.id,       // claim, ID of the propose
-      ctx.amount.big,    // balance, the amount we deposited
-      ctx.option,        // vote, agree or disagree with the claim
-      ctx.expiry,        // expiry, unix timestamp in seconds
-      ctx.reference,     // hash, the claim's content checksum
-      [],                // whitelisted tokens, none
+      pro, // claim, ID of the propose
+      amo, // balance, the amount we deposited
+      opt, // vote, agree or disagree with the claim
+      exp, // expiry, unix timestamp in seconds
+      ref, // hash, the claim's content checksum
+      [],  // whitelisted tokens, none for now
     ],
   };
 };

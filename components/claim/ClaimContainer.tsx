@@ -8,11 +8,9 @@ import { ClaimFooter } from "@/components/claim/ClaimFooter";
 import { ClaimHeader } from "@/components/claim/ClaimHeader";
 import { ClaimLabels } from "@/components/claim/ClaimLabels";
 import { ClaimObject } from "@/modules/claim/ClaimObject";
-import { StakeButtons } from "@/components/app/claim/stake/editor/StakeButtons";
-import { StakeButtonsOverlay } from "@/components/app/claim/stake/editor/StakeButtonsOverlay";
 import { TrimWhitespace } from "@/modules/string/TrimWhitespace";
-import { TruthButtons } from "@/components/app/claim/truth/editor/TruthButtons";
-import { TruthButtonsOverlay } from "@/components/app/claim/truth/editor/TruthButtonsOverlay";
+import { ClaimVoteButtons } from "@/components/claim/ClaimVoteButtons";
+import { ClaimVoteButtonsOverlay } from "@/components/claim/ClaimVoteButtonsOverlay";
 import { usePathname } from "next/navigation";
 import { UserObject } from "@/modules/user/UserObject";
 
@@ -22,13 +20,10 @@ interface Props {
 }
 
 export const ClaimContainer = (props: Props) => {
-  const [open, setOpen] = React.useState<string>("");
-
   const isClaim = props.claim.kind() === "claim" ? true : false;
   const isOwner = props.user && props.claim.owner().id() === props.user.id() ? true : false;
   const isPage = usePathname() === "/claim/" + props.claim.id() ? true : false;
   const isPending = props.claim.pending();
-  const isResolve = props.claim.lifecycle() === "resolve";
 
   return (
     <div
@@ -96,41 +91,17 @@ export const ClaimContainer = (props: Props) => {
 
       {isClaim && isPage && (
         <>
-          {isResolve && !isPending ? (
-            <>
-              <TruthButtons
-                expired={props.claim.expired()}
-                selected={props.claim.selected()}
-                setOpen={setOpen}
-                voted={props.claim.voted()}
-              />
+          {!isPending && (
+            <ClaimVoteButtons
+              claim={props.claim}
+              user={props.user}
+            />
+          )}
 
-              {open && (
-                <TruthButtonsOverlay
-                  claim={props.claim}
-                  open={open}
-                  setOpen={setOpen}
-                />
-              )}
-            </>
-          ) : (
-            <>
-              {!isPending && (
-                <StakeButtons
-                  expired={props.claim.expired()}
-                  setOpen={setOpen}
-                />
-              )}
-
-              {(open || (isPending && isOwner)) && (
-                <StakeButtonsOverlay
-                  claim={props.claim}
-                  open={open}
-                  pending={isPending}
-                  setOpen={setOpen}
-                />
-              )}
-            </>
+          {isPending && isOwner && (
+            <ClaimVoteButtonsOverlay
+              claim={props.claim}
+            />
           )}
         </>
       )}

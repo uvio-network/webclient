@@ -1,6 +1,6 @@
 import { ToastStore } from "@/components/toast/ToastStore";
 
-export const Error = (text: string, repl: boolean = false) => {
+export const Error = (text: string, repl: boolean = false): false => {
   ToastStore.getState().create({
     clss: "bg-rose-400",
     repl: repl,
@@ -9,6 +9,8 @@ export const Error = (text: string, repl: boolean = false) => {
     text: text,
     unix: Date.now(),
   });
+
+  return false;
 };
 
 export const Info = (text: string, repl: boolean = false) => {

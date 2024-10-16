@@ -23,6 +23,33 @@ export interface PostSearchResponse {
   token: string;
 };
 
+export const EmptyPostSearchResponse = (): PostSearchResponse => {
+  return {
+    // extern
+    samples: {},
+
+    // intern
+    created: "",
+    id: "",
+    owner: "",
+    tree: "",
+
+    // public
+    chain: "",
+    contract: "",
+    expiry: "",
+    hash: "",
+    kind: "",
+    labels: "",
+    lifecycle: "",
+    meta: "",
+    parent: "",
+    summary: "",
+    text: "",
+    token: "",
+  };
+};
+
 export const UniqueOwners = (inp: PostSearchResponse[]): string[] => {
   const set = new Set<string>();
 

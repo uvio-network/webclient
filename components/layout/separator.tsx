@@ -112,8 +112,6 @@ const durStr = (rem: moment.Moment): string => {
   } else {
     return `less than a minute left`;
   }
-
-  return "";
 };
 
 const uniStr = (dur: number, uni: string): string => {

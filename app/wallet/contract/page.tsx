@@ -8,9 +8,9 @@ import * as ToastSender from "@/components/toast/ToastSender";
 import { BaseButton } from "@/components/button/BaseButton";
 import { ChainStore } from "@/modules/chain/ChainStore";
 import { CopyIcon } from "@/components/icon/CopyIcon";
+import { EditorButton } from "@/components/editor/EditorButton";
 import { LoadingStore } from "@/components/loading/LoadingStore";
 import { OpenLinkIcon } from "@/components/icon/OpenLinkIcon";
-import { PageButton } from "@/components/page/PageButton";
 import { RefreshIcon } from "@/components/icon/RefreshIcon";
 import { TokenConfig } from "@/modules/token/TokenConfig";
 import { TokenStore } from "@/modules/token/TokenStore";
@@ -42,13 +42,13 @@ export default function Page() {
   return (
     <>
       <div className="flex mb-6 w-full items-center">
-        <PageButton
+        <EditorButton
           active={deposit}
           onClick={() => setDeposit(true)}
           text="Deposit"
         />
 
-        <PageButton
+        <EditorButton
           active={!deposit}
           // onClick={() => setDeposit(false)}
           onClick={onClick}
