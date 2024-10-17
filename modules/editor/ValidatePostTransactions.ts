@@ -6,16 +6,18 @@ import { EditorStore } from "@/modules/editor/EditorStore";
 import { EmptyPostCreateResponse } from "@/modules/api/post/create/Response";
 import { WalletStore } from "@/modules/wallet/WalletStore";
 
-export const ValidateTransactions = async () => {
+export const ValidatePostTransactions = async () => {
   const edi = EditorStore.getState();
   const wal = WalletStore.getState();
 
-  // Since we are trying to create a claim, and since we are trying to simulate
-  // the contract write for exactly that objective, we need to fake the claim ID
-  // for the simulation step because the post resource for our claim object has
-  // not yet been created offchain. When we create the post object offchain, we
-  // will overwrite the claim ID with the real value.
-  {
+  // We need to fake the claim ID if we are creating a claim from scratch,
+  // because the post resource for our claim object has not yet been created
+  // offchain. When we create the post object offchain, we will overwrite the
+  // claim ID with the real value. Note that we may simulate transactions for
+  // pending claims that we have to confirm onchain after some unknown failure.
+  // In such a case the ID of the post object will be known already and we do
+  // not have to overwrite it anymore.
+  if (edi.post.id === "") {
     edi.updatePost(EmptyPostCreateResponse(ranNum(32).toString()));
   }
 

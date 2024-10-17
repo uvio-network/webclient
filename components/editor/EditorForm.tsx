@@ -25,8 +25,13 @@ export const EditorForm = (props: Props) => {
   const [write, setWrite] = React.useState<boolean>(true);
 
   React.useEffect(() => {
-    EditorStore.getState().updateKind(props.Kind);
-    EditorStore.getState().updateOption(true);
+    {
+      EditorStore.getState().updateKind(props.Kind);
+    }
+
+    if (props.Kind === "claim") {
+      EditorStore.getState().updateOption(true);
+    }
   }, [props.Kind]);
 
   return (

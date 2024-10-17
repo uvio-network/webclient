@@ -1,43 +1,62 @@
 import * as TokenApprove from "@/modules/transaction/token/write/TokenApprove";
 
+import { EditorStore } from "@/modules/editor/EditorStore";
 import { encodeFunctionData } from "viem";
 import { EncodeFunctionDataParameters } from "viem";
-import { StakeContext } from "@/modules/context/StakeContext";
 import { Transaction } from "@biconomy/account";
+import { WalletStore } from "@/modules/wallet/WalletStore";
 
-export const Encode = (ctx: StakeContext): Transaction => {
+export const Encode = (): Transaction => {
+  const edi = EditorStore.getState();
+
   return {
-    to: ctx.claims.address,
-    data: encodeFunctionData(newPar(ctx)),
+    to: edi.claims.address,
+    data: encodeFunctionData(newPar()),
   };
 }
 
-export const Simulate = async (ctx: StakeContext) => {
-  await ctx.public.simulateContract({
-    ...newPar(ctx),
-    address: ctx.claims.address,
-    account: ctx.from,
+export const Simulate = async () => {
+  const edi = EditorStore.getState();
+  const wal = WalletStore.getState();
+
+  const amo = edi.getAmount().big;
+  const cla = edi.claims.address;
+  const frm = wal.wallet.object.address();
+  const tok = edi.getToken().address;
+
+  await wal.wallet.object.public().simulateContract({
+    ...newPar(),
+    address: cla,
+    account: frm,
     stateOverride: [
       {
-        address: ctx.token.address,
-        stateDiff: TokenApprove.State(ctx.from, ctx.claims.address, ctx.amount.big),
+        address: tok,
+        stateDiff: TokenApprove.State(frm, cla, amo),
       },
     ],
   });
 }
 
-const newPar = (ctx: StakeContext): Required<EncodeFunctionDataParameters> => {
+const newPar = (): Required<EncodeFunctionDataParameters> => {
+  const edi = EditorStore.getState();
+
+  const amo = edi.getAmount().big;
+  const cla = edi.claims.abi;
+  const opt = edi.getOption();
+  const pod = edi.post.id;
+  const tok = edi.getToken().abi;
+
   return {
     abi: [
-      ...ctx.claims.abi, // Claims ABI for contract write
-      ...ctx.token.abi,  // UVX ABI for contract simulation
+      ...cla, // Claims ABI for contract write
+      ...tok, // UVX ABI for contract simulation
     ],
     functionName: "updatePropose",
     args: [
-      ctx.claim,         // claim, ID of the propose
-      ctx.amount.big,    // balance, the amount we deposited
-      ctx.option,        // vote, agree or disagree with the claim
-      0,                 // token index, none whitelisted for now
+      pod, // claim, ID of the propose
+      amo, // balance, the amount we deposited
+      opt, // vote, agree or disagree with the claim
+      0,   // token index, none whitelisted for now
     ],
   };
 };

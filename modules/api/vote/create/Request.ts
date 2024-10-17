@@ -8,3 +8,16 @@ export interface VoteCreateRequest {
   option: string;
   value: string;
 }
+
+export const EmptyVoteCreateRequest = (): VoteCreateRequest => {
+  // public
+  return {
+    claim: "",
+    hash: "",
+    kind: "",
+    lifecycle: "",
+    meta: "",
+    option: "",
+    value: "",
+  };
+};

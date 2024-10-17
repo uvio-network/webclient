@@ -1,19 +1,15 @@
 import * as ToastSender from "@/components/toast/ToastSender";
-import * as UpdateResolve from "@/modules/transaction/claims/write/UpdateResolve";
 
 import { ChainStore } from "@/modules/chain/ChainStore";
 import { ContractWithAddress } from "@/modules/chain/ChainConfig";
+import { CreateVote } from "@/modules/editor/CreateVote";
+import { DeleteVote } from "@/modules/editor/DeleteVote";
 import { EditorStore } from "@/modules/editor/EditorStore";
-import { EmptyReceipt } from "@/modules/wallet/WalletInterface";
-import { EmptyVoteCreateResponse } from "@/modules/api/vote/create/Response";
-import { UserStore } from "@/modules/user/UserStore";
-import { VoteCreate } from "@/modules/api/vote/create/Create";
-import { VoteCreateRequest } from "@/modules/api/vote/create/Request";
-import { VoteDelete } from "@/modules/api/vote/delete/Delete";
-import { VoteDeleteRequest } from "@/modules/api/vote/delete/Request";
-import { VoteUpdate } from "@/modules/api/vote/update/Update";
-import { VoteUpdateRequest } from "@/modules/api/vote/update/Request";
-import { WalletStore } from "@/modules/wallet/WalletStore";
+import { ErrorMessage } from "@/modules/error/ErrorMessage";
+import { ExecuteVoteTransactions } from "@/modules/editor/ExecuteVoteTransactions";
+import { UpdateVote } from "@/modules/editor/UpdateVote";
+import { ValidateStake } from "@/modules/editor/ValidateStake";
+import { ValidateVoteTransactions } from "@/modules/editor/ValidateVoteTransactions";
 
 interface Props {
   after: () => void;
@@ -28,22 +24,17 @@ export const SubmitVote = async (props: Props) => {
   const chn = ChainStore.getState().getActive();
   const edi = EditorStore.getState();
 
-  let ctx: TruthContext = {
-    after: props.after,
-    auth: user.token,
-    before: props.before,
-    chain: chain.id.toString(),
-    claim: {
-      propose: editor.propose,
-      resolve: editor.resolve,
-    },
-    claims: ContractWithAddress(editor.contract, chain),
-    from: wallet.object.address(),
-    option: editor.option,
-    public: wallet.object.public(),
-    receipt: EmptyReceipt(),
-    vote: EmptyVoteCreateResponse(),
-  };
+  {
+    if (edi.kind === "stake") {
+      if (!ValidateStake()) return;
+    }
+  }
+
+  {
+    if (edi.propose !== undefined) {
+      edi.updateClaims(ContractWithAddress(edi.propose.contract(), chn));
+    }
+  }
 
   try {
     // Before we create any resources, whether it is offchain or onchain, we
@@ -51,131 +42,69 @@ export const SubmitVote = async (props: Props) => {
     // abilities. If we cannot even simulate transactions, we have no business
     // creating any resources on behalf of the user.
     {
-      await txnSim(ctx);
+      await ValidateVoteTransactions();
     }
 
     {
-      props.valid(ctx);
+      props.valid();
     }
 
     {
-      ctx = await votCre(ctx);
+      await CreateVote();
     }
 
     {
-      props.offchain(ctx);
+      props.offchain();
     }
 
     {
-      ctx = await conCre(ctx, wallet);
+      await ExecuteVoteTransactions(props.before, props.after);
     }
 
-    if (ctx.receipt.success === true) {
-      await votUpd(ctx);
-      ToastSender.Success("Heareth heareth, let there truth be told!");
-      editor.delete();
-      props.onchain(ctx);
-    } else if (ctx.receipt.rejected === true) {
-      ToastSender.Info("No biggie darling, we'll take it back.");
-      await votDel(ctx);
-      props.error(ctx);
+    // Note that the receipt must be fetched from scratch since it only recently
+    // got updated in the editor store. If we were to use the old editor message
+    // instance, then we would get a stale copy that does not containn the
+    // transaction receipt.
+    if (EditorStore.getState().receipt.success === true) {
+      {
+        await UpdateVote();
+      }
+
+      if (edi.kind === "stake") {
+        ToastSender.Success("Certified, you staked the shit out of that claim!");
+      }
+      if (edi.kind === "truth") {
+        ToastSender.Success("Heareth heareth, let there truth be told!");
+      }
+
+      {
+        edi.delete();
+        props.onchain();
+      }
+    } else if (EditorStore.getState().receipt.rejected === true) {
+      {
+        await DeleteVote();
+      }
+
+      {
+        ToastSender.Info("No biggie darling, we'll take it back.");
+      }
+
+      {
+        props.error();
+      }
     } else {
-      ToastSender.Error("Ohh, nope, that was not good enough!");
-      props.error(ctx);
+      {
+        ToastSender.Error("Ohh, nope, that was not good enough!");
+      }
+
+      {
+        props.error();
+      }
     }
   } catch (err) {
-    props.error(ctx);
+    console.error(err);
+    ToastSender.Error(ErrorMessage(err));
+    props.error();
   }
 };
-
-const errMsg = (err: any): string => {
-  if (err instanceof Error) {
-    if (err.message.includes(".")) {
-      return err.message.split(".")[0] + ".";
-    }
-
-    return err.message;
-  }
-
-  return String(err);
-};
-
-const conCre = async (): Promise<TruthContext> => {
-  const txn = [
-    UpdateResolve.Encode(ctx),
-  ];
-
-  try {
-    ctx.receipt = await wal.object.sendTransaction(txn, ctx.before, ctx.after);
-    return ctx;
-  } catch (err) {
-    console.error(err);
-    ToastSender.Error(errMsg(err));
-    return Promise.reject(err);
-  }
-};
-
-const txnSim = async () => {
-  try {
-    await UpdateResolve.Simulate(ctx);
-  } catch (err) {
-    console.error(err);
-    ToastSender.Error(errMsg(err));
-    return Promise.reject(err);
-  }
-};
-
-const votCre = async (): Promise<TruthContext> => {
-  const req: VoteCreateRequest = {
-    claim: ctx.claim.resolve,
-    hash: "",
-    kind: "truth",
-    lifecycle: "onchain",
-    meta: "",
-    option: String(ctx.option),
-    value: "1",
-  };
-
-  try {
-    const [res] = await VoteCreate(ctx.auth, [req]);
-    ctx.vote = res;
-    return ctx;
-  } catch (err) {
-    console.error(err);
-    ToastSender.Error(errMsg(err));
-    return Promise.reject(err);
-  }
-}
-
-const votDel = async () => {
-  const req: VoteDeleteRequest = {
-    // intern
-    id: ctx.vote.id,
-  };
-
-  try {
-    const [res] = await VoteDelete(ctx.auth, [req]);
-  } catch (err) {
-    console.error(err);
-    ToastSender.Error(errMsg(err));
-    return Promise.reject(err);
-  }
-}
-
-const votUpd = async () => {
-  const req: VoteUpdateRequest = {
-    // intern
-    id: ctx.vote.id,
-    // public
-    hash: ctx.receipt.hash,
-    meta: "",
-  };
-
-  try {
-    const [res] = await VoteUpdate(ctx.auth, [req]);
-  } catch (err) {
-    console.error(err);
-    ToastSender.Error(errMsg(err));
-    return Promise.reject(err);
-  }
-}

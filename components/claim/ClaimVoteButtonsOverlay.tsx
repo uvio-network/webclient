@@ -8,6 +8,7 @@ import { EditorStore } from "@/modules/editor/EditorStore";
 import { OverlayInfoCard } from "@/components/card/OverlayInfoCard";
 import { QueryStore } from "@/modules/query/QueryStore";
 import { SpinnerIcon } from "@/components/icon/SpinnerIcon";
+import { SubmitPost } from "@/modules/editor/SubmitPost";
 import { SubmitVote } from "@/modules/editor/SubmitVote";
 import { TokenStore } from "@/modules/token/TokenStore";
 import { ToTitle } from "@/modules/string/ToTitle";
@@ -26,29 +27,47 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
     overlay: state.overlay,
   })));
 
-  const editor = EditorStore.getState();
-
   const isDispute = props.claim.lifecycle() === "dispute" ? true : false;
+  const isPending = props.claim.pending();
+  const isPropose = props.claim.lifecycle() === "propose" ? true : false;
   const isResolve = props.claim.lifecycle() === "resolve" ? true : false;
 
   React.useEffect(() => {
     if (overlay) {
-      if (isResolve) {
-        EditorStore.getState().updateKind("truth");
-        editor.updatePropose(props.claim.parent()!)
-        editor.updateResolve(props.claim)
-      } else if (isDispute) {
-        EditorStore.getState().updateKind("stake");
-        editor.updatePropose(props.claim)
-        editor.updateResolve(props.claim.parent()!)
+      if (isPending) {
+        // Note that the pending claim's stake value is managed in the
+        // ClaimVoteValue component.
+        {
+          EditorStore.getState().updateDay(props.claim.expiry().date());
+          EditorStore.getState().updateKind("claim");
+          EditorStore.getState().updateLabels(props.claim.getPost().labels);
+          EditorStore.getState().updateMarkdown(props.claim.getPost().text);
+          EditorStore.getState().updateMonth(props.claim.expiry().month() + 1);
+          EditorStore.getState().updateOption(true);
+          EditorStore.getState().updatePending(true);
+          EditorStore.getState().updatePost(props.claim.getPost());
+          EditorStore.getState().updatePropose(props.claim);
+          EditorStore.getState().updateVote(props.claim.pendingVote());
+          EditorStore.getState().updateYear(props.claim.expiry().year());
+        }
       } else {
-        EditorStore.getState().updateKind("stake");
-        editor.updatePropose(props.claim)
+        if (isResolve) {
+          EditorStore.getState().updateKind("truth");
+          EditorStore.getState().updatePropose(props.claim.parent()!)
+          EditorStore.getState().updateResolve(props.claim)
+        } else if (isDispute) {
+          EditorStore.getState().updateKind("stake");
+          EditorStore.getState().updatePropose(props.claim)
+          EditorStore.getState().updateResolve(props.claim.parent()!)
+        } else if (isPropose) {
+          EditorStore.getState().updateKind("stake");
+          EditorStore.getState().updatePropose(props.claim)
+        }
       }
     } else {
-      editor.delete();
+      EditorStore.getState().delete();
     }
-  }, [props.claim, overlay]);
+  }, [props.claim, overlay, isDispute, isPending, isPropose, isResolve]);
 
   if (!overlay) {
     return <></>;
@@ -70,35 +89,64 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
             disabled={disabled}
             type="button"
             onClick={() => {
-              SubmitVote({
-                after: () => {
-                  setProcessing("Confirming Onchain");
-                },
-                before: () => {
-                  //
-                },
-                valid: () => {
-                  setDisabled(true);
-                  setProcessing("Signing Transaction");
-                },
-                error: () => {
-                  setDisabled(false);
-                  setProcessing("");
-                },
-                offchain: () => {
-                  //
-                },
-                onchain: () => {
-                  setDisabled(false);
-                  setProcessing("");
-                  EditorStore.getState().updateOverlay(false);
-                  QueryStore.getState().claim.refresh();
+              if (isPending) {
+                SubmitPost({
+                  after: () => {
+                    setProcessing("Confirming Onchain");
+                  },
+                  before: () => {
+                    //
+                  },
+                  valid: () => {
+                    setDisabled(true);
+                    setProcessing("Signing Transaction");
+                  },
+                  error: () => {
+                    setDisabled(false);
+                    setProcessing("");
+                  },
+                  offchain: () => {
+                    //
+                  },
+                  onchain: () => {
+                    setDisabled(false);
+                    setProcessing("");
 
-                  if (!isResolve) {
+                    QueryStore.getState().claim.refresh();
                     TokenStore.getState().updateBalance();
-                  }
-                },
-              });
+                  },
+                });
+              } else {
+                SubmitVote({
+                  after: () => {
+                    setProcessing("Confirming Onchain");
+                  },
+                  before: () => {
+                    //
+                  },
+                  valid: () => {
+                    setDisabled(true);
+                    setProcessing("Signing Transaction");
+                  },
+                  error: () => {
+                    setDisabled(false);
+                    setProcessing("");
+                  },
+                  offchain: () => {
+                    //
+                  },
+                  onchain: () => {
+                    setDisabled(false);
+                    setProcessing("");
+                    EditorStore.getState().updateOverlay(false);
+                    QueryStore.getState().claim.refresh();
+
+                    if (!isResolve) {
+                      TokenStore.getState().updateBalance();
+                    }
+                  },
+                });
+              }
             }}
           >
             <>

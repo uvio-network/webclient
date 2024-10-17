@@ -1,32 +1,47 @@
+import { EditorStore } from "@/modules/editor/EditorStore";
 import { encodeFunctionData } from "viem";
 import { EncodeFunctionDataParameters } from "viem";
 import { Transaction } from "@biconomy/account";
-import { TruthContext } from "@/modules/context/TruthContext";
+import { WalletStore } from "@/modules/wallet/WalletStore";
 
-export const Encode = (ctx: TruthContext): Transaction => {
+export const Encode = (): Transaction => {
+  const edi = EditorStore.getState();
+
   return {
-    to: ctx.claims.address,
-    data: encodeFunctionData(newPar(ctx)),
+    to: edi.claims.address,
+    data: encodeFunctionData(newPar()),
   };
 }
 
-export const Simulate = async (ctx: TruthContext) => {
-  await ctx.public.simulateContract({
-    ...newPar(ctx),
-    address: ctx.claims.address,
-    account: ctx.from,
+export const Simulate = async () => {
+  const edi = EditorStore.getState();
+  const wal = WalletStore.getState();
+
+  const cla = edi.claims.address;
+  const frm = wal.wallet.object.address();
+
+  await wal.wallet.object.public().simulateContract({
+    ...newPar(),
+    address: cla,
+    account: frm,
   });
 }
 
-const newPar = (ctx: TruthContext): Required<EncodeFunctionDataParameters> => {
+const newPar = (): Required<EncodeFunctionDataParameters> => {
+  const edi = EditorStore.getState();
+
+  const cla = edi.claims.abi;
+  const opt = edi.getOption();
+  const pod = edi.post.id;
+
   return {
     abi: [
-      ...ctx.claims.abi, // Claims ABI for contract write
+      ...cla, // Claims ABI for contract write
     ],
     functionName: "updateResolve",
     args: [
-      ctx.claim.propose, // propose, ID of the propose
-      ctx.option,        // vote, verify the truth with true or false
+      pod, // claim, ID of the propose or dispute
+      opt, // vote, verify the truth with true or false
     ],
   };
 };

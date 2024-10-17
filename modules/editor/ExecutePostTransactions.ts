@@ -5,7 +5,7 @@ import * as TokenApprove from "@/modules/transaction/token/write/TokenApprove";
 import { EditorStore } from "@/modules/editor/EditorStore";
 import { WalletStore } from "@/modules/wallet/WalletStore";
 
-export const CreateTransactions = async (bef: () => void, aft: () => void) => {
+export const ExecutePostTransactions = async (bef: () => void, aft: () => void) => {
   const edi = EditorStore.getState();
   const wal = WalletStore.getState();
 

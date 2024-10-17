@@ -9,6 +9,14 @@ interface Props {
 }
 
 export const ClaimVoteValue = (props: Props) => {
+  const def = defVal(props.claim);
+
+  React.useEffect(() => {
+    if (def !== "") {
+      EditorStore.getState().updateStake(def);
+    }
+  }, [def]);
+
   // The value field here has only one purpose, allowing the user to cancel the
   // verification using the ESC key.
   if (props.claim.lifecycle() === "resolve") {
@@ -49,7 +57,7 @@ export const ClaimVoteValue = (props: Props) => {
         }
       }}
       placeholder={plcHld(props.claim)}
-      defaultValue={defVal(props.claim)}
+      defaultValue={def}
       autoFocus={true}
       type="text"
     />
@@ -83,11 +91,5 @@ const plcHld = (cla: ClaimObject): string => {
     return `${min} ${cla.token()}`;
   }
 
-  const vot = cla.getVote();
-
-  if (vot.length !== 0) {
-    return `${vot[0].value} ${cla.token()}`;
-  }
-
-  return "";
+  return defVal(cla);
 };

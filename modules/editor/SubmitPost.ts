@@ -2,20 +2,21 @@ import * as ToastSender from "@/components/toast/ToastSender";
 
 import { ChainStore } from "@/modules/chain/ChainStore";
 import { CreatePost } from "@/modules/editor/CreatePost";
-import { CreateTransactions } from "@/modules/editor/CreateTransactions";
 import { CreateVote } from "@/modules/editor/CreateVote";
 import { ClaimsWithSymbol } from "@/modules/chain/ChainConfig";
 import { ContractWithAddress } from "@/modules/chain/ChainConfig";
 import { DeleteVote } from "@/modules/editor/DeleteVote";
 import { DeletePost } from "@/modules/editor/DeletePost";
 import { EditorStore } from "@/modules/editor/EditorStore";
+import { ErrorMessage } from "@/modules/error/ErrorMessage";
+import { ExecutePostTransactions } from "@/modules/editor/ExecutePostTransactions";
 import { UpdatePost } from "@/modules/editor/UpdatePost";
 import { UpdateVote } from "@/modules/editor/UpdateVote";
 import { ValidateExpiry } from "@/modules/editor/ValidateExpiry";
 import { ValidateLabels } from "@/modules/editor/ValidateLabels";
 import { ValidateMarkdown } from "@/modules/editor/ValidateMarkdown";
+import { ValidatePostTransactions } from "@/modules/editor/ValidatePostTransactions";
 import { ValidateStake } from "@/modules/editor/ValidateStake";
-import { ValidateTransactions } from "@/modules/editor/ValidateTransactions";
 
 interface Props {
   after: () => void;
@@ -49,7 +50,9 @@ export const SubmitPost = async (props: Props) => {
 
   {
     if (edi.kind === "claim") {
-      if (edi.resolve !== undefined) {
+      if (edi.propose !== undefined) {
+        edi.updateClaims(ContractWithAddress(edi.propose.contract(), chn));
+      } else if (edi.resolve !== undefined) {
         edi.updateClaims(ContractWithAddress(edi.resolve.contract(), chn));
       } else {
         edi.updateClaims(ClaimsWithSymbol(edi.getSymbol(), chn));
@@ -67,7 +70,7 @@ export const SubmitPost = async (props: Props) => {
     // abilities. If we cannot even simulate transactions, we have no business
     // creating any resources on behalf of the user.
     {
-      await ValidateTransactions();
+      await ValidatePostTransactions();
     }
 
     {
@@ -88,7 +91,7 @@ export const SubmitPost = async (props: Props) => {
     }
 
     {
-      await CreateTransactions(props.before, props.after);
+      await ExecutePostTransactions(props.before, props.after);
     }
 
     // Note that the receipt must be fetched from scratch since it only recently
@@ -142,6 +145,8 @@ export const SubmitPost = async (props: Props) => {
       }
     }
   } catch (err) {
+    console.error(err);
+    ToastSender.Error(ErrorMessage(err));
     props.error();
   }
 };

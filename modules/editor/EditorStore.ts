@@ -13,15 +13,16 @@ import { VoteCreateResponse } from "@/modules/api/vote/create/Response";
 
 export interface EditorMessage {
   claims: ContractConfig;
-  day: string;
+  day: number | string;
   from: Address;
   kind: string;
   labels: string;
   markdown: string;
-  month: string;
+  month: number | string;
   option: boolean;
   overlay: boolean;
   parent: ClaimObject;
+  pending: boolean;
   post: PostCreateResponse;
   propose: ClaimObject;
   receipt: Receipt;
@@ -29,11 +30,7 @@ export interface EditorMessage {
   resolve: ClaimObject;
   stake: string;
   vote: VoteCreateResponse;
-  year: string;
-
-  // TODO
-  claim: string;
-  pending: ClaimObject | undefined;
+  year: number | string;
 };
 
 export const EditorStore = create(
@@ -77,7 +74,7 @@ export const EditorStore = create(
           };
         });
       },
-      updateDay: (d: string) => {
+      updateDay: (d: number | string) => {
         set((state: EditorMessage) => {
           return {
             ...state,
@@ -109,7 +106,7 @@ export const EditorStore = create(
           };
         });
       },
-      updateMonth: (m: string) => {
+      updateMonth: (m: number | string) => {
         set((state: EditorMessage) => {
           return {
             ...state,
@@ -138,6 +135,14 @@ export const EditorStore = create(
           return {
             ...state,
             parent: p,
+          };
+        });
+      },
+      updatePending: (p: boolean) => {
+        set((state: EditorMessage) => {
+          return {
+            ...state,
+            pending: p,
           };
         });
       },
@@ -197,7 +202,7 @@ export const EditorStore = create(
           };
         });
       },
-      updateYear: (y: string) => {
+      updateYear: (y: number | string) => {
         set((state: EditorMessage) => {
           return {
             ...state,
