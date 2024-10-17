@@ -23,10 +23,10 @@ export const ValidateExpiry = (): boolean => {
     }
   }
 
-  // If the propose is empty, then that means we are creating a propose in the
-  // propose editor. If the propose is not empty, then that means we are
-  // creating a dispute in the dispute editor.
-  if (edi.propose === undefined) {
+  // If the propose is empty, or pending, then that means we are creating a
+  // propose in the propose editor. If a proper propose exists on the other
+  // hand, then that means we are creating a dispute in the dispute editor.
+  if (edi.propose === undefined || edi.propose.pending()) {
     if (moment.unix(uni).isBefore(moment().utc().add(1, "day"))) {
       return ToastSender.Error("The selected expiry must be at least 1 day in the future.");
     }

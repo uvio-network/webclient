@@ -63,6 +63,10 @@ export class VoteObject {
   }
 
   value(): number {
+    if (this.vote.value === "") {
+      return 0;
+    }
+
     return parseFloat(this.vote.value);
   }
 }

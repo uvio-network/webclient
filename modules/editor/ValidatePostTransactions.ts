@@ -13,7 +13,9 @@ export const ValidatePostTransactions = async () => {
   // We need to fake the claim ID temporarily in order to make the transaction
   // simulation work. Below we remove the fake again once we know our
   // transactions are validated.
-  if (edi.post === undefined || edi.post.id === "") {
+  const exi = edi.post !== undefined && edi.post.id !== "" ? true : false;
+
+  if (!exi) {
     edi.updatePost(EmptyPostCreateResponse(ranNum(32).toString()));
   }
 
@@ -33,8 +35,9 @@ export const ValidatePostTransactions = async () => {
     await CreatePropose.Simulate();
   }
 
-  // Reset the fake claim ID.
-  {
+  // Reset the fake claim ID, but only if it was indeed the fake ID that we set
+  // above.
+  if (!exi) {
     edi.updatePost(EmptyPostCreateResponse());
   }
 };

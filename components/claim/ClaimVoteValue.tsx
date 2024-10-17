@@ -12,6 +12,8 @@ export const ClaimVoteValue = (props: Props) => {
   const def = defVal(props.claim);
 
   React.useEffect(() => {
+    // Ensure we set the stake property according to any pending staking value
+    // on page load, if any.
     if (def !== "") {
       EditorStore.getState().updateStake(def);
     }
@@ -65,11 +67,11 @@ export const ClaimVoteValue = (props: Props) => {
 };
 
 const defVal = (cla: ClaimObject): string => {
-  if (cla.pending()) {
-    const vot = cla.getVote();
+  const vot = cla.latestVote();
 
-    if (vot.length !== 0) {
-      return `${vot[0].value} ${cla.token()}`;
+  if (cla.pending() || vot.pending()) {
+    if (vot.value() > 0) {
+      return `${vot.value()} ${cla.token()}`;
     }
   }
 
@@ -93,5 +95,5 @@ const plcHld = (cla: ClaimObject): string => {
     return `${min} ${cla.token()}`;
   }
 
-  return defVal(cla);
+  return "10 UVX";
 };

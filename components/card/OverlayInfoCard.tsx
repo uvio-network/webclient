@@ -24,7 +24,7 @@ export const OverlayInfoCard = (props: Props) => {
 
   return (
     <InfoCard
-      close={true}
+      close={(!pendingClaim && !pendingVote)}
       color={pendingClaim || pendingVote ? "red" : "blue"}
       text={
         <>
@@ -35,10 +35,10 @@ export const OverlayInfoCard = (props: Props) => {
                   Your claim could <strong>not</strong> be confirmed onchain.
                   Please try to submit your
 
-                  {isDispute && (<> dispute </>)}
-                  {isPropose && (<> proposal </>)}
+                  {isDispute && " dispute "}
+                  {isPropose && " proposal "}
 
-                  once more.
+                  {props.claim.summary().post.minimum === 0 ? " once more using your desired amount of stake." : " once more."}
                 </>
               )}
 
@@ -46,8 +46,8 @@ export const OverlayInfoCard = (props: Props) => {
                 <>
                   Your
 
-                  {isStake && (<> stake </>)}
-                  {isTruth && (<> vote </>)}
+                  {isStake && " stake "}
+                  {isTruth && " vote "}
 
                   could <strong>not</strong> be confirmed onchain.
                   Please try to submit it once more.
@@ -58,7 +58,7 @@ export const OverlayInfoCard = (props: Props) => {
             <>
               {isResolve ? (
                 <>
-                  You are verifing that this claim was in fact <strong>{ToTitle(String(editor.option))}</strong>.
+                  You are verifing that this claim was in fact <strong>{editor.option ? "True" : "False"}</strong>.
                   Your vote cannot be undone.
                 </>
               ) : (

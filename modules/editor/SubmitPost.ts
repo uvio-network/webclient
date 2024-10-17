@@ -121,9 +121,15 @@ export const SubmitPost = async (props: Props) => {
         props.onchain();
       }
     } else if (EditorStore.getState().receipt.rejected === true) {
-      // The vote object must be deleted first, because it requires the post
-      // object to exist in the backend in order to be deleted.
-      {
+      // If the user rejects the claim creation we can revert the system state
+      // offchain. The vote object must then be deleted first, because it
+      // requires the post object to exist in the backend in order to be
+      // deleted.
+      //
+      // If the user rejects the confirmation of a pending claim, then we should
+      // not delete those pending resources, because this pending state is
+      // effectively what the user tries to confirm after all.
+      if (!edi.pending) {
         await DeleteVote();
         await DeletePost();
       }
