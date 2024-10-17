@@ -42,7 +42,7 @@ export const OverlayInfoCard = (props: Props) => {
                 </>
               )}
 
-              {pendingVote && (
+              {pendingVote && !pendingClaim && (
                 <>
                   Your
 

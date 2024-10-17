@@ -46,10 +46,11 @@ export const ClaimVoteValue = (props: Props) => {
     <input
       className={TrimWhitespace(`
         w-full h-full p-2 bg-transparent
-        border-b-2 border-sky-400 outline-none
+        border-b-2 border-sky-400 outline-none disabled:cursor-not-allowed
         placeholder:text-gray-400 placeholder:dark:text-gray-500
         text-2xl sm:text-4xl font-light text-right caret-sky-400
       `)}
+      disabled={def !== ""}
       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
         EditorStore.getState().updateStake(ensTok(e.currentTarget.value, props.claim.token()));
       }}
@@ -70,6 +71,9 @@ const defVal = (cla: ClaimObject): string => {
   const vot = cla.latestVote();
 
   if (cla.pending() || vot.pending()) {
+    if (cla.summary().post.minimum > 0) {
+      return `${cla.summary().post.minimum} ${cla.token()}`;
+    }
     if (vot.value() > 0) {
       return `${vot.value()} ${cla.token()}`;
     }

@@ -41,16 +41,22 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
       // Note that the pending claim's stake value is managed in the
       // ClaimVoteValue component.
 
-      EditorStore.getState().updateDay(FormatDay(props.claim.expiry().date()));
-      EditorStore.getState().updateKind("claim");
-      EditorStore.getState().updateLabels(props.claim.getPost().labels);
-      EditorStore.getState().updateMarkdown(props.claim.getPost().text);
-      EditorStore.getState().updateMonth(FormatMonth(props.claim.expiry().month()));
-      EditorStore.getState().updateOption(true);
-      EditorStore.getState().updatePending(true);
-      EditorStore.getState().updatePost(props.claim.getPost());
-      EditorStore.getState().updatePropose(props.claim);
-      EditorStore.getState().updateYear(props.claim.expiry().year());
+      {
+        EditorStore.getState().updateDay(FormatDay(props.claim.expiry().date()));
+        EditorStore.getState().updateKind("claim");
+        EditorStore.getState().updateLabels(props.claim.getPost().labels);
+        EditorStore.getState().updateMarkdown(props.claim.getPost().text);
+        EditorStore.getState().updateMonth(FormatMonth(props.claim.expiry().month()));
+        EditorStore.getState().updateOption(true);
+        EditorStore.getState().updatePending(true);
+        EditorStore.getState().updatePost(props.claim.getPost());
+        EditorStore.getState().updatePropose(props.claim);
+        EditorStore.getState().updateYear(props.claim.expiry().year());
+      }
+
+      if (pendingVote) {
+        EditorStore.getState().updateVote(props.claim.latestVote().getVote());
+      }
     } else {
       // Note that we must prioritize the confirmation of a pending claim over
       // everything else. So only if the given claim is not pending, only then
@@ -141,9 +147,7 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
                     setProcessing("Signing Transaction");
                   },
                 });
-              }
-
-              if (overlay || pendingVote) {
+              } else if (overlay || pendingVote) {
                 SubmitVote({
                   after: () => {
                     setProcessing("Confirming Onchain");

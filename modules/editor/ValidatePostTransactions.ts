@@ -29,10 +29,12 @@ export const ValidatePostTransactions = async () => {
     );
   }
 
-  if (edi.resolve !== undefined) {
-    await CreateDispute.Simulate();
-  } else {
+  if (edi.isPropose()) {
     await CreatePropose.Simulate();
+  }
+
+  if (edi.isDispute()) {
+    await CreateDispute.Simulate();
   }
 
   // Reset the fake claim ID, but only if it was indeed the fake ID that we set

@@ -98,6 +98,12 @@ export const EditorStore = create(
           };
         });
       },
+      isDispute: (): boolean => {
+        return exiCla(get().propose) && exiCla(get().resolve);
+      },
+      isPropose: (): boolean => {
+        return (!exiCla(get().propose) && !exiCla(get().resolve)) || (exiCla(get().propose) && !exiCla(get().resolve));
+      },
       updateDay: (d: number | string) => {
         set((state: EditorMessage) => {
           return {
@@ -237,6 +243,14 @@ export const EditorStore = create(
     })
   )
 );
+
+const exiCla = (res: ClaimObject): boolean => {
+  if (res !== undefined && res.id() !== "") {
+    return true
+  }
+
+  return false;
+};
 
 const getAmo = (stk: string): number => {
   const spl = stk.split(" ");

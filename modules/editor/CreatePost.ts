@@ -9,7 +9,6 @@ export const CreatePost = async () => {
   const edi = EditorStore.getState();
   const use = UserStore.getState();
 
-  console.log("pos", edi.post)
   // If a pending claim exists, then we do not have to create one.
   if (edi.post !== undefined && edi.post.id !== "") {
     console.log("Editor.CreatePost.return", edi.post.id);
@@ -24,8 +23,8 @@ export const CreatePost = async () => {
     req.expiry = edi.getExpiry().toString();
     req.kind = "claim";
     req.labels = edi.labels;
-    req.lifecycle = edi.resolve !== undefined ? "dispute" : "propose";
-    req.parent = edi.resolve !== undefined ? edi.resolve.id() : "";
+    req.lifecycle = edi.isDispute() ? "dispute" : "propose";
+    req.parent = edi.isDispute() ? edi.resolve.id() : "";
     req.token = edi.getSymbol();
   }
 

@@ -17,10 +17,12 @@ export const ExecutePostTransactions = async (bef: () => void, aft: () => void) 
     ),
   ];
 
-  if (edi.resolve !== undefined) {
-    txn.push(CreateDispute.Encode());
-  } else {
+  if (edi.isPropose()) {
     txn.push(CreatePropose.Encode());
+  }
+
+  if (edi.isDispute()) {
+    txn.push(CreateDispute.Encode());
   }
 
   const res = await wal.object.sendTransaction(txn, bef, aft);

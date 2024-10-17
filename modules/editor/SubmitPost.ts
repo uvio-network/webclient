@@ -106,10 +106,12 @@ export const SubmitPost = async (props: Props) => {
           await UpdateVote();
         }
 
-        if (edi.resolve !== undefined) {
-          ToastSender.Success("That's a dispute for the history books!");
-        } else {
+        if (edi.isPropose()) {
           ToastSender.Success("Hooray, thy claim proposed milady!");
+        }
+
+        if (edi.isDispute()) {
+          ToastSender.Success("That's a dispute for the history books!");
         }
       }
 
