@@ -3,7 +3,6 @@ import * as React from "react";
 import { ClaimContainer } from "@/components/claim/ClaimContainer";
 import { ClaimObject } from "@/modules/claim/ClaimObject";
 import { ClaimStore } from "@/modules/claim/ClaimStore";
-import { HorizontalSeparator } from "@/components/layout/HorizontalSeparator";
 import { NewClaimList } from "@/modules/claim/ClaimList";
 import { LoadingStore } from "@/components/loading/LoadingStore";
 import { PostSearchRequest } from "@/modules/api/post/search/Request";
@@ -11,6 +10,7 @@ import { QueryStore } from "@/modules/query/QueryStore";
 import { useQuery } from "@tanstack/react-query";
 import { UserStore } from "@/modules/user/UserStore";
 import { useShallow } from "zustand/react/shallow";
+import { VerticalSeparator } from "@/components/layout/VerticalSeparator";
 
 interface Props {
   filter?: (cla: ClaimObject) => boolean;
@@ -95,7 +95,7 @@ export const ClaimList = (props: Props) => {
           */}
           {i < list.length - 1 && (
             <div className="w-full h-12 mb-8">
-              <HorizontalSeparator />
+              <VerticalSeparator />
             </div>
           )}
         </div>

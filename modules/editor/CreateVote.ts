@@ -9,7 +9,8 @@ export const CreateVote = async () => {
 
   // If a pending vote for a pending claim exists already, then we do not have
   // to create one.
-  if (edi.vote.id !== "") {
+  if (edi.vote !== undefined && edi.vote.id !== "") {
+    console.log("Editor.CreateVote.return", edi.vote.id);
     return;
   }
 
@@ -30,7 +31,7 @@ export const CreateVote = async () => {
     req.hash = "";
     req.lifecycle = "onchain";
     req.meta = "";
-    req.option = String(edi.getOption());
+    req.option = String(edi.option);
   }
 
   const [res] = await VoteCreate(use.token, [req]);

@@ -12,13 +12,13 @@ export const FundingInfoCard = () => {
   })));
 
   React.useEffect(() => {
-    if (stake !== "") {
+    if (stake !== undefined && stake !== "") {
       const amo = EditorStore.getState().getAmount();
       const sym = EditorStore.getState().getSymbol();
+      const tok = EditorStore.getState().getToken();
 
-      if (amo.num !== 0 && sym !== "") {
-        const pre = EditorStore.getState().getToken().precision;
-        setFunding(`${amo.num.toFixed(pre)} ${sym}`);
+      if (amo.num !== 0 && sym !== "" && tok !== undefined) {
+        setFunding(`${amo.num.toFixed(tok.precision)} ${sym}`);
       } else {
         setFunding("your funds");
       }
@@ -31,7 +31,7 @@ export const FundingInfoCard = () => {
       color="default"
       text={
         <>
-          You are about to lock up ${funding} until this new market resolves.
+          You are about to lock up {funding} until this new market resolves.
           There is no guarantee of repayment.
         </>
       }

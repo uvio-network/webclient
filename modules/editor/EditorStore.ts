@@ -8,6 +8,7 @@ import { parseUnits } from "viem";
 import { PostCreateResponse } from "@/modules/api/post/create/Response";
 import { Receipt } from "@/modules/wallet/WalletInterface";
 import { TokenConfig } from "@/modules/token/TokenConfig";
+import { TrimWhitespace } from "@/modules/string/TrimWhitespace";
 import { Unix } from "@/modules/time/Time";
 import { VoteCreateResponse } from "@/modules/api/vote/create/Response";
 
@@ -45,10 +46,11 @@ export const EditorStore = create(
       getAmount: (): { num: number; big: bigint; } => {
         const stk = getStk(get().stake, get().propose);
         const amo = getAmo(stk);
+        const tok = tokCon(stk);
 
         return {
           num: amo,
-          big: parseUnits(String(amo), tokCon(stk).decimals),
+          big: parseUnits(String(amo), tok ? tok.decimals : 2),
         };
       },
       getExpiry: (): number => {
@@ -56,9 +58,6 @@ export const EditorStore = create(
       },
       getLabels: (): string => {
         return getLab(get().labels, get().propose);
-      },
-      getOption: (): boolean => {
-        return getOpt(get().option, get().propose);
       },
       getSymbol: (): string => {
         return tokStr(getStk(get().stake, get().propose));
@@ -221,18 +220,20 @@ const getAmo = (stk: string): number => {
     return 0;
   }
 
-  const str = spl[0];
+  const str = TrimWhitespace(spl[0]);
 
   if (str === "") {
     return 0;
   }
 
-  return parseFloat(str);
+  const num = parseFloat(str);
+
+  return isNaN(num) ? 0 : num;
 };
 
 const getLab = (lab: string, pro: ClaimObject): string => {
   if (lab !== "") {
-    return lab;
+    return TrimWhitespace(lab);
   }
 
   if (pro !== undefined) {
@@ -242,17 +243,9 @@ const getLab = (lab: string, pro: ClaimObject): string => {
   return "";
 };
 
-const getOpt = (opt: boolean, pro: ClaimObject): boolean => {
-  if (pro !== undefined) {
-    return !pro.side();
-  }
-
-  return opt;
-};
-
 const getStk = (stk: string, pro: ClaimObject): string => {
-  if (stk !== "") {
-    return stk;
+  if (stk !== undefined && stk !== "") {
+    return TrimWhitespace(stk);
   }
 
   if (pro !== undefined) {
@@ -273,5 +266,5 @@ const tokStr = (stk: string): string => {
     return "";
   }
 
-  return spl[1];
+  return TrimWhitespace(spl[1]);
 };

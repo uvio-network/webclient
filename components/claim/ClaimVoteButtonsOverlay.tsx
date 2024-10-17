@@ -63,6 +63,11 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
           EditorStore.getState().updateKind("stake");
           EditorStore.getState().updatePropose(props.claim)
         }
+
+        {
+          EditorStore.getState().updatePost(props.claim.getPost());
+          EditorStore.getState().updateOption(option);
+        }
       }
     } else {
       EditorStore.getState().delete();
@@ -77,10 +82,12 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
     <div className="absolute bottom-12 w-full background">
       <OverlayInfoCard claim={props.claim} />
 
-      <div className="flex h-14">
-        <div className="w-full">
+      <div className="flex gap-x-2 h-14">
+        <div className="flex-1 w-full">
           <ClaimVoteValue claim={props.claim} />
+        </div>
 
+        <div className="flex-1 w-full">
           <button
             className={`
               flex px-2 py-1 sm:py-4 w-full h-full rounded items-center justify-center
@@ -97,10 +104,6 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
                   before: () => {
                     //
                   },
-                  valid: () => {
-                    setDisabled(true);
-                    setProcessing("Signing Transaction");
-                  },
                   error: () => {
                     setDisabled(false);
                     setProcessing("");
@@ -115,6 +118,14 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
                     QueryStore.getState().claim.refresh();
                     TokenStore.getState().updateBalance();
                   },
+                  rejected: () => {
+                    setDisabled(false);
+                    setProcessing("");
+                  },
+                  valid: () => {
+                    setDisabled(true);
+                    setProcessing("Signing Transaction");
+                  },
                 });
               } else {
                 SubmitVote({
@@ -123,10 +134,6 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
                   },
                   before: () => {
                     //
-                  },
-                  valid: () => {
-                    setDisabled(true);
-                    setProcessing("Signing Transaction");
                   },
                   error: () => {
                     setDisabled(false);
@@ -138,12 +145,21 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
                   onchain: () => {
                     setDisabled(false);
                     setProcessing("");
-                    EditorStore.getState().updateOverlay(false);
+
+                    EditorStore.getState().delete();
                     QueryStore.getState().claim.refresh();
 
                     if (!isResolve) {
                       TokenStore.getState().updateBalance();
                     }
+                  },
+                  rejected: () => {
+                    setDisabled(false);
+                    setProcessing("");
+                  },
+                  valid: () => {
+                    setDisabled(true);
+                    setProcessing("Signing Transaction");
                   },
                 });
               }

@@ -32,8 +32,15 @@ export const EditorForm = (props: Props) => {
     }
 
     if (props.Kind === "claim") {
-      EditorStore.getState().updateOption(true);
+      const res = EditorStore.getState().resolve;
+
+      if (res !== undefined) {
+        EditorStore.getState().updateOption(!res.side()); // invert for dispute
+      } else {
+        EditorStore.getState().updateOption(true); // always true for propose
+      }
     }
+
   }, [props.Kind]);
 
   return (
@@ -73,6 +80,36 @@ export const EditorForm = (props: Props) => {
             before: () => {
               //
             },
+            error: () => {
+              const edi = EditorStore.getState();
+
+              if (edi.post !== undefined && edi.post.id !== "") {
+                router.push(`/claim/${edi.post.id}`);
+              }
+
+              setDisabled(false);
+              setProcessing("");
+            },
+            offchain: () => {
+              //
+            },
+            onchain: () => {
+              const edi = EditorStore.getState();
+
+              if (edi.post !== undefined && edi.post.id !== "") {
+                router.push(`/claim/${edi.post.id}`);
+              }
+
+              setDisabled(false);
+              setProcessing("");
+
+              EditorStore.getState().delete();
+              TokenStore.getState().updateBalance();
+            },
+            rejected: () => {
+              setDisabled(false);
+              setProcessing("");
+            },
             valid: () => {
               setDisabled(true);
 
@@ -81,31 +118,6 @@ export const EditorForm = (props: Props) => {
               } else {
                 setProcessing("Posting Comment");
               }
-            },
-            error: () => {
-              setDisabled(false);
-              setProcessing("");
-
-              const pos = EditorStore.getState().post;
-
-              if (pos.id !== "") {
-                router.push(`/claim/${pos.id}`);
-              }
-            },
-            offchain: () => {
-              //
-            },
-            onchain: () => {
-              setDisabled(false);
-              setProcessing("");
-
-              const pos = EditorStore.getState().post;
-
-              if (pos.id !== "") {
-                router.push(`/claim/${pos.id}`);
-              }
-
-              TokenStore.getState().updateBalance();
             },
           });
         }}

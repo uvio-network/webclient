@@ -21,10 +21,11 @@ import { ValidateStake } from "@/modules/editor/ValidateStake";
 interface Props {
   after: () => void;
   before: () => void;
-  valid: () => void;
   error: () => void;
   offchain: () => void;
   onchain: () => void;
+  rejected: () => void;
+  valid: () => void;
 }
 
 export const SubmitPost = async (props: Props) => {
@@ -69,7 +70,7 @@ export const SubmitPost = async (props: Props) => {
     // create the required transactions and simulate them to the best of our
     // abilities. If we cannot even simulate transactions, we have no business
     // creating any resources on behalf of the user.
-    {
+    if (edi.kind === "claim") {
       await ValidatePostTransactions();
     }
 
@@ -90,7 +91,7 @@ export const SubmitPost = async (props: Props) => {
       props.offchain();
     }
 
-    {
+    if (edi.kind === "claim") {
       await ExecutePostTransactions(props.before, props.after);
     }
 
@@ -117,7 +118,6 @@ export const SubmitPost = async (props: Props) => {
       }
 
       {
-        edi.delete();
         props.onchain();
       }
     } else if (EditorStore.getState().receipt.rejected === true) {
@@ -133,7 +133,7 @@ export const SubmitPost = async (props: Props) => {
       }
 
       {
-        props.error();
+        props.rejected();
       }
     } else {
       {

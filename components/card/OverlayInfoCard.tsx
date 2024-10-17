@@ -21,19 +21,19 @@ export const OverlayInfoCard = (props: Props) => {
           {props.claim.pending() ? (
             <>
               Your claim could <strong>not</strong> be confirmed onchain.
-              Please try to finish your proposal once more. Learn more at&nbsp;
+              Please try to finish your proposal once more.
             </>
           ) : (
             <>
               {props.claim.lifecycle() === "resolve" ? (
                 <>
                   You are verifing that this claim was in fact <strong>{ToTitle(String(editor.option))}</strong>.
-                  Your vote cannot be undone. Learn more at&nbsp;
+                  Your vote cannot be undone.
                 </>
               ) : (
                 <>
                   You are staking to <strong>{editor.option ? "Agree" : "Disagree"}</strong> with this claim.
-                  There is no guarantee of repayment. Learn more at&nbsp;
+                  There is no guarantee of repayment.
                 </>
               )}
             </>

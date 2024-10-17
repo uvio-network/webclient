@@ -10,14 +10,10 @@ export const ValidatePostTransactions = async () => {
   const edi = EditorStore.getState();
   const wal = WalletStore.getState();
 
-  // We need to fake the claim ID if we are creating a claim from scratch,
-  // because the post resource for our claim object has not yet been created
-  // offchain. When we create the post object offchain, we will overwrite the
-  // claim ID with the real value. Note that we may simulate transactions for
-  // pending claims that we have to confirm onchain after some unknown failure.
-  // In such a case the ID of the post object will be known already and we do
-  // not have to overwrite it anymore.
-  if (edi.post.id === "") {
+  // We need to fake the claim ID temporarily in order to make the transaction
+  // simulation work. Below we remove the fake again once we know our
+  // transactions are validated.
+  if (edi.post === undefined || edi.post.id === "") {
     edi.updatePost(EmptyPostCreateResponse(ranNum(32).toString()));
   }
 
@@ -35,6 +31,11 @@ export const ValidatePostTransactions = async () => {
     await CreateDispute.Simulate();
   } else {
     await CreatePropose.Simulate();
+  }
+
+  // Reset the fake claim ID.
+  {
+    edi.updatePost(EmptyPostCreateResponse());
   }
 };
 

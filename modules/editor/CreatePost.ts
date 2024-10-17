@@ -10,7 +10,8 @@ export const CreatePost = async () => {
   const use = UserStore.getState();
 
   // If a pending claim exists, then we do not have to create one.
-  if (edi.post.id !== "") {
+  if (edi.post !== undefined && edi.post.id !== "") {
+    console.log("Editor.CreatePost.return", edi.post.id);
     return;
   }
 

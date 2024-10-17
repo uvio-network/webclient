@@ -14,10 +14,11 @@ import { ValidateVoteTransactions } from "@/modules/editor/ValidateVoteTransacti
 interface Props {
   after: () => void;
   before: () => void;
-  valid: () => void;
   error: () => void;
   offchain: () => void;
   onchain: () => void;
+  rejected: () => void;
+  valid: () => void;
 }
 
 export const SubmitVote = async (props: Props) => {
@@ -78,7 +79,6 @@ export const SubmitVote = async (props: Props) => {
       }
 
       {
-        edi.delete();
         props.onchain();
       }
     } else if (EditorStore.getState().receipt.rejected === true) {
@@ -91,7 +91,7 @@ export const SubmitVote = async (props: Props) => {
       }
 
       {
-        props.error();
+        props.rejected();
       }
     } else {
       {

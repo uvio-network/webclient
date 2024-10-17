@@ -77,7 +77,9 @@ const defVal = (cla: ClaimObject): string => {
 };
 
 const ensTok = (inp: string, tok: string): string => {
-  if (inp.endsWith(` ${tok}`)) {
+  const spl = TrimWhitespace(inp).split(" ");
+
+  if (!spl || spl.length >= 2) {
     return inp;
   }
 

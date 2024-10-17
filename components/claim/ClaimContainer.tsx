@@ -98,7 +98,7 @@ export const ClaimContainer = (props: Props) => {
             />
           )}
 
-          {isPending && isOwner && (
+          {(!isPending || (isPending && isOwner)) && (
             <ClaimVoteButtonsOverlay
               claim={props.claim}
             />

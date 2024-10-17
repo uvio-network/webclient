@@ -17,7 +17,7 @@ export const InfoCard = (props: Props) => {
   return (
     <div
       className={TrimWhitespace(`
-        relative flex mb-2 p-4 rounded
+        relative flex my-2 p-4 rounded
         ${props.color === "default" && "background-overlay"}
         ${props.color === "blue" && "bg-sky-200 dark:bg-sky-900"}
         ${props.color === "red" && "bg-rose-200 dark:bg-rose-900"}
