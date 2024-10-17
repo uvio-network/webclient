@@ -26,7 +26,7 @@ const itemClassName = `
 
 export const ClaimHeaderMenu = (props: Props) => {
   const { valid } = UserStore(useShallow((state) => ({
-    valid: state.user.valid,
+    valid: state.valid,
   })));
 
   const router = useRouter();

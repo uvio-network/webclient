@@ -18,9 +18,9 @@ export const Simulate = async () => {
   const wal = WalletStore.getState();
 
   const cla = edi.claims.address;
-  const frm = wal.wallet.object.address();
+  const frm = wal.object.address();
 
-  await wal.wallet.object.public().simulateContract({
+  await wal.object.public().simulateContract({
     ...newPar(),
     address: cla,
     account: frm,

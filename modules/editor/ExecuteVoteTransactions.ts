@@ -26,7 +26,7 @@ export const ExecuteVoteTransactions = async (bef: () => void, aft: () => void) 
     txn.push(UpdateResolve.Encode());
   }
 
-  const res = await wal.wallet.object.sendTransaction(txn, bef, aft);
+  const res = await wal.object.sendTransaction(txn, bef, aft);
 
   edi.updateReceipt(res);
 };

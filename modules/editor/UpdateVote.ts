@@ -5,7 +5,7 @@ import { VoteUpdateRequest } from "@/modules/api/vote/update/Request";
 
 export const UpdateVote = async () => {
   const edi = EditorStore.getState();
-  const use = UserStore.getState().user;
+  const use = UserStore.getState();
 
   const req: VoteUpdateRequest = {
     // intern

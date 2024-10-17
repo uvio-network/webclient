@@ -21,10 +21,10 @@ export const Simulate = async () => {
 
   const amo = edi.getAmount().big;
   const cla = edi.claims.address;
-  const frm = wal.wallet.object.address();
+  const frm = wal.object.address();
   const tok = edi.getToken().address;
 
-  await wal.wallet.object.public().simulateContract({
+  await wal.object.public().simulateContract({
     ...newPar(),
     address: cla,
     account: frm,

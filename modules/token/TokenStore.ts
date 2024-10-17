@@ -1,6 +1,6 @@
 import { ChainStore } from "@/modules/chain/ChainStore";
-import { create } from "zustand";
 import { combine } from "zustand/middleware";
+import { create } from "zustand";
 import { SearchBalance } from "@/modules/transaction/claims/read/SearchBalance";
 import { TokenBalance } from "@/modules/transaction/token/read/TokenBalance";
 import { TokenConfig } from "@/modules/token/TokenConfig";
@@ -28,7 +28,7 @@ export const TokenStore = create(
 
       updateBalance: async () => {
         const chn = ChainStore.getState().getActive();
-        const wal = WalletStore.getState().wallet;
+        const wal = WalletStore.getState();
 
         const alo = get().allocated;
         const avl = get().available;

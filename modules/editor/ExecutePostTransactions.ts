@@ -23,7 +23,7 @@ export const ExecutePostTransactions = async (bef: () => void, aft: () => void) 
     txn.push(CreatePropose.Encode());
   }
 
-  const res = await wal.wallet.object.sendTransaction(txn, bef, aft);
+  const res = await wal.object.sendTransaction(txn, bef, aft);
 
   edi.updateReceipt(res);
 };

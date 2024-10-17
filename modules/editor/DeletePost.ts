@@ -5,7 +5,7 @@ import { UserStore } from "@/modules/user/UserStore";
 
 export const DeletePost = async () => {
   const edi = EditorStore.getState();
-  const use = UserStore.getState().user;
+  const use = UserStore.getState();
 
   const req: PostDeleteRequest = {
     // intern

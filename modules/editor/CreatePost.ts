@@ -7,7 +7,7 @@ import { UserStore } from "@/modules/user/UserStore";
 export const CreatePost = async () => {
   const chn = ChainStore.getState().getActive();
   const edi = EditorStore.getState();
-  const use = UserStore.getState().user;
+  const use = UserStore.getState();
 
   // If a pending claim exists, then we do not have to create one.
   if (edi.post.id !== "") {

@@ -5,7 +5,7 @@ import { EmptyVoteCreateRequest, VoteCreateRequest } from "@/modules/api/vote/cr
 
 export const CreateVote = async () => {
   const edi = EditorStore.getState();
-  const use = UserStore.getState().user;
+  const use = UserStore.getState();
 
   // If a pending vote for a pending claim exists already, then we do not have
   // to create one.

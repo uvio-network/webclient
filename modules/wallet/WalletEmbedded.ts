@@ -11,8 +11,7 @@ import { Signer } from "@/modules/wallet/WalletInterface";
 import { Transaction } from "@biconomy/account";
 
 export const NewWalletEmbedded = async (wal: Privy.ConnectedWallet, index: number = 0): Promise<Signer> => {
-  const chain = ChainStore.getState();
-  const active = chain.getActive();
+  const active = ChainStore.getState().getActive();
 
   await wal.switchChain(active.id);
   const provider = await wal.getEthersProvider();

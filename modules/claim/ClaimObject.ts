@@ -246,13 +246,13 @@ export class ClaimObject {
   }
 
   selected(): boolean {
-    const user = UserStore.getState().user;
+    const use = UserStore.getState();
 
-    if (!user.valid || !user.object) {
+    if (!use.valid || !use.object) {
       return false;
     }
 
-    if (Object.values(this.samples()).includes(user.object.id())) {
+    if (Object.values(this.samples()).includes(use.object.id())) {
       return true;
     }
 

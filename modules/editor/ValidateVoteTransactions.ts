@@ -11,8 +11,8 @@ export const ValidateVoteTransactions = async () => {
 
   if (edi.kind === "stake") {
     await TokenApprove.Simulate(
-      wal.wallet.object.public(),
-      wal.wallet.object.address(),
+      wal.object.public(),
+      wal.object.address(),
       edi.getAmount().big,
       edi.claims.address,
       edi.getToken(),

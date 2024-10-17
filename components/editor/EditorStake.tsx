@@ -17,11 +17,11 @@ export const EditorStake = (props: Props) => {
 
   React.useEffect(() => {
     if (propose && props.disabled) {
-      const chain = ChainStore.getState().getActive();
+      const chn = ChainStore.getState().getActive();
 
       const amo = propose.summary().post.minimum * 2; // disputes require 2x the minimum of the disputed propose
       const tok = propose.token();
-      const pre = chain.tokens[tok]?.precision || 2;
+      const pre = chn.tokens[tok]?.precision || 2;
 
       setStake(`${amo.toFixed(pre)} ${tok}`);
     } else {

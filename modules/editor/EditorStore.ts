@@ -263,8 +263,7 @@ const getStk = (stk: string, pro: ClaimObject): string => {
 };
 
 const tokCon = (stk: string): TokenConfig => {
-  const chain = ChainStore.getState().getActive();
-  return chain.tokens[tokStr(stk)];
+  return ChainStore.getState().getActive().tokens[tokStr(stk)];
 };
 
 const tokStr = (stk: string): string => {

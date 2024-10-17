@@ -9,7 +9,7 @@ import { useShallow } from "zustand/react/shallow";
 export const AuthPage = ({ children }: { children: React.ReactNode }) => {
   const { authorizing, loaded, loading } = LoadingStore();
   const { valid } = UserStore(useShallow((state) => ({
-    valid: state.user.valid,
+    valid: state.valid,
   })));
 
   React.useEffect(() => {

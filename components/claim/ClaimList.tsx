@@ -24,9 +24,9 @@ export const ClaimList = (props: Props) => {
   })));
 
   const { token, user, valid } = UserStore(useShallow((state) => ({
-    token: state.user.token,
-    user: state.user.object,
-    valid: state.user.valid,
+    token: state.token,
+    user: state.object,
+    valid: state.valid,
   })));
 
   const { query, updateClaim } = QueryStore.getState();

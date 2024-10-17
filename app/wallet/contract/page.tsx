@@ -20,7 +20,7 @@ export default function Page() {
   const [deposit, setDeposit] = React.useState<boolean>(true);
 
   const { available } = TokenStore();
-  const { wallet } = WalletStore();
+  const { object, ready } = WalletStore();
 
   const chain = ChainStore.getState().getActive();
 
@@ -36,7 +36,7 @@ export default function Page() {
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    if (wallet?.object === undefined || loading) return <></>;
+    if (!ready || loading) return <></>;
   }
 
   return (
@@ -64,7 +64,7 @@ export default function Page() {
 
           <div className="flex my-4 p-4 bg-gray-50 dark:bg-gray-900 rounded">
             <div className="w-full text-gray-500 dark:text-gray-400 font-mono overflow-auto">
-              {wallet.object.address()}
+              {object.address()}
             </div>
             <div className="my-auto mx-2">
               <BaseButton
@@ -76,7 +76,7 @@ export default function Page() {
             </div>
             <div className="my-auto">
               <Link
-                href={`${chain.blockExplorers?.default.url}/address/${wallet.object.address()}#tokentxns`}
+                href={`${chain.blockExplorers?.default.url}/address/${object.address()}#tokentxns`}
                 target="_blank"
               >
                 <BaseButton
@@ -118,7 +118,7 @@ export default function Page() {
                 </div>
                 <div className="my-auto">
                   <Link
-                    href={`${chain.blockExplorers?.default.url}/token/${val.address}?a=${wallet.object.address()}`}
+                    href={`${chain.blockExplorers?.default.url}/token/${val.address}?a=${object.address()}`}
                     target="_blank"
                   >
                     <BaseButton

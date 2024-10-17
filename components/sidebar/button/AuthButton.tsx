@@ -12,7 +12,7 @@ interface Props {
 
 export const AuthButton = (props: Props) => {
   const { valid } = UserStore(useShallow((state) => ({
-    valid: state.user.valid,
+    valid: state.valid,
   })));
 
   const { login, logout } = Privy.usePrivy();

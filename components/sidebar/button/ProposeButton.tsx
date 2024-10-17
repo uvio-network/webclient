@@ -16,7 +16,7 @@ interface Props {
 
 export const ProposeButton = (props: Props) => {
   const { valid } = UserStore(useShallow((state) => ({
-    valid: state.user.valid,
+    valid: state.valid,
   })));
 
   const onClick = (e: React.MouseEvent) => {

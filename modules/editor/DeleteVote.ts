@@ -5,7 +5,7 @@ import { VoteDeleteRequest } from "@/modules/api/vote/delete/Request";
 
 export const DeleteVote = async () => {
   const edi = EditorStore.getState();
-  const use = UserStore.getState().user;
+  const use = UserStore.getState();
 
   const req: VoteDeleteRequest = {
     // intern

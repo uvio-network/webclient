@@ -5,7 +5,7 @@ import { UserStore } from "@/modules/user/UserStore";
 
 export const UpdatePost = async () => {
   const edi = EditorStore.getState();
-  const use = UserStore.getState().user;
+  const use = UserStore.getState();
 
   const req: PostUpdateRequest = {
     // intern
