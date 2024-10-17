@@ -1,16 +1,16 @@
 "use client";
 
 import * as React from "react";
-import * as Separator from "@/components/layout/separator";
 
 import { ClaimContent } from "@/components/claim/ClaimContent";
 import { ClaimFooter } from "@/components/claim/ClaimFooter";
 import { ClaimHeader } from "@/components/claim/ClaimHeader";
 import { ClaimLabels } from "@/components/claim/ClaimLabels";
 import { ClaimObject } from "@/modules/claim/ClaimObject";
-import { TrimWhitespace } from "@/modules/string/TrimWhitespace";
 import { ClaimVoteButtons } from "@/components/claim/ClaimVoteButtons";
 import { ClaimVoteButtonsOverlay } from "@/components/claim/ClaimVoteButtonsOverlay";
+import { HorizontalSeparator } from "@/components/layout/HorizontalSeparator";
+import { TrimWhitespace } from "@/modules/string/TrimWhitespace";
 import { usePathname } from "next/navigation";
 import { UserObject } from "@/modules/user/UserObject";
 
@@ -83,7 +83,7 @@ export const ClaimContainer = (props: Props) => {
       )}
 
       <div className="relative h-px my-2">
-        <Separator.Horizontal
+        <HorizontalSeparator
           progress={props.claim.pending() ? undefined : props.claim.progress()}
           remaining={props.claim.pending() ? undefined : props.claim.remaining()}
         />

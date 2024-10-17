@@ -1,9 +1,9 @@
 import * as React from "react";
-import * as Separator from "@/components/layout/separator";
 
 import { ClaimContainer } from "@/components/claim/ClaimContainer";
 import { ClaimObject } from "@/modules/claim/ClaimObject";
 import { ClaimStore } from "@/modules/claim/ClaimStore";
+import { HorizontalSeparator } from "@/components/layout/HorizontalSeparator";
 import { NewClaimList } from "@/modules/claim/ClaimList";
 import { LoadingStore } from "@/components/loading/LoadingStore";
 import { PostSearchRequest } from "@/modules/api/post/search/Request";
@@ -95,7 +95,7 @@ export const ClaimList = (props: Props) => {
           */}
           {i < list.length - 1 && (
             <div className="w-full h-12 mb-8">
-              <Separator.Vertical />
+              <HorizontalSeparator />
             </div>
           )}
         </div>

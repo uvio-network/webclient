@@ -1,12 +1,12 @@
 "use client";
 
 import * as React from "react";
-import * as Separator from "@/components/layout/separator";
 
 import { AppLogo } from "@/components/app/AppLogo";
 import { AuthButton } from "@/components/sidebar/button/AuthButton";
 import { BarsLeftIcon } from "@/components/icon/BarsLeftIcon";
 import { BaseButton } from "@/components/button/BaseButton";
+import { HorizontalSeparator } from "@/components/layout/HorizontalSeparator";
 import { LifecycleButton } from "@/components/sidebar/button/LifecycleButton";
 import { LoadingStore } from "@/components/loading/LoadingStore";
 import { ProposeButton } from "@/components/sidebar/button/ProposeButton";
@@ -76,16 +76,16 @@ export const Sidebar = () => {
         {/* All sidebar content goes here. */}
         <AppLogo onClick={onClick} />
 
-        <Separator.Horizontal />
+        <HorizontalSeparator />
 
         {/* lists */}
         <ProposeButton onClick={onClick} />
 
-        <Separator.Horizontal />
+        <HorizontalSeparator />
 
         <LifecycleButton onClick={onClick} />
 
-        <Separator.Horizontal />
+        <HorizontalSeparator />
 
         <UserButton onClick={onClick} />
         <WalletButton onClick={onClick} />
@@ -93,7 +93,7 @@ export const Sidebar = () => {
         {/* settings */}
         <AuthButton onClick={onClick} />
 
-        <Separator.Horizontal />
+        <HorizontalSeparator />
 
         <SocialButton onClick={onClick} />
       </div>
