@@ -1,8 +1,7 @@
 "use client";
 
-import * as Separator from "@/components/layout/separator";
-
 import { ClaimObject } from "@/modules/claim/ClaimObject";
+import { HorizontalSeparator } from "@/components/layout/HorizontalSeparator";
 
 interface Props {
   claim: ClaimObject;
@@ -27,7 +26,7 @@ export const ClaimFooterCardPropose = (props: Props) => {
 
       {stakeAgree !== 0 && (
         <div>
-          <Separator.Horizontal />
+          <HorizontalSeparator />
 
           <div>
             You have {stakeAgree.toFixed(2)} {token} staked in <strong>agreement</strong> with the claim&apos;s statement.
@@ -45,7 +44,7 @@ export const ClaimFooterCardPropose = (props: Props) => {
 
       {stakeDisagree !== 0 && (
         <div>
-          <Separator.Horizontal />
+          <HorizontalSeparator />
 
           <div>
             You have {stakeDisagree.toFixed(2)} {token} staked in <strong>disagreement</strong> with the claim&apos;s statement.
@@ -63,7 +62,7 @@ export const ClaimFooterCardPropose = (props: Props) => {
 
       {isStaker === false && (
         <div>
-          <Separator.Horizontal />
+          <HorizontalSeparator />
 
           <div>
             You have no reputation staked in this market.
@@ -73,7 +72,7 @@ export const ClaimFooterCardPropose = (props: Props) => {
 
       {props.claim.expired() === true && (
         <div>
-          <Separator.Horizontal />
+          <HorizontalSeparator />
 
           <div>
             This claim has expired already.

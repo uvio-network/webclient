@@ -1,5 +1,5 @@
-import { create } from "zustand";
 import { combine } from "zustand/middleware";
+import { create } from "zustand";
 import { WalletObject } from "@/modules/wallet/WalletObject";
 
 export interface WalletMessage {
@@ -9,25 +9,19 @@ export interface WalletMessage {
 
 export const WalletStore = create(
   combine(
-    {
-      wallet: {} as WalletMessage,
-    },
+    {} as WalletMessage,
     (set) => ({
       delete: () => {
         set(() => {
           return {
-            wallet: {
-              object: new WalletObject(),
-              ready: false,
-            },
+            object: new WalletObject(),
+            ready: false,
           };
         });
       },
       update: (w: WalletMessage) => {
         set(() => {
-          return {
-            wallet: w,
-          };
+          return w;
         });
       },
     })

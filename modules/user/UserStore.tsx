@@ -10,45 +10,35 @@ export interface UserMessage {
 
 export const UserStore = create(
   combine(
-    {
-      user: {} as UserMessage,
-    },
+    {} as UserMessage,
     (set) => ({
       delete: () => {
         set(() => {
           return {
-            user: {
-              object: undefined,
-              token: "",
-              valid: false,
-            },
+            object: undefined,
+            token: "",
+            valid: false,
           };
         });
       },
       update: (u: UserMessage) => {
         set(() => {
-          return {
-            user: u,
-          };
+          return u;
         });
       },
       updateObject: (o: UserObject) => {
-        set((state: { user: UserMessage }) => {
+        set((state: UserMessage) => {
           return {
-            user: {
-              ...state.user,
-              object: o,
-            }
+            ...state,
+            object: o,
           };
         });
       },
       updateToken: (t: string) => {
-        set((state: { user: UserMessage }) => {
+        set((state: UserMessage) => {
           return {
-            user: {
-              ...state.user,
-              token: t,
-            }
+            ...state,
+            token: t,
           };
         });
       },

@@ -1,8 +1,8 @@
 import moment from "moment";
 
 import { Address } from "viem";
+import { EmptyPostSearchResponse } from "@/modules/api/post/search/Response";
 import { EmptyUserSearchResponse } from "@/modules/api/user/search/Response";
-import { EmptyVoteCreateResponse } from "@/modules/api/vote/create/Response";
 import { NewSummary } from "@/modules/summary/Summary";
 import { PostSearchResponse } from "@/modules/api/post/search/Response";
 import { SplitList } from "@/modules/string/SplitList";
@@ -10,9 +10,12 @@ import { Summary } from "@/modules/summary/Summary";
 import { UserObject } from "@/modules/user/UserObject";
 import { UserSearchResponse } from "@/modules/api/user/search/Response";
 import { UserStore } from "@/modules/user/UserStore";
-import { VoteCreateResponse } from "@/modules/api/vote/create/Response";
-import { VoteObject } from "@/modules/vote/VoteObject";
+import { EmptyVoteObject, VoteObject } from "@/modules/vote/VoteObject";
 import { VoteSearchResponse } from "@/modules/api/vote/search/Response";
+
+export const EmptyClaimObject = (): ClaimObject => {
+  return new ClaimObject(EmptyPostSearchResponse(), EmptyUserSearchResponse(), undefined, []);
+};
 
 export class ClaimObject {
   private embd: number;
@@ -160,6 +163,16 @@ export class ClaimObject {
     return SplitList(this.post.labels);
   }
 
+  latestVote(): VoteObject {
+    const vot = this.getVote();
+
+    if (vot.length !== 0) {
+      return new VoteObject(vot[vot.length - 1]);
+    }
+
+    return EmptyVoteObject();
+  }
+
   lifecycle(): string {
     if (this.post.lifecycle === "") {
       return "";
@@ -200,14 +213,6 @@ export class ClaimObject {
     return spl[1].toLowerCase() === "pending";
   }
 
-  pendingVote(): VoteCreateResponse {
-    if (this.pending() && this.getVote().length === 1) {
-      return this.getVote()[0];
-    }
-
-    return EmptyVoteCreateResponse();
-  }
-
   progress(): number {
     if (this.post.expiry === "") {
       return -1;
@@ -234,13 +239,13 @@ export class ClaimObject {
   }
 
   selected(): boolean {
-    const user = UserStore.getState().user;
+    const use = UserStore.getState();
 
-    if (!user.valid || !user.object) {
+    if (!use.valid || !use.object) {
       return false;
     }
 
-    if (Object.values(this.samples()).includes(user.object.id())) {
+    if (Object.values(this.samples()).includes(use.object.id())) {
       return true;
     }
 

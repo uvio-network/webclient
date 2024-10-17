@@ -1,5 +1,7 @@
 import moment from "moment";
 
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
 export class Time {
   private mom: moment.Moment;
 
@@ -9,11 +11,11 @@ export class Time {
 
   allDays(): string[] {
     const day = this.mom.daysInMonth();
-    return Array.from({ length: day }, (_, i) => format(i + 1));
+    return Array.from({ length: day }, (_, i) => FormatDay(i + 1));
   }
 
   allMonths(): string[] {
-    return ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    return months;
   }
 
   allYears(): string[] {
@@ -22,7 +24,7 @@ export class Time {
   }
 
   currentDay(): string {
-    return format(this.mom.date());
+    return FormatDay(this.mom.date());
   }
 
   currentMonth(): string {
@@ -34,17 +36,7 @@ export class Time {
   }
 };
 
-export const Unix = (str: string): number => {
-  const num: number = moment.utc(str, "Do MMM YYYY", true).unix();
-
-  if (isNaN(num)) {
-    return 0;
-  }
-
-  return num;
-};
-
-const format = (day: number): string => {
+export const FormatDay = (day: number): string => {
   const j = day % 10;
   const k = day % 100;
 
@@ -58,4 +50,18 @@ const format = (day: number): string => {
   }
 
   return `${day}${suffix}`;
+};
+
+export const FormatMonth = (mon: number): string => {
+  return months[mon];
+};
+
+export const Unix = (str: string): number => {
+  const num: number = moment.utc(str, "Do MMM YYYY", true).unix();
+
+  if (isNaN(num)) {
+    return 0;
+  }
+
+  return num;
 };

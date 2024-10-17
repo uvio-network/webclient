@@ -22,24 +22,24 @@ interface Props {
 
 export const WalletButton = (props: Props) => {
   const { allocated, available } = TokenStore();
-  const { wallet } = WalletStore();
+  const { ready } = WalletStore();
 
   const { user } = UserStore(useShallow((state) => ({
-    user: state.user.object,
+    user: state.object,
   })));
 
   // Make sure we update balances every time the user enters or refreshes the
   // page.
   React.useEffect(() => {
-    if (wallet.ready) {
+    if (ready) {
       TokenStore.getState().updateBalance();
     }
-  }, [wallet]);
+  }, [ready]);
 
   // Additionally to the above, make sure that we update balances every 2
   // seconds if the user registered just now, as long as its balance is zero.
   React.useEffect(() => {
-    if (!user || !wallet.ready) {
+    if (!user || !ready) {
       return;
     }
 
@@ -89,7 +89,7 @@ export const WalletButton = (props: Props) => {
     return () => {
       mnt = false;
     };
-  }, [user, wallet]);
+  }, [ready, user]);
 
   return (
     <>

@@ -11,7 +11,7 @@ interface Props {
 
 export const UserButton = (props: Props) => {
   const { object } = UserStore(useShallow((state) => ({
-    object: state.user.object,
+    object: state.object,
   })));
 
   return (

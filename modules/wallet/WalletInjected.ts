@@ -15,8 +15,7 @@ import { TransactionReceipt } from "viem";
 import { WalletClient } from "viem";
 
 export const NewWalletInjected = async (wal: Privy.ConnectedWallet): Promise<Signer> => {
-  const chain = ChainStore.getState();
-  const active = chain.getActive();
+  const active = ChainStore.getState().getActive();
 
   await wal.switchChain(active.id);
   const provider = await wal.getEthereumProvider();

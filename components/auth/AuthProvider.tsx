@@ -148,7 +148,7 @@ const setupAuth = async (user: Privy.User, wallet: Privy.ConnectedWallet) => {
 
 const updateToken = async () => {
   const des = await Privy.getAccessToken();
-  const cur = UserStore.getState().user.token;
+  const cur = UserStore.getState().token;
 
   if (des && des != cur) {
     UserStore.getState().updateToken(des);

@@ -1,45 +1,67 @@
 import * as TokenApprove from "@/modules/transaction/token/write/TokenApprove";
 
+import { EditorStore } from "@/modules/editor/EditorStore";
 import { encodeFunctionData } from "viem";
 import { EncodeFunctionDataParameters } from "viem";
-import { DisputeContext } from "@/modules/context/DisputeContext";
 import { Transaction } from "@biconomy/account";
+import { WalletStore } from "@/modules/wallet/WalletStore";
 
-export const Encode = (ctx: DisputeContext): Transaction => {
+export const Encode = (): Transaction => {
+  const edi = EditorStore.getState();
+
   return {
-    to: ctx.claims.address,
-    data: encodeFunctionData(encPar(ctx)),
+    to: edi.claims.address,
+    data: encodeFunctionData(encPar()),
   };
 };
 
-export const Simulate = async (ctx: DisputeContext) => {
-  await ctx.public.simulateContract({
-    ...encPar(ctx),
-    address: ctx.claims.address,
-    account: ctx.from,
+export const Simulate = async () => {
+  const edi = EditorStore.getState();
+  const wal = WalletStore.getState();
+
+  const amo = edi.getAmount().big;
+  const cla = edi.claims.address;
+  const frm = wal.object.address();
+  const tok = edi.getToken().address;
+
+  await wal.object.public().simulateContract({
+    ...encPar(),
+    address: cla,
+    account: frm,
     stateOverride: [
       {
-        address: ctx.token.address,
-        stateDiff: TokenApprove.State(ctx.from, ctx.claims.address, ctx.amount.big),
+        address: tok,
+        stateDiff: TokenApprove.State(frm, cla, amo),
       },
     ],
   });
 };
 
-const encPar = (ctx: DisputeContext): Required<EncodeFunctionDataParameters> => {
+const encPar = (): Required<EncodeFunctionDataParameters> => {
+  const edi = EditorStore.getState();
+
+  const amo = edi.getAmount().big;
+  const cla = edi.claims.abi;
+  const dis = edi.post.id;
+  const exp = edi.getExpiry();
+  const opt = edi.option;
+  const pro = edi.propose.id();
+  const ref = edi.reference;
+  const tok = edi.getToken().abi;
+
   return {
     abi: [
-      ...ctx.claims.abi, // Claims ABI for contract write
-      ...ctx.token.abi,  // UVX ABI for contract simulation
+      ...cla, // Claims ABI for contract write
+      ...tok, // UVX ABI for contract simulation
     ],
     functionName: "createDispute",
     args: [
-      ctx.post.id,       // claim, ID of the dispute
-      ctx.amount.big,    // balance, the amount we deposited
-      ctx.option,        // vote, agree or disagree with the claim
-      ctx.expiry,        // expiry, unix timestamp in seconds
-      ctx.reference,     // hash, the claim's content checksum
-      ctx.propose,       // the ID of the disputed propose
+      dis, // claim, ID of the dispute
+      amo, // balance, the amount we deposited
+      opt, // vote, agree or disagree with the claim
+      exp, // expiry, unix timestamp in seconds
+      ref, // hash, the claim's content checksum
+      pro, // the ID of the disputed propose
     ],
   };
 };

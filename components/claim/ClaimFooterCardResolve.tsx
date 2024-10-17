@@ -1,8 +1,8 @@
 "use client";
 
-import * as Separator from "@/components/layout/separator";
 
 import { ClaimObject } from "@/modules/claim/ClaimObject";
+import { HorizontalSeparator } from "@/components/layout/HorizontalSeparator";
 
 interface Props {
   claim: ClaimObject;
@@ -32,7 +32,7 @@ export const ClaimFooterCardResolve = (props: Props) => {
       )}
 
       <div>
-        <Separator.Horizontal />
+        <HorizontalSeparator />
 
         {selected === true ? (
           <>
@@ -63,7 +63,7 @@ export const ClaimFooterCardResolve = (props: Props) => {
 
       {props.claim.expired() === true && (
         <div>
-          <Separator.Horizontal />
+          <HorizontalSeparator />
 
           {props.claim.challenge() === true ? (
             <div>

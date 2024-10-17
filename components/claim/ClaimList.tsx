@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as Separator from "@/components/layout/separator";
 
 import { ClaimContainer } from "@/components/claim/ClaimContainer";
 import { ClaimObject } from "@/modules/claim/ClaimObject";
@@ -11,6 +10,7 @@ import { QueryStore } from "@/modules/query/QueryStore";
 import { useQuery } from "@tanstack/react-query";
 import { UserStore } from "@/modules/user/UserStore";
 import { useShallow } from "zustand/react/shallow";
+import { VerticalSeparator } from "@/components/layout/VerticalSeparator";
 
 interface Props {
   filter?: (cla: ClaimObject) => boolean;
@@ -24,9 +24,9 @@ export const ClaimList = (props: Props) => {
   })));
 
   const { token, user, valid } = UserStore(useShallow((state) => ({
-    token: state.user.token,
-    user: state.user.object,
-    valid: state.user.valid,
+    token: state.token,
+    user: state.object,
+    valid: state.valid,
   })));
 
   const { query, updateClaim } = QueryStore.getState();
@@ -95,7 +95,7 @@ export const ClaimList = (props: Props) => {
           */}
           {i < list.length - 1 && (
             <div className="w-full h-12 mb-8">
-              <Separator.Vertical />
+              <VerticalSeparator />
             </div>
           )}
         </div>

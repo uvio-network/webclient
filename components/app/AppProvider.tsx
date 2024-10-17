@@ -9,20 +9,18 @@ import { Sidebar } from "@/components/sidebar/Sidebar";
 import { ToastProvider } from "@/components/toast/ToastProvider";
 
 export const AppProvider = () => {
-  const chain = ChainStore.getState();
-
   return (
     <>
       <PrivyProvider
         appId={Config.PrivyAppId}
         clientId={Config.PrivyClientId}
         config={{
-          defaultChain: chain.getActive(),
+          defaultChain: ChainStore.getState().getActive(),
           embeddedWallets: {
             // Create embedded wallets for users who don't have a wallet yet.
             createOnLogin: "users-without-wallets",
           },
-          supportedChains: chain.getAll(),
+          supportedChains: ChainStore.getState().getAll(),
         }}
       >
         <AuthProvider />

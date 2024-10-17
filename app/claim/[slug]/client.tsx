@@ -3,7 +3,7 @@
 import { ArrowUpLeftIcon } from "@/components/icon/ArrowUpLeftIcon";
 import { ClaimList } from "@/components/claim/ClaimList";
 import { ClaimStore } from "@/modules/claim/ClaimStore";
-import { PageHeader } from "@/components/page/PageHeader";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { useShallow } from "zustand/react/shallow";
 
 interface Props {

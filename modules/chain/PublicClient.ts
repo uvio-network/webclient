@@ -5,8 +5,7 @@ import { http } from "viem";
 import { PublicClient } from "viem";
 
 export const NewPublicClient = (): PublicClient => {
-  const chain = ChainStore.getState();
-  const active = chain.getActive();
+  const active = ChainStore.getState().getActive();
 
   return createPublicClient({
     batch: {

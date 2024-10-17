@@ -26,36 +26,29 @@ const newChainMessage = (): ChainMessage => {
 
 export const ChainStore = create(
   combine(
-    {
-      chain: newChainMessage(),
-    },
+    newChainMessage(),
     (set, get) => ({
       activate: (i: number) => {
-        set((state: { chain: ChainMessage }) => {
+        set((state: ChainMessage) => {
           return {
-            chain: {
-              ...state.chain,
-              active: i,
-            },
+            ...state,
+            active: i,
           };
         });
       },
       getActive: (): ChainConfig => {
-        const state = get();
-        return state.chain.chains.get(state.chain.active)!;
+        return get().chains.get(get().active)!;
       },
       getAll: (): ChainConfig[] => {
-        return Array.from(get().chain.chains.values());
+        return Array.from(get().chains.values());
       },
       update: (c: ChainConfig) => {
-        set((state: { chain: ChainMessage }) => {
-          const m = new Map(state.chain.chains);
+        set((state: ChainMessage) => {
+          const m = new Map(state.chains);
           m.set(c.id, c);
           return {
-            chain: {
-              ...state.chain,
-              chains: m,
-            },
+            ...state,
+            chains: m,
           };
         });
       },

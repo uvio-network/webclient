@@ -1,7 +1,7 @@
 "use client";
 
 import { ClaimList } from "@/components/claim/ClaimList";
-import { PageHeader } from "@/components/page/PageHeader";
+import { PageHeader } from "@/components/layout/PageHeader";
 
 export const Client = () => {
   return (

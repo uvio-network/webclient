@@ -1,11 +1,11 @@
 import Link from "next/link";
 
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import * as Separator from "@/components/layout/separator";
 import * as ToastSender from "@/components/toast/ToastSender";
 
 import { BaseButton } from "@/components/button/BaseButton";
 import { ClaimObject } from "@/modules/claim/ClaimObject";
+import { HorizontalSeparator } from "@/components/layout/HorizontalSeparator";
 import { InfoCircleIcon } from "@/components/icon/InfoCircleIcon";
 import { MenuHorizontalIcon } from "@/components/icon/MenuHorizontalIcon";
 import { Tooltip } from "@/components/tooltip/Tooltip";
@@ -26,7 +26,7 @@ const itemClassName = `
 
 export const ClaimHeaderMenu = (props: Props) => {
   const { valid } = UserStore(useShallow((state) => ({
-    valid: state.user.valid,
+    valid: state.valid,
   })));
 
   const router = useRouter();
@@ -132,7 +132,7 @@ export const ClaimHeaderMenu = (props: Props) => {
                 </DropdownMenu.Item>
               )}
 
-              <Separator.Horizontal margin="my-2" />
+              <HorizontalSeparator margin="my-2" />
             </>
           )}
 

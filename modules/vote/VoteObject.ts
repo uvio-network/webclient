@@ -1,6 +1,11 @@
 import moment from "moment";
 
+import { EmptyVoteSearchResponse } from "@/modules/api/vote/search/Response";
 import { VoteSearchResponse } from "@/modules/api/vote/search/Response";
+
+export const EmptyVoteObject = (): VoteObject => {
+  return new VoteObject(EmptyVoteSearchResponse());
+};
 
 export class VoteObject {
   private vote: VoteSearchResponse;
@@ -58,6 +63,10 @@ export class VoteObject {
   }
 
   value(): number {
+    if (this.vote.value === "") {
+      return 0;
+    }
+
     return parseFloat(this.vote.value);
   }
 }
