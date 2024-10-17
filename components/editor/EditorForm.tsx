@@ -24,6 +24,8 @@ export const EditorForm = (props: Props) => {
   const [processing, setProcessing] = React.useState<string>("");
   const [write, setWrite] = React.useState<boolean>(true);
 
+  const router = useRouter();
+
   React.useEffect(() => {
     {
       EditorStore.getState().updateKind(props.Kind);
@@ -87,7 +89,7 @@ export const EditorForm = (props: Props) => {
               const pos = EditorStore.getState().post;
 
               if (pos.id !== "") {
-                useRouter().push(`/claim/${pos.id}`);
+                router.push(`/claim/${pos.id}`);
               }
             },
             offchain: () => {
@@ -100,7 +102,7 @@ export const EditorForm = (props: Props) => {
               const pos = EditorStore.getState().post;
 
               if (pos.id !== "") {
-                useRouter().push(`/claim/${pos.id}`);
+                router.push(`/claim/${pos.id}`);
               }
 
               TokenStore.getState().updateBalance();
