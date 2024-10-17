@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const HorizontalSeparator = (props: Props) => {
-  if (props.progress === undefined || props.progress >= 100) {
+  if (props.progress === undefined || props.progress === -1 || props.progress >= 100) {
     return (
       <Separator.Root
         className={TrimWhitespace(`

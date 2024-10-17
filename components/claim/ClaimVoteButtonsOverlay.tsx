@@ -85,10 +85,10 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
           EditorStore.getState().updatePost(props.claim.getPost());
         }
       }
+    }
 
-      if (!overlay) {
-        EditorStore.getState().delete();
-      }
+    if (!overlay && !pendingClaim && !pendingVote) {
+      EditorStore.getState().delete();
     }
   }, [props.claim, overlay, isDispute, isPropose, isResolve, pendingClaim, pendingVote]);
 

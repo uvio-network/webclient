@@ -244,12 +244,16 @@ export const EditorStore = create(
   )
 );
 
-const exiCla = (res: ClaimObject): boolean => {
-  if (res !== undefined && res.id() !== "") {
-    return true
+const exiCla = (cla: ClaimObject): boolean => {
+  if (cla === undefined) {
+    return false;
   }
 
-  return false;
+  if (cla.id() === "") {
+    return false;
+  }
+
+  return true;
 };
 
 const getAmo = (stk: string): number => {

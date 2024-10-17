@@ -32,7 +32,7 @@ export const SubmitVote = async (props: Props) => {
   }
 
   {
-    if (edi.propose !== undefined) {
+    if (edi.propose !== undefined && edi.propose.contract() as String !== "") {
       edi.updateClaims(ContractWithAddress(edi.propose.contract(), chn));
     }
   }

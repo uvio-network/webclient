@@ -20,7 +20,7 @@ export const ValidateStake = (): boolean => {
     if (amo.num === 0) {
       return ToastSender.Error("You must stake reputation with your claim.");
     }
-    if (edi.propose !== undefined && sym !== edi.propose.token()) {
+    if (edi.propose !== undefined && edi.propose.id() !== "" && sym !== edi.propose.token()) {
       return ToastSender.Error(`You can only stake the claim's token "${edi.propose.token()}".`);
     }
     if (tok === undefined) {

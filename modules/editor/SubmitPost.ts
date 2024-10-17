@@ -51,9 +51,9 @@ export const SubmitPost = async (props: Props) => {
 
   {
     if (edi.kind === "claim") {
-      if (edi.propose !== undefined) {
+      if (edi.propose !== undefined && edi.propose.contract() as String !== "") {
         edi.updateClaims(ContractWithAddress(edi.propose.contract(), chn));
-      } else if (edi.resolve !== undefined) {
+      } else if (edi.resolve !== undefined && edi.resolve.contract() as String !== "") {
         edi.updateClaims(ContractWithAddress(edi.resolve.contract(), chn));
       } else {
         edi.updateClaims(ClaimsWithSymbol(edi.getSymbol(), chn));
@@ -99,7 +99,7 @@ export const SubmitPost = async (props: Props) => {
     // got updated in the editor store. If we were to use the old editor message
     // instance, then we would get a stale copy that does not containn the
     // transaction receipt.
-    if (EditorStore.getState().receipt.success === true) {
+    if (EditorStore.getState().receipt.success === true || edi.kind === "comment") {
       if (edi.kind === "claim") {
         {
           await UpdatePost();

@@ -32,10 +32,8 @@ export const EditorForm = (props: Props) => {
     }
 
     if (props.Kind === "claim") {
-      const res = EditorStore.getState().resolve;
-
-      if (res !== undefined) {
-        EditorStore.getState().updateOption(!res.side()); // invert for dispute
+      if (EditorStore.getState().isDispute()) {
+        EditorStore.getState().updateOption(!EditorStore.getState().resolve.side()); // invert for dispute
       } else {
         EditorStore.getState().updateOption(true); // always true for propose
       }

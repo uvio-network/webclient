@@ -70,10 +70,16 @@ export const ClaimVoteValue = (props: Props) => {
 const defVal = (cla: ClaimObject): string => {
   const vot = cla.latestVote();
 
-  if (cla.pending() || vot.pending()) {
+  if (cla.pending()) {
     if (cla.summary().post.minimum > 0) {
       return `${cla.summary().post.minimum} ${cla.token()}`;
     }
+    if (vot.value() > 0) {
+      return `${vot.value()} ${cla.token()}`;
+    }
+  }
+
+  if (vot.pending()) {
     if (vot.value() > 0) {
       return `${vot.value()} ${cla.token()}`;
     }
