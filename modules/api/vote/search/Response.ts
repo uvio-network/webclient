@@ -13,3 +13,21 @@ export interface VoteSearchResponse {
   option: string;
   value: string;
 };
+
+export const EmptyVoteSearchResponse = (): VoteSearchResponse => {
+  return {
+    // intern
+    created: "",
+    id: "",
+    owner: "",
+
+    // public
+    claim: "",
+    hash: "",
+    kind: "",
+    lifecycle: "",
+    meta: "",
+    option: "",
+    value: "",
+  };
+};

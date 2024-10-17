@@ -43,7 +43,7 @@ const encPar = (): Required<EncodeFunctionDataParameters> => {
   const amo = edi.getAmount().big;
   const cla = edi.claims.abi;
   const exp = edi.getExpiry();
-  const opt = edi.getOption();
+  const opt = edi.option;
   const pro = edi.post.id;
   const ref = edi.reference;
   const tok = edi.getToken().abi;

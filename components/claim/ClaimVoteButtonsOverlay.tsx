@@ -28,53 +28,56 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
   })));
 
   const isDispute = props.claim.lifecycle() === "dispute" ? true : false;
-  const isPending = props.claim.pending();
   const isPropose = props.claim.lifecycle() === "propose" ? true : false;
   const isResolve = props.claim.lifecycle() === "resolve" ? true : false;
 
-  React.useEffect(() => {
-    if (overlay) {
-      if (isPending) {
-        // Note that the pending claim's stake value is managed in the
-        // ClaimVoteValue component.
-        {
-          EditorStore.getState().updateDay(props.claim.expiry().date());
-          EditorStore.getState().updateKind("claim");
-          EditorStore.getState().updateLabels(props.claim.getPost().labels);
-          EditorStore.getState().updateMarkdown(props.claim.getPost().text);
-          EditorStore.getState().updateMonth(props.claim.expiry().month() + 1);
-          EditorStore.getState().updateOption(true);
-          EditorStore.getState().updatePending(true);
-          EditorStore.getState().updatePost(props.claim.getPost());
-          EditorStore.getState().updatePropose(props.claim);
-          EditorStore.getState().updateVote(props.claim.pendingVote());
-          EditorStore.getState().updateYear(props.claim.expiry().year());
-        }
-      } else {
-        if (isResolve) {
-          EditorStore.getState().updateKind("truth");
-          EditorStore.getState().updatePropose(props.claim.parent()!)
-          EditorStore.getState().updateResolve(props.claim)
-        } else if (isDispute) {
-          EditorStore.getState().updateKind("stake");
-          EditorStore.getState().updatePropose(props.claim)
-          EditorStore.getState().updateResolve(props.claim.parent()!)
-        } else if (isPropose) {
-          EditorStore.getState().updateKind("stake");
-          EditorStore.getState().updatePropose(props.claim)
-        }
+  const pendingClaim = props.claim.pending();
+  const pendingVote = props.claim.latestVote().pending();
 
-        {
-          EditorStore.getState().updatePost(props.claim.getPost());
-          EditorStore.getState().updateOption(option);
-        }
+  React.useEffect(() => {
+    // Note that the pending claim's stake value is managed in the
+    // ClaimVoteValue component.
+    if (pendingClaim) {
+      EditorStore.getState().updateDay(props.claim.expiry().date());
+      EditorStore.getState().updateKind("claim");
+      EditorStore.getState().updateLabels(props.claim.getPost().labels);
+      EditorStore.getState().updateMarkdown(props.claim.getPost().text);
+      EditorStore.getState().updateMonth(props.claim.expiry().month() + 1);
+      EditorStore.getState().updateOption(true);
+      EditorStore.getState().updatePending(true);
+      EditorStore.getState().updatePost(props.claim.getPost());
+      EditorStore.getState().updatePropose(props.claim);
+      EditorStore.getState().updateYear(props.claim.expiry().year());
+    }
+
+    if (pendingVote) {
+      EditorStore.getState().updateOption(props.claim.latestVote().option());
+      EditorStore.getState().updateVote(props.claim.latestVote().getVote());
+    }
+
+    if (overlay || pendingVote) {
+      if (isResolve) {
+        EditorStore.getState().updateKind("truth");
+        EditorStore.getState().updatePropose(props.claim.parent()!)
+        EditorStore.getState().updateResolve(props.claim)
+      } else if (isDispute) {
+        EditorStore.getState().updateKind("stake");
+        EditorStore.getState().updatePropose(props.claim)
+        EditorStore.getState().updateResolve(props.claim.parent()!)
+      } else if (isPropose) {
+        EditorStore.getState().updateKind("stake");
+        EditorStore.getState().updatePropose(props.claim)
+      }
+
+      {
+        EditorStore.getState().updatePost(props.claim.getPost());
       }
     } else {
       EditorStore.getState().delete();
     }
-  }, [props.claim, overlay, isDispute, isPending, isPropose, isResolve]);
+  }, [props.claim, overlay, isDispute, isPropose, isResolve, pendingClaim, pendingVote]);
 
-  if (!overlay) {
+  if (!overlay && !pendingClaim && !pendingVote) {
     return <></>;
   }
 
@@ -96,7 +99,7 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
             disabled={disabled}
             type="button"
             onClick={() => {
-              if (isPending) {
+              if (pendingClaim) {
                 SubmitPost({
                   after: () => {
                     setProcessing("Confirming Onchain");
@@ -112,10 +115,12 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
                     //
                   },
                   onchain: () => {
+                    QueryStore.getState().claim.refresh();
+
                     setDisabled(false);
                     setProcessing("");
 
-                    QueryStore.getState().claim.refresh();
+                    EditorStore.getState().delete();
                     TokenStore.getState().updateBalance();
                   },
                   rejected: () => {
@@ -127,7 +132,9 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
                     setProcessing("Signing Transaction");
                   },
                 });
-              } else {
+              }
+
+              if (overlay || pendingVote) {
                 SubmitVote({
                   after: () => {
                     setProcessing("Confirming Onchain");

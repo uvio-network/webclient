@@ -31,7 +31,7 @@ const newPar = (): Required<EncodeFunctionDataParameters> => {
   const edi = EditorStore.getState();
 
   const cla = edi.claims.abi;
-  const opt = edi.getOption();
+  const opt = edi.option;
   const pod = edi.post.id;
 
   return {

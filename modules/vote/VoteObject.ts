@@ -1,6 +1,11 @@
 import moment from "moment";
 
+import { EmptyVoteSearchResponse } from "@/modules/api/vote/search/Response";
 import { VoteSearchResponse } from "@/modules/api/vote/search/Response";
+
+export const EmptyVoteObject = (): VoteObject => {
+  return new VoteObject(EmptyVoteSearchResponse());
+};
 
 export class VoteObject {
   private vote: VoteSearchResponse;

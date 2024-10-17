@@ -12,20 +12,51 @@ interface Props {
 export const OverlayInfoCard = (props: Props) => {
   const editor = EditorStore.getState();
 
+  const isDispute = props.claim.lifecycle() === "dispute" ? true : false;
+  const isPropose = props.claim.lifecycle() === "propose" ? true : false;
+  const isResolve = props.claim.lifecycle() === "resolve" ? true : false;
+
+  const isStake = props.claim.latestVote().kind() === "stake" ? true : false;
+  const isTruth = props.claim.latestVote().kind() === "truth" ? true : false;
+
+  const pendingClaim = props.claim.pending();
+  const pendingVote = props.claim.latestVote().pending();
+
   return (
     <InfoCard
       close={true}
-      color={props.claim.pending() ? "red" : "blue"}
+      color={pendingClaim || pendingVote ? "red" : "blue"}
       text={
         <>
-          {props.claim.pending() ? (
+          {(pendingClaim || pendingVote) ? (
             <>
-              Your claim could <strong>not</strong> be confirmed onchain.
-              Please try to finish your proposal once more.
+              {pendingClaim && (
+                <>
+                  Your claim could <strong>not</strong> be confirmed onchain.
+                  Please try to submit your
+
+                  {isDispute && (<> dispute </>)}
+                  {isPropose && (<> proposal </>)}
+
+                  once more.
+                </>
+              )}
+
+              {pendingVote && (
+                <>
+                  Your
+
+                  {isStake && (<> stake </>)}
+                  {isTruth && (<> vote </>)}
+
+                  could <strong>not</strong> be confirmed onchain.
+                  Please try to submit it once more.
+                </>
+              )}
             </>
           ) : (
             <>
-              {props.claim.lifecycle() === "resolve" ? (
+              {isResolve ? (
                 <>
                   You are verifing that this claim was in fact <strong>{ToTitle(String(editor.option))}</strong>.
                   Your vote cannot be undone.

@@ -1,9 +1,8 @@
 import moment from "moment";
 
 import { Address } from "viem";
-import { EmptyUserSearchResponse } from "@/modules/api/user/search/Response";
-import { EmptyVoteCreateResponse } from "@/modules/api/vote/create/Response";
 import { EmptyPostSearchResponse } from "@/modules/api/post/search/Response";
+import { EmptyUserSearchResponse } from "@/modules/api/user/search/Response";
 import { NewSummary } from "@/modules/summary/Summary";
 import { PostSearchResponse } from "@/modules/api/post/search/Response";
 import { SplitList } from "@/modules/string/SplitList";
@@ -11,8 +10,7 @@ import { Summary } from "@/modules/summary/Summary";
 import { UserObject } from "@/modules/user/UserObject";
 import { UserSearchResponse } from "@/modules/api/user/search/Response";
 import { UserStore } from "@/modules/user/UserStore";
-import { VoteCreateResponse } from "@/modules/api/vote/create/Response";
-import { VoteObject } from "@/modules/vote/VoteObject";
+import { EmptyVoteObject, VoteObject } from "@/modules/vote/VoteObject";
 import { VoteSearchResponse } from "@/modules/api/vote/search/Response";
 
 export const EmptyClaimObject = (): ClaimObject => {
@@ -165,6 +163,16 @@ export class ClaimObject {
     return SplitList(this.post.labels);
   }
 
+  latestVote(): VoteObject {
+    const vot = this.getVote();
+
+    if (vot.length !== 0) {
+      return new VoteObject(vot[vot.length - 1]);
+    }
+
+    return EmptyVoteObject();
+  }
+
   lifecycle(): string {
     if (this.post.lifecycle === "") {
       return "";
@@ -203,21 +211,6 @@ export class ClaimObject {
 
     const spl = SplitList(this.post.lifecycle, ":");
     return spl[1].toLowerCase() === "pending";
-  }
-
-  pendingVote(): VoteCreateResponse {
-    const vot = this.getVote();
-
-    if (vot.length !== 0) {
-      const lat = vot[vot.length - 1];
-      const obj = new VoteObject(lat);
-
-      if (obj.pending()) {
-        return lat;
-      }
-    }
-
-    return EmptyVoteCreateResponse();
   }
 
   progress(): number {

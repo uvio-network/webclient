@@ -42,7 +42,7 @@ const newPar = (): Required<EncodeFunctionDataParameters> => {
 
   const amo = edi.getAmount().big;
   const cla = edi.claims.abi;
-  const opt = edi.getOption();
+  const opt = edi.option;
   const pod = edi.post.id;
   const tok = edi.getToken().abi;
 

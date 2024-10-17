@@ -5,6 +5,11 @@ import { combine } from "zustand/middleware";
 import { ContractConfig } from "@/modules/contract/ContractConfig";
 import { create } from "zustand";
 import { parseUnits } from "viem";
+import { EmptyClaimObject } from "@/modules/claim/ClaimObject";
+import { EmptyContractConfig } from "@/modules/contract/ContractConfig";
+import { EmptyPostCreateResponse } from "@/modules/api/post/create/Response";
+import { EmptyReceipt } from "@/modules/wallet/WalletInterface";
+import { EmptyVoteCreateResponse } from "@/modules/api/vote/create/Response";
 import { PostCreateResponse } from "@/modules/api/post/create/Response";
 import { Receipt } from "@/modules/wallet/WalletInterface";
 import { TokenConfig } from "@/modules/token/TokenConfig";
@@ -40,7 +45,27 @@ export const EditorStore = create(
     (set, get) => ({
       delete: () => {
         set(() => {
-          return {};
+          return {
+            claims: EmptyContractConfig(),
+            day: 0,
+            from: "0x0",
+            kind: "",
+            labels: "",
+            markdown: "",
+            month: 0,
+            option: false,
+            overlay: false,
+            parent: EmptyClaimObject(),
+            pending: false,
+            post: EmptyPostCreateResponse(),
+            propose: EmptyClaimObject(),
+            receipt: EmptyReceipt(),
+            reference: "",
+            resolve: EmptyClaimObject(),
+            stake: "",
+            vote: EmptyVoteCreateResponse(),
+            year: 0,
+          };
         });
       },
       getAmount: (): { num: number; big: bigint; } => {
