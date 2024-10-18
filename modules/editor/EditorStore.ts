@@ -28,7 +28,8 @@ export interface EditorMessage {
   option: boolean;
   overlay: boolean;
   parent: ClaimObject;
-  pending: boolean;
+  patch: boolean;   // whether the vote must be patched
+  pending: boolean; // whether the claim is pending
   post: PostCreateResponse;
   propose: ClaimObject;
   receipt: Receipt;
@@ -168,6 +169,14 @@ export const EditorStore = create(
           };
         });
       },
+      updatePatch: (p: boolean) => {
+        set((state: EditorMessage) => {
+          return {
+            ...state,
+            patch: p,
+          };
+        });
+      },
       updatePending: (p: boolean) => {
         set((state: EditorMessage) => {
           return {
@@ -269,7 +278,7 @@ const getAmo = (stk: string): number => {
     return 0;
   }
 
-  const num = parseFloat(str);
+  const num = Number(str);
 
   return isNaN(num) ? 0 : num;
 };

@@ -29,7 +29,7 @@ export interface PostSummary {
 //
 export const NewPostSummary = (pos: PostSearchResponse): PostSummary => {
   const num = SplitList(pos.summary).map((x: string) => {
-    return parseFloat(x);
+    return Number(x);
   });
 
   const sum: PostSummary = {

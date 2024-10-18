@@ -49,23 +49,23 @@ export const SubmitPost = async (props: Props) => {
     }
   }
 
-  {
-    if (edi.kind === "claim") {
-      if (edi.propose !== undefined && edi.propose.contract() as String !== "") {
-        edi.updateClaims(ContractWithAddress(edi.propose.contract(), chn));
-      } else if (edi.resolve !== undefined && edi.resolve.contract() as String !== "") {
-        edi.updateClaims(ContractWithAddress(edi.resolve.contract(), chn));
-      } else {
-        edi.updateClaims(ClaimsWithSymbol(edi.getSymbol(), chn));
-      }
+  try {
+    {
+      if (edi.kind === "claim") {
+        if (edi.propose !== undefined && edi.propose.contract() as String !== "") {
+          edi.updateClaims(ContractWithAddress(edi.propose.contract(), chn));
+        } else if (edi.resolve !== undefined && edi.resolve.contract() as String !== "") {
+          edi.updateClaims(ContractWithAddress(edi.resolve.contract(), chn));
+        } else {
+          edi.updateClaims(ClaimsWithSymbol(edi.getSymbol(), chn));
+        }
 
-      {
-        edi.updateReference(await newHsh(edi.markdown));
+        {
+          edi.updateReference(await newHsh(edi.markdown));
+        }
       }
     }
-  }
 
-  try {
     // Before we create any resources, whether it is offchain or onchain, we
     // create the required transactions and simulate them to the best of our
     // abilities. If we cannot even simulate transactions, we have no business

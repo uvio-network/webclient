@@ -23,6 +23,14 @@ export const RejectedReceipt = (): Receipt => {
   };
 };
 
+export const SuccessReceipt = (hsh: string): Receipt => {
+  return {
+    hash: hsh,
+    rejected: false,
+    success: true,
+  };
+};
+
 export interface Signer {
   address(): Address;
   connectorType(): string;

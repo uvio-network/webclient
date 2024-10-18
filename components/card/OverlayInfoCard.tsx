@@ -3,7 +3,6 @@ import * as React from "react";
 import { ClaimObject } from "@/modules/claim/ClaimObject";
 import { EditorStore } from "@/modules/editor/EditorStore";
 import { InfoCard } from "@/components/card/InfoCard";
-import { ToTitle } from "@/modules/string/ToTitle";
 
 interface Props {
   claim: ClaimObject;
@@ -22,6 +21,9 @@ export const OverlayInfoCard = (props: Props) => {
   const pendingClaim = props.claim.pending();
   const pendingVote = props.claim.latestVote().pending();
 
+  const hasMinimum = props.claim.summary().post.minimum > 0;
+  const hasVote = props.claim.latestVote().value() > 0;
+
   return (
     <InfoCard
       close={(!pendingClaim && !pendingVote)}
@@ -38,7 +40,7 @@ export const OverlayInfoCard = (props: Props) => {
                   {isDispute && " dispute "}
                   {isPropose && " proposal "}
 
-                  {props.claim.summary().post.minimum === 0 ? " once more using your desired amount of stake." : " once more."}
+                  {hasMinimum || hasVote ? " once more." : ` once more using your desired amount of ${props.claim.token()} tokens.`}
                 </>
               )}
 

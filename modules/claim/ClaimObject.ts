@@ -155,6 +155,10 @@ export class ClaimObject {
     return moment.unix(parseInt(this.post.expiry, 10)).utc();
   }
 
+  hash(): string {
+    return this.post.hash;
+  }
+
   kind(): string {
     return this.post.kind;
   }

@@ -14,7 +14,7 @@ export const SearchBalance = async (wal: WalletMessage, cla: ContractConfig, tok
   }) as unknown as [bigint, bigint];
 
   return {
-    alo: parseFloat(formatUnits(res[0], tok.decimals)),
-    avl: parseFloat(formatUnits(res[1], tok.decimals)),
+    alo: Number(formatUnits(res[0], tok.decimals)),
+    avl: Number(formatUnits(res[1], tok.decimals)),
   };
 };

@@ -11,6 +11,7 @@ import { OverlayInfoCard } from "@/components/card/OverlayInfoCard";
 import { QueryStore } from "@/modules/query/QueryStore";
 import { SpinnerIcon } from "@/components/icon/SpinnerIcon";
 import { SubmitPost } from "@/modules/editor/SubmitPost";
+import { SuccessReceipt } from "@/modules/wallet/WalletInterface";
 import { SubmitVote } from "@/modules/editor/SubmitVote";
 import { TokenStore } from "@/modules/token/TokenStore";
 import { ToTitle } from "@/modules/string/ToTitle";
@@ -33,8 +34,13 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
   const isPropose = props.claim.lifecycle() === "propose" ? true : false;
   const isResolve = props.claim.lifecycle() === "resolve" ? true : false;
 
+  const hasNoVotes = props.claim.getVote().length === 0;
+  const hasOneVote = props.claim.getVote().length === 1;
+
   const pendingClaim = props.claim.pending();
   const pendingVote = props.claim.latestVote().pending();
+
+  const mustBePatched = (!pendingClaim && ((hasNoVotes) || (hasOneVote && pendingVote))) ? true : false;
 
   React.useEffect(() => {
     if (pendingClaim) {
@@ -62,12 +68,21 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
       // everything else. So only if the given claim is not pending, only then
       // can we go ahead to ensure pending votes or deal with stakes and votes.
 
-      if (pendingVote) {
+      // If the claim is not pending, then that means that we deposited tokens
+      // already into a smart contract. If the latest vote is then still
+      // pending, then that means we need to update the pending vote with the
+      // hash of the confirmed claim, without doing any more contract writes.
+      if (mustBePatched) {
+        EditorStore.getState().updateOption(true);
+        EditorStore.getState().updatePatch(true);
+        EditorStore.getState().updateReceipt(SuccessReceipt(props.claim.hash()));
+        EditorStore.getState().updateVote(props.claim.latestVote().getVote());
+      } else if (pendingVote) {
         EditorStore.getState().updateOption(props.claim.latestVote().option());
         EditorStore.getState().updateVote(props.claim.latestVote().getVote());
       }
 
-      if (overlay || pendingVote) {
+      if (overlay || mustBePatched || pendingVote) {
         if (isResolve) {
           EditorStore.getState().updateKind("truth");
           EditorStore.getState().updatePropose(props.claim.parent()!)
@@ -147,7 +162,7 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
                     setProcessing("Signing Transaction");
                   },
                 });
-              } else if (overlay || pendingVote) {
+              } else if (overlay || mustBePatched || pendingVote) {
                 SubmitVote({
                   after: () => {
                     setProcessing("Confirming Onchain");
@@ -179,7 +194,11 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
                   },
                   valid: () => {
                     setDisabled(true);
-                    setProcessing("Signing Transaction");
+                    if (mustBePatched) {
+                      setProcessing(`Submitting ${EditorStore.getState().kind === "stake" ? "Stake" : "Vote"}`);
+                    } else {
+                      setProcessing("Signing Transaction");
+                    }
                   },
                 });
               }

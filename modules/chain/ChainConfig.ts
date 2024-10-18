@@ -2,6 +2,7 @@ import { Address } from "viem";
 import { Chain } from "viem/chains";
 import { ContractConfig } from "@/modules/contract/ContractConfig";
 import { TokenConfig } from "@/modules/token/TokenConfig";
+import { truncateEthAddress } from "@/modules/wallet/WalletAddress";
 
 export interface ChainConfig extends Omit<Chain, "contracts"> {
   biconomyPaymasterApiKey: string;
@@ -16,7 +17,7 @@ export const ClaimsWithSymbol = (sym: string, chn: ChainConfig): ContractConfig 
   });
 
   if (con === undefined) {
-    throw "could not find contract config based on contract address";
+    throw `Could not find contract config for token symbol ${sym}.`;
   }
 
   return con;
@@ -28,7 +29,7 @@ export const ContractWithAddress = (add: Address, chn: ChainConfig): ContractCon
   });
 
   if (con === undefined) {
-    throw "could not find contract config based on contract address";
+    throw `Could not find contract config for contract address ${truncateEthAddress(add)}.`;
   }
 
   return con;

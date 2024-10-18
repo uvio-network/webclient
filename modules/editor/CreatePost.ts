@@ -11,7 +11,7 @@ export const CreatePost = async () => {
 
   // If a pending claim exists, then we do not have to create one.
   if (edi.post !== undefined && edi.post.id !== "") {
-    console.log("Editor.CreatePost.return", edi.post.id);
+    console.log("Editor.CreatePost.exists", edi.post.id);
     return;
   }
 

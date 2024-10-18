@@ -31,13 +31,13 @@ export const SubmitVote = async (props: Props) => {
     }
   }
 
-  {
-    if (edi.propose !== undefined && edi.propose.contract() as String !== "") {
-      edi.updateClaims(ContractWithAddress(edi.propose.contract(), chn));
-    }
-  }
-
   try {
+    {
+      if (edi.propose !== undefined && edi.propose.contract() as String !== "") {
+        edi.updateClaims(ContractWithAddress(edi.propose.contract(), chn));
+      }
+    }
+
     // Before we create any resources, whether it is offchain or onchain, we
     // create the required transactions and simulate them to the best of our
     // abilities. If we cannot even simulate transactions, we have no business

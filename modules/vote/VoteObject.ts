@@ -67,6 +67,6 @@ export class VoteObject {
       return 0;
     }
 
-    return parseFloat(this.vote.value);
+    return Number(this.vote.value);
   }
 }
