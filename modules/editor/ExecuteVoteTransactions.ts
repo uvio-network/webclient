@@ -10,6 +10,14 @@ export const ExecuteVoteTransactions = async (bef: () => void, aft: () => void) 
   const edi = EditorStore.getState();
   const wal = WalletStore.getState();
 
+  // In case a claim's first vote does either not exist or is pending, we must
+  // not deposit onchain again, because the confirmed claim has already
+  // deposited.
+  if (edi.patch === true) {
+    console.log("Editor.ExecuteVoteTransactions.patch", edi.patch);
+    return;
+  }
+
   const txn: Transaction[] = [];
 
   if (edi.kind === "stake") {

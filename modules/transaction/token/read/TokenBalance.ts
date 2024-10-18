@@ -10,5 +10,5 @@ export const TokenBalance = async (wal: WalletMessage, tok: TokenConfig): Promis
     args: [wal.object.address()],
   }) as unknown as bigint;
 
-  return parseFloat(formatUnits(res, tok.decimals));
+  return Number(formatUnits(res, tok.decimals));
 };

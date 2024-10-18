@@ -26,7 +26,7 @@ export const InfoCard = (props: Props) => {
       <div className="w-full text-sm">
         {props.text && React.cloneElement(props.text, {})}
 
-        &nbsp;Learn more at&nbsp;
+        {" Learn more at "}
 
         <Link
           className="text-blue-600 dark:text-blue-400"
