@@ -34,6 +34,7 @@ export const EditorLabels = (props: Props) => {
           lifecycle="propose"
           pending={false}
           target="_blank"
+          valid={false}
         />
       </div>
     </div>

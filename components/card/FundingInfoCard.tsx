@@ -28,7 +28,7 @@ export const FundingInfoCard = () => {
   return (
     <InfoCard
       close={false}
-      color="default"
+      color="gray"
       text={
         <>
           You are about to lock up {funding} until this new market resolves.

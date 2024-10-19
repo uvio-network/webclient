@@ -9,7 +9,7 @@ import { XMarkIcon } from "@/components/icon/XMarkIcon";
 
 interface Props {
   close: boolean;
-  color: "default" | "blue" | "red";
+  color: "blue" | "gray" | "red";
   text: React.ReactElement | undefined;
 }
 
@@ -18,9 +18,9 @@ export const InfoCard = (props: Props) => {
     <div
       className={TrimWhitespace(`
         relative flex my-2 p-4 rounded
-        ${props.color === "default" && "background-overlay"}
-        ${props.color === "blue" && "bg-sky-200 dark:bg-sky-900"}
-        ${props.color === "red" && "bg-rose-200 dark:bg-rose-900"}
+        ${props.color === "gray" && "background-overlay"}
+        ${props.color === "blue" && "bg-amber-300 text-black"}
+        ${props.color === "red" && "bg-rose-400 text-black"}
       `)}
     >
       <div className="w-full text-sm">
@@ -29,7 +29,7 @@ export const InfoCard = (props: Props) => {
         {" Learn more at "}
 
         <Link
-          className="text-blue-600 dark:text-blue-400"
+          className="text-blue-600"
           href="https://docs.uvio.network"
           target="_blank"
         >
@@ -43,7 +43,8 @@ export const InfoCard = (props: Props) => {
         <div className="absolute top-0 right-0">
           <BaseButton
             background="none"
-            color="text-gray-500 dark:text-gray-400"
+            color="text-gray-500"
+            hover="hover:text-black"
             icon={<XMarkIcon />}
             onClick={() => {
               EditorStore.getState().updateOverlay(false);

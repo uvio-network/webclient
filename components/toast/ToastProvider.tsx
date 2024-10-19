@@ -1,5 +1,6 @@
 import * as RadixToast from "@radix-ui/react-toast";
 
+import { BaseButton } from "@/components/button/BaseButton";
 import { ToastMessage } from "@/components/toast/ToastStore";
 import { ToastStore } from "@/components/toast/ToastStore";
 import { XMarkIcon } from "@/components/icon/XMarkIcon";
@@ -17,7 +18,7 @@ export const ToastProvider = () => {
           <RadixToast.Root
             key={mes.unix}
             className={`
-              p-2 text-black rounded items-center
+              relative p-2 text-black rounded items-center
               data-[state=open]:animate-slideIn
               data-[state=closed]:animate-hide
               data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)]
@@ -36,10 +37,12 @@ export const ToastProvider = () => {
               <RadixToast.Title className="flex-1 font-medium">
                 {mes.titl}
               </RadixToast.Title>
-              <RadixToast.Close className="flex-none" aria-label="Close">
-                <XMarkIcon
-                  className="w-5 h-5 text-black hover:text-gray-600 dark:text-black dark:hover:text-gray-600"
-                  overwrite={true}
+              <RadixToast.Close className="absolute top-0 right-0" aria-label="Close">
+                <BaseButton
+                  background="none"
+                  color="text-gray-500"
+                  hover="hover:text-black"
+                  icon={<XMarkIcon />}
                 />
               </RadixToast.Close>
             </div>

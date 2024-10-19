@@ -20,7 +20,9 @@ interface Props {
 }
 
 export const ClaimContainer = (props: Props) => {
+  const isBalance = props.claim.lifecycle() === "balance" ? true : false;
   const isClaim = props.claim.kind() === "claim" ? true : false;
+  const isExpired = props.claim.expired();
   const isOwner = props.user && props.claim.owner().id() === props.user.id() ? true : false;
   const isPage = usePathname() === "/claim/" + props.claim.id() ? true : false;
   const isPending = props.claim.pending();
@@ -70,6 +72,7 @@ export const ClaimContainer = (props: Props) => {
           labels={props.claim.labels()}
           lifecycle={props.claim.lifecycle()}
           pending={props.claim.pending()}
+          valid={props.claim.parent()?.valid()}
         />
       )}
 
@@ -79,6 +82,7 @@ export const ClaimContainer = (props: Props) => {
           labels={props.claim.parent()!.labels()}
           lifecycle={props.claim.parent()!.lifecycle()}
           pending={props.claim.parent()!.pending()}
+          valid={false}
         />
       )}
 
@@ -89,7 +93,7 @@ export const ClaimContainer = (props: Props) => {
         />
       </div>
 
-      {isClaim && isPage && (
+      {isClaim && !isBalance && isPage && (
         <>
           {!isPending && (
             <ClaimVoteButtons
@@ -98,7 +102,7 @@ export const ClaimContainer = (props: Props) => {
             />
           )}
 
-          {(!isPending || (isPending && isOwner)) && (
+          {(!isPending || (isPending && isOwner)) && !isExpired && (
             <ClaimVoteButtonsOverlay
               claim={props.claim}
             />
