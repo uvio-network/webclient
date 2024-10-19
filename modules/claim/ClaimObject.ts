@@ -155,6 +155,14 @@ export class ClaimObject {
     return moment.unix(parseInt(this.post.expiry, 10)).utc();
   }
 
+  hasExpiry(): boolean {
+    if (this.post.expiry === undefined) {
+      return false;
+    }
+
+    return this.post.expiry !== "" && this.post.expiry !== "0";
+  }
+
   hash(): string {
     return this.post.hash;
   }

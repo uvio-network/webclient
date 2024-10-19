@@ -8,21 +8,24 @@ interface Props {
   labels: string[];
   lifecycle: string;
   pending: boolean;
-  target?: string;
+  target: string | undefined;
+  valid: boolean | undefined;
 }
 
 export const LabelList = (props: Props) => {
-  let col: "blue" | "rose" | "gray" = "blue";
+  let col: "blue" | "gray" | "green" | "rose" = "blue";
 
   if (props.lifecycle === "dispute") {
     col = "rose";
   }
 
-  // TODO we need to set green and we need to create those settled objects
-  //
-  // if (props.lifecycle === "settled") {
-  //   col = "green";
-  // }
+  if (props.lifecycle === "balance" && props.valid === true) {
+    col = "green";
+  }
+
+  if (props.lifecycle === "balance" && props.valid === false) {
+    col = "rose";
+  }
 
   return (
     <div className="flex flex-wrap gap-x-2 gap-y-2">
@@ -55,7 +58,7 @@ export const LabelList = (props: Props) => {
               href={`/claim/lifecycle/${props.lifecycle}`}
               target={props.target}
             >
-              <BaseLabel colour={col} text={props.lifecycle} />
+              <BaseLabel colour={col} text={props.lifecycle === "balance" ? "settled" : props.lifecycle} />
             </Link>
           )}
         </>

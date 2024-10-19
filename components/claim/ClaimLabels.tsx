@@ -5,6 +5,7 @@ interface Props {
   labels: string[];
   lifecycle: string;
   pending: boolean;
+  valid: boolean | undefined;
 }
 
 export const ClaimLabels = (props: Props) => {
@@ -15,6 +16,8 @@ export const ClaimLabels = (props: Props) => {
         labels={props.labels}
         lifecycle={props.lifecycle}
         pending={props.pending}
+        target={undefined}
+        valid={props.valid}
       />
     </div>
   );
