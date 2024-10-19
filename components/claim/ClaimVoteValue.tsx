@@ -68,20 +68,26 @@ export const ClaimVoteValue = (props: Props) => {
 };
 
 const defVal = (cla: ClaimObject): string => {
+  const pre = cla.precision();
   const vot = cla.latestVote();
 
   if (cla.pending()) {
-    if (cla.summary().post.minimum > 0) {
-      return `${cla.summary().post.minimum} ${cla.token()}`;
+    const min = cla.summary().post.minimum;
+
+    if (min > 0) {
+      return `${min.toFixed(pre)} ${cla.token()}`;
     }
-    if (vot.value() > 0) {
-      return `${vot.value()} ${cla.token()}`;
+
+    const val = vot.value();
+
+    if (val > 0) {
+      return `${val.toFixed(pre)} ${cla.token()}`;
     }
   }
 
   if (vot.pending()) {
     if (vot.value() > 0) {
-      return `${vot.value()} ${cla.token()}`;
+      return `${vot.value().toFixed(pre)} ${cla.token()}`;
     }
   }
 
@@ -102,8 +108,8 @@ const plcHld = (cla: ClaimObject): string => {
   const min = cla.summary().post.minimum;
 
   if (min) {
-    return `${min} ${cla.token()}`;
+    return `${min.toFixed(cla.precision())} ${cla.token()}`;
   }
 
-  return "10 UVX";
+  return "10.00 UVX";
 };

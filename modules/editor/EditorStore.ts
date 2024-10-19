@@ -103,7 +103,13 @@ export const EditorStore = create(
         return getLab(get().labels, get().propose);
       },
       getPostHash: (): string => {
-        return localStorage.getItem(posKey(get().post.id)) || "";
+        const pos = get().post;
+
+        if (pos !== undefined && pos.id !== "") {
+          return localStorage.getItem(posKey(pos.id)) || "";
+        }
+
+        return "";
       },
       getSymbol: (): string => {
         return tokStr(getStk(get().stake, get().propose));
@@ -112,7 +118,13 @@ export const EditorStore = create(
         return tokCon(getStk(get().stake, get().propose));
       },
       getVoteHash: (): string => {
-        return localStorage.getItem(votKey(get().vote.id)) || "";
+        const vot = get().vote;
+
+        if (vot !== undefined && vot.id !== "") {
+          return localStorage.getItem(votKey(vot.id)) || "";
+        }
+
+        return "";
       },
       updateClaims: (c: ContractConfig) => {
         set((state: EditorMessage) => {
