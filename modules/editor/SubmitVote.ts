@@ -82,7 +82,10 @@ export const SubmitVote = async (props: Props) => {
         props.onchain();
       }
     } else if (EditorStore.getState().receipt.rejected === true) {
-      {
+      // If the user rejects the confirmation of a pending vote, then we should
+      // not delete this pending resource, because this pending state is
+      // effectively what the user tries to confirm after all.
+      if (!edi.pending) {
         await DeleteVote();
       }
 

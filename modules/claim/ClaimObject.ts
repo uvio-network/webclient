@@ -1,8 +1,10 @@
 import moment from "moment";
 
 import { Address } from "viem";
+import { ChainStore } from "@/modules/chain/ChainStore";
 import { EmptyPostSearchResponse } from "@/modules/api/post/search/Response";
 import { EmptyUserSearchResponse } from "@/modules/api/user/search/Response";
+import { EmptyVoteObject } from "@/modules/vote/VoteObject";
 import { NewSummary } from "@/modules/summary/Summary";
 import { PostSearchResponse } from "@/modules/api/post/search/Response";
 import { SplitList } from "@/modules/string/SplitList";
@@ -10,7 +12,7 @@ import { Summary } from "@/modules/summary/Summary";
 import { UserObject } from "@/modules/user/UserObject";
 import { UserSearchResponse } from "@/modules/api/user/search/Response";
 import { UserStore } from "@/modules/user/UserStore";
-import { EmptyVoteObject, VoteObject } from "@/modules/vote/VoteObject";
+import { VoteObject } from "@/modules/vote/VoteObject";
 import { VoteSearchResponse } from "@/modules/api/vote/search/Response";
 
 export const EmptyClaimObject = (): ClaimObject => {
@@ -223,6 +225,13 @@ export class ClaimObject {
 
     const spl = SplitList(this.post.lifecycle, ":");
     return spl[1].toLowerCase() === "pending";
+  }
+
+  precision(): number {
+    const chn = ChainStore.getState().getActive();
+    const pre = chn.tokens[this.token()]?.precision || 2;
+
+    return pre;
   }
 
   progress(): number {
