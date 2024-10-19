@@ -45,6 +45,23 @@ export const EditorStore = create(
     {} as EditorMessage,
     (set, get) => ({
       delete: () => {
+        // Note that we store transaction hashes temporarily on the user's local
+        // storage for us to guarantee the reconciliation between onchain and
+        // offchain resources. Before we delete all editor state we want to
+        // ensure that we do not clutter the user's system with temporary state.
+        // That is why we have to remove this temporary state before deleting
+        // the editor state.
+
+        const pos = get().post;
+        if (pos !== undefined && pos.id !== "") {
+          localStorage.removeItem(posKey(pos.id));
+        }
+
+        const vot = get().vote;
+        if (vot !== undefined && vot.id !== "") {
+          localStorage.removeItem(votKey(vot.id));
+        }
+
         set(() => {
           return {
             claims: EmptyContractConfig(),
@@ -85,11 +102,17 @@ export const EditorStore = create(
       getLabels: (): string => {
         return getLab(get().labels, get().propose);
       },
+      getPostHash: (): string => {
+        return localStorage.getItem(posKey(get().post.id)) || "";
+      },
       getSymbol: (): string => {
         return tokStr(getStk(get().stake, get().propose));
       },
       getToken: (): TokenConfig => {
         return tokCon(getStk(get().stake, get().propose));
+      },
+      getVoteHash: (): string => {
+        return localStorage.getItem(votKey(get().vote.id)) || "";
       },
       updateClaims: (c: ContractConfig) => {
         set((state: EditorMessage) => {
@@ -202,6 +225,14 @@ export const EditorStore = create(
         });
       },
       updateReceipt: (r: Receipt) => {
+        if (get().kind === "stake" || get().kind === "truth") {
+          localStorage.setItem(votKey(get().vote.id), r.hash);
+        }
+
+        if (get().kind === "claim") {
+          localStorage.setItem(posKey(get().post.id), r.hash);
+        }
+
         set((state: EditorMessage) => {
           return {
             ...state,
@@ -307,6 +338,10 @@ const getStk = (stk: string, pro: ClaimObject): string => {
   return "";
 };
 
+const posKey = (oid: string): string => {
+  return oid + ".post.uvio.network/hash";
+};
+
 const tokCon = (stk: string): TokenConfig => {
   return ChainStore.getState().getActive().tokens[tokStr(stk)];
 };
@@ -319,4 +354,8 @@ const tokStr = (stk: string): string => {
   }
 
   return TrimWhitespace(spl[1]);
+};
+
+const votKey = (oid: string): string => {
+  return oid + ".vote.uvio.network/hash";
 };

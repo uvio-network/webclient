@@ -79,6 +79,7 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
         EditorStore.getState().updateVote(props.claim.latestVote().getVote());
       } else if (pendingVote) {
         EditorStore.getState().updateOption(props.claim.latestVote().option());
+        EditorStore.getState().updatePending(true);
         EditorStore.getState().updateVote(props.claim.latestVote().getVote());
       }
 
@@ -138,8 +139,20 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
                     //
                   },
                   error: () => {
+                    // We do not delete the editor state on errors, but instead
+                    // only refresh the query for the claim that we are working
+                    // on right now. This has the effect that the user will be
+                    // prompted to complete their originally intended action, so
+                    // that most of the broken state that we can anticipate gets
+                    // fixed immediately.
+                    QueryStore.getState().claim.refresh();
+
                     setDisabled(false);
                     setProcessing("");
+
+                    if (!isResolve) {
+                      TokenStore.getState().updateBalance();
+                    }
                   },
                   offchain: () => {
                     //
@@ -171,18 +184,31 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
                     //
                   },
                   error: () => {
+                    // We do not delete the editor state on errors, but instead
+                    // only refresh the query for the claim that we are working
+                    // on right now. This has the effect that the user will be
+                    // prompted to complete their originally intended action, so
+                    // that most of the broken state that we can anticipate gets
+                    // fixed immediately.
+                    QueryStore.getState().claim.refresh();
+
                     setDisabled(false);
                     setProcessing("");
+
+                    if (!isResolve) {
+                      TokenStore.getState().updateBalance();
+                    }
                   },
                   offchain: () => {
                     //
                   },
                   onchain: () => {
+                    QueryStore.getState().claim.refresh();
+
                     setDisabled(false);
                     setProcessing("");
 
                     EditorStore.getState().delete();
-                    QueryStore.getState().claim.refresh();
 
                     if (!isResolve) {
                       TokenStore.getState().updateBalance();
