@@ -13,17 +13,23 @@ interface Props {
 }
 
 export const LabelList = (props: Props) => {
+  let lif = props.lifecycle;
+
+  if (lif === "balance") {
+    lif = "settled";
+  }
+
   let col: "blue" | "gray" | "green" | "rose" = "blue";
 
-  if (props.lifecycle === "dispute") {
+  if (lif === "dispute") {
     col = "rose";
   }
 
-  if (props.lifecycle === "balance" && props.valid === true) {
+  if (lif === "settled" && props.valid === true) {
     col = "green";
   }
 
-  if (props.lifecycle === "balance" && props.valid === false) {
+  if (lif === "settled" && props.valid === false) {
     col = "rose";
   }
 
@@ -46,7 +52,7 @@ export const LabelList = (props: Props) => {
             <Tooltip
               content={
                 <>
-                  Lifecycle <strong>{props.lifecycle}</strong> once the claim&apos;s transaction has been finalized onchain.
+                  Lifecycle <strong>{lif}</strong> once the claim&apos;s transaction has been finalized onchain.
                 </>
               }
               trigger={
@@ -55,10 +61,10 @@ export const LabelList = (props: Props) => {
             />
           ) : (
             <Link
-              href={`/claim/lifecycle/${props.lifecycle}`}
+              href={`/claim/lifecycle/${lif}`}
               target={props.target}
             >
-              <BaseLabel colour={col} text={props.lifecycle === "balance" ? "settled" : props.lifecycle} />
+              <BaseLabel colour={col} text={lif} />
             </Link>
           )}
         </>

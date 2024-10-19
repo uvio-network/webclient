@@ -110,9 +110,11 @@ export const ClaimContainer = (props: Props) => {
         </>
       )}
 
-      <ClaimFooter
-        claim={props.claim}
-      />
+      {!isBalance && (
+        <ClaimFooter
+          claim={props.claim}
+        />
+      )}
     </div>
   );
 };
