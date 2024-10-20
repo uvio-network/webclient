@@ -21,7 +21,7 @@ export const ClaimVoteValue = (props: Props) => {
 
   // The value field here has only one purpose, allowing the user to cancel the
   // verification using the ESC key.
-  if (props.claim.lifecycle() === "resolve") {
+  if (props.claim.isResolve()) {
     return (
       <input
         style={{

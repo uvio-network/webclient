@@ -1,19 +1,22 @@
 import * as React from "react";
 
-import { ClaimContainer } from "@/components/claim/ClaimContainer";
 import { ClaimObject } from "@/modules/claim/ClaimObject";
-import { ClaimStore } from "@/modules/claim/ClaimStore";
-import { NewClaimList } from "@/modules/claim/ClaimList";
+import { ClaimTree } from "@/modules/claim/ClaimTree";
+import { CommentContainer } from "@/components/claim/CommentContainer";
 import { LoadingStore } from "@/components/loading/LoadingStore";
+import { NewClaimList } from "@/modules/claim/ClaimList";
+import { NewClaimTree } from "@/modules/claim/ClaimTree";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { PostSearchRequest } from "@/modules/api/post/search/Request";
 import { QueryStore } from "@/modules/query/QueryStore";
+import { TreeContainer } from "@/components/claim/TreeContainer";
 import { useQuery } from "@tanstack/react-query";
 import { UserStore } from "@/modules/user/UserStore";
 import { useShallow } from "zustand/react/shallow";
 import { VerticalSeparator } from "@/components/layout/VerticalSeparator";
 
 interface Props {
-  filter?: (cla: ClaimObject) => boolean;
+  comments: boolean;
   query: string[];
   request: PostSearchRequest[];
 }
@@ -34,7 +37,7 @@ export const ClaimList = (props: Props) => {
   const posts = useQuery({
     queryKey: [...props.query, "NewClaimList"],
     queryFn: async () => {
-      return await NewClaimList(token, props.request);
+      return NewClaimTree(await NewClaimList(token, props.request));
     },
     enabled: !authorizing && valid,
     staleTime: 5000, // this prevents NewClaimList to be called multiple times
@@ -43,23 +46,6 @@ export const ClaimList = (props: Props) => {
   updateClaim(() => {
     posts.refetch();
   });
-
-  // We search for posts in all kinds of variations in this component. For one,
-  // getLis gives us a list of posts, which is easier to work with below, even
-  // if it is empty. And then, we have to account for pages rendered with or
-  // without comments. If we are tasked to render a claims page, and the post to
-  // render is in fact a comment, then we only render the comment itself.
-  const list = filLis(getLis(posts.data || [], props.query), props.filter);
-
-  React.useEffect(() => {
-    if (list.length !== 0) {
-      if (props.query.join("-").startsWith("claim-id")) {
-        ClaimStore.getState().updateTree(list[0].tree());
-      } else {
-        ClaimStore.getState().delete();
-      }
-    }
-  }, [list, props.query]);
 
   {
     const { loaded, loading } = LoadingStore();
@@ -74,109 +60,52 @@ export const ClaimList = (props: Props) => {
     if (loading) return <></>;
   }
 
+  if (posts.data?.length === 0 && !posts.isPending) {
+    return (
+      <>
+        no claims found
+      </>
+    );
+  }
+
   return (
     <div>
-      {list.length === 0 && !posts.isPending && (
-        <>
-          no claims found
-        </>
-      )}
-
-      {list.map((x: ClaimObject, i: number) => (
-        <div key={x.id()}>
-          <ClaimContainer
-            claim={x}
+      {posts.data?.map((x: ClaimTree, i: number) => (
+        <div key={x.propose().id()}>
+          <TreeContainer
+            tree={x}
             user={user}
           />
 
-          {/*
-          Show a vertical separator between claims and make sure that the last
-          claim does not display a separator anymore.
-          */}
-          {i < list.length - 1 && (
+          {i < posts.data?.length - 1 && (
             <div className="w-full h-12 mb-8">
               <VerticalSeparator />
             </div>
+          )}
+
+          {props.comments && (
+            <>
+              <PageHeader
+                titl="Comments"
+              />
+
+              {x.comment().map((y: ClaimObject, i: number) => (
+                <div key={y.id()}>
+                  <CommentContainer
+                    comment={y}
+                  />
+
+                  {i < x.comment().length - 1 && (
+                    <div className="w-full h-12 mb-8">
+                      <VerticalSeparator />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </>
           )}
         </div>
       ))}
     </div>
   );
-};
-
-// filLis applies a filter function to the given list of claims, if such a
-// filter is provided. If not, the given list of claims is returned as is.
-const filLis = (cla: ClaimObject[], fil: ((cla: ClaimObject) => boolean) | undefined): ClaimObject[] => {
-  if (fil !== undefined) {
-    return cla.filter(fil);
-  }
-
-  return cla;
-};
-
-// getLis ensures the order of post objects according to the page we are
-// supposed to render.
-const getLis = (cla: ClaimObject[], qry: string[]): ClaimObject[] => {
-  const pag = qry.join("-").startsWith("claim-id") ? qry[2] : "";
-
-  if (pag === "") {
-    for (const x of cla) {
-      // On the timeline, every claim is allowed to embed once, if a parent
-      // exists.
-      if (x.kind() == "claim") {
-        x.setEmbd(1);
-      }
-
-      // On the timeline, every comment is allowed to embed twice, to the extend
-      // that those parents exists.
-      if (x.kind() == "comment") {
-        x.setEmbd(2);
-      }
-    }
-
-    return cla;
-  }
-
-  // If we are rendering a single comment on the comment page, then only return
-  // the comment object itself.
-  for (const x of cla) {
-    if (x.kind() === "comment" && x.id() === pag) {
-      x.setEmbd(2);
-      return [x];
-    }
-  }
-
-  const lis: ClaimObject[] = [];
-
-  // If we are rendering a dedicated claims page, then put the claim of this
-  // page at the top.
-  for (const x of cla) {
-    if (x.kind() === "claim" && x.id() === pag) {
-      x.setEmbd(2);
-      lis.push(x);
-      break;
-    }
-  }
-
-  const fir = lis[0];
-
-  for (const x of cla) {
-    // Do not add the claim again that we have already added at the top of this
-    // list.
-    if (fir.id() === x.id()) {
-      continue
-    }
-
-    // Do not add the parent of the first claim, because the first claim has its
-    // parent already embedded.
-    if (fir.parent()?.id() === x.id()) {
-      continue
-    }
-
-    {
-      lis.push(x);
-    }
-  }
-
-  return lis;
 };

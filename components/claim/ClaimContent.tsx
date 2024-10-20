@@ -3,6 +3,7 @@
 import * as React from "react";
 
 import { ClaimObject } from "@/modules/claim/ClaimObject";
+import { ClaimPage } from "@/modules/claim/ClaimPage";
 import { LimitMarkdown } from "@/modules/string/LimitMarkdown";
 import { RenderMarkdown } from "@/components/markdown/RenderMarkdown";
 import { usePathname } from "next/navigation";
@@ -18,7 +19,7 @@ export const ClaimContent = (props: Props) => {
   const router = useRouter();
 
   const claimPage = "/claim/" + props.claim.id();
-  const isPage = usePathname() === "/claim/" + props.claim.id() ? true : false;
+  const isPage = ClaimPage(usePathname());
   const limit = props.embed === true ? 25 : 70;
 
   const process = (txt: string): string => {

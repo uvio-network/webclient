@@ -32,9 +32,6 @@ export const ClaimHeaderMenu = (props: Props) => {
   const router = useRouter();
 
   const isClaim = props.claim.kind() === "claim";
-  const isPropose = props.claim.lifecycle() === "propose";
-  const isDispute = props.claim.lifecycle() === "dispute";
-  const isResolve = props.claim.lifecycle() === "resolve";
   const isChallenge = props.claim.expired() && props.claim.challenge();
   const isStaker = props.claim.summary().vote.hsitg;
   const isVoter = props.claim.selected();
@@ -103,12 +100,12 @@ export const ClaimHeaderMenu = (props: Props) => {
                     <Tooltip
                       content={
                         <>
-                          {isResolve && (
+                          {props.claim.isResolve() && (
                             <>
                               You cannot comment because you have not been selected to vote on this claim. You can still comment on the associated claim if you staked reputation there.
                             </>
                           )}
-                          {(isDispute || isPropose) && (
+                          {(props.claim.isDispute() || props.claim.isPropose()) && (
                             <>
                               You cannot comment because you have no reputation staked on this claim.
                             </>
@@ -123,7 +120,7 @@ export const ClaimHeaderMenu = (props: Props) => {
                 )}
               </DropdownMenu.Item>
 
-              {isResolve && isChallenge && (
+              {props.claim.isResolve() && isChallenge && (
                 <DropdownMenu.Item
                   className={itemClassName}
                   onSelect={addDispute}

@@ -1,23 +1,22 @@
 import { LabelList } from "@/components/label/LabelList";
+import { LifecycleObject } from "@/modules/lifecycle/LifecycleObject";
 
 interface Props {
-  comment: boolean;
+  expand: (() => void) | undefined;
   labels: string[];
-  lifecycle: string;
+  lifecycle: LifecycleObject;
   pending: boolean;
-  valid: boolean | undefined;
 }
 
 export const ClaimLabels = (props: Props) => {
   return (
     <div className="my-4">
       <LabelList
-        comment={props.comment}
+        expand={props.expand}
         labels={props.labels}
         lifecycle={props.lifecycle}
         pending={props.pending}
         target={undefined}
-        valid={props.valid}
       />
     </div>
   );

@@ -33,6 +33,14 @@ export const LifecycleButton = (props: Props) => {
           text="Market Resolutions"
         />
       </Link>
+
+      <Link href="/claim/lifecycle/settled">
+        <BaseButton
+          icon={<CycleIcon />}
+          onClick={props.onClick}
+          text="Settled Markets"
+        />
+      </Link>
     </>
   );
 };
