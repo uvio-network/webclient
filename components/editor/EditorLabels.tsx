@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import { BaseLabel } from "@/components/label/BaseLabel";
 import { EditorStore } from "@/modules/editor/EditorStore";
 import { LabelList } from "@/components/label/LabelList";
 import { SplitList } from "@/modules/string/SplitList";
@@ -10,15 +11,15 @@ interface Props {
 }
 
 export const EditorLabels = (props: Props) => {
-  const editor = EditorStore.getState();
+  const edi = EditorStore.getState();
 
   if (props.write) {
     return (
       <input
         className="block w-full mr-2 p-2 py-1 background placeholder outline-none"
-        defaultValue={editor.labels}
+        defaultValue={edi.labels}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          editor.updateLabels(e.currentTarget.value);
+          edi.updateLabels(e.currentTarget.value);
         }}
         placeholder="crypto, economics, sports"
         type="text"
@@ -26,17 +27,21 @@ export const EditorLabels = (props: Props) => {
     );
   };
 
+  const lif = new LifecycleObject("propose", false);
+
   return (
     <div className="flex h-8">
-      <div className="my-auto">
-        <LabelList
-          expand={undefined}
-          labels={SplitList(editor.labels).map((str) => str.toLowerCase().replace(/\s+/g, "-"))}
-          lifecycle={new LifecycleObject("propose", false)}
-          pending={false}
-          target="_blank"
-        />
-      </div>
+      <BaseLabel
+        className="cursor-default"
+        color={lif.color()}
+        dashed={lif.pending()}
+        text={lif.phase()}
+      />
+
+      <LabelList
+        labels={SplitList(edi.labels).map((str) => str.toLowerCase().replace(/\s+/g, "-"))}
+        target="_blank"
+      />
     </div>
   );
 };
