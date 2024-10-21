@@ -1,4 +1,4 @@
-export const ClaimPage = (str: string): boolean => {
-  const claimPattern = /^\/?claim\/\d+$/;
-  return claimPattern.test(str);
+export const ClaimPage = (str: string): string => {
+  const mat = str.match(/^\/?claim\/(\d+)$/);
+  return mat ? mat[1] : "";
 };

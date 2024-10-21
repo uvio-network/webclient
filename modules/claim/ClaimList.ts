@@ -11,9 +11,9 @@ import { UserSearchResponse } from "@/modules/api/user/search/Response";
 import { VoteSearch } from "@/modules/api/vote/search/Search";
 import { VoteSearchResponse } from "@/modules/api/vote/search/Response";
 
-export const NewClaimList = async (tok: string, req: PostSearchRequest[]): Promise<ClaimObject[]> => {
+export const NewClaimList = async (tok: string, req: PostSearchRequest): Promise<ClaimObject[]> => {
   try {
-    const pos = await PostSearch(tok, req);
+    const pos = await PostSearch(tok, [req]);
 
     if (pos.length === 0) {
       return [];

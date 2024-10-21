@@ -21,7 +21,7 @@ export const UserButton = (props: Props) => {
           <BaseButton
             icon={<AccountIcon />}
             onClick={props.onClick}
-            text={object.name()}
+            text={<>{object.name()}</>}
           />
         </Link>
       )}

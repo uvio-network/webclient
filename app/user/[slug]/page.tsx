@@ -10,7 +10,7 @@ export default function Page({ params }: { params: { slug: string } }) {
       <ClaimList
         comments={false}
         query={["claim", "owner", params.slug]}
-        request={[{ owner: params.slug }]}
+        request={{ owner: params.slug }}
       />
     </>
   );

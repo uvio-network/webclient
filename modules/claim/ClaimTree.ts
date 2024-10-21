@@ -32,7 +32,7 @@ export class ClaimTree {
   private com: ClaimObject[];
 
   constructor(cla: ClaimObject[]) {
-    this.all = cla.sort((x, y) => x.expiry().diff(y.expiry()));
+    this.all = cla.sort((x, y) => x.created().diff(y.created()));
 
     this.cla = this.all.filter((x) => x.kind() === "claim");
     this.com = this.all.filter((x) => x.kind() === "comment");
@@ -48,7 +48,7 @@ export class ClaimTree {
     return this.set;
   }
 
-  claim(): ClaimObject[] {
+  claims(): ClaimObject[] {
     return this.cla;
   }
 
@@ -56,19 +56,35 @@ export class ClaimTree {
     return this.com;
   }
 
-  current(): ClaimObject {
+  current(cur?: string): ClaimObject {
+    if (cur && cur !== "") {
+      return this.cla.find((x) => x.id() === cur)!;
+    }
+
     return this.cur;
+  }
+
+  disputes(): ClaimObject[] {
+    return this.dis;
   }
 
   instance(): number {
     return this.dis.length;
   }
 
+  latest(): ClaimObject {
+    if (this.dis.length === 0) {
+      return this.pro;
+    }
+
+    return this.dis[this.dis.length - 1];
+  }
+
   propose(): ClaimObject {
     return this.pro;
   }
 
-  resolve(): ClaimObject[] {
+  resolves(): ClaimObject[] {
     return this.res;
   }
 };

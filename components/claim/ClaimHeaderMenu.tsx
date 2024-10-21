@@ -57,10 +57,6 @@ export const ClaimHeaderMenu = (props: Props) => {
     }
   };
 
-  const onSelect = () => {
-    ToastSender.Info("It's comming just chill ok!");
-  };
-
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>

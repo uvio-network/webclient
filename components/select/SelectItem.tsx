@@ -12,22 +12,19 @@ export const SelectItem = React.forwardRef<HTMLDivElement, Props>(function Selec
   return (
     <Select.Item
       className={`
-        flex w-[150px] p-2
-        rounded outline-none cursor-pointer
-        items-center justify-center
+        flex min-w-[110px] p-2
+        outline-none cursor-pointer
         data-[highlighted]:bg-gray-200
         dark:data-[highlighted]:bg-gray-700
       `}
       value={props.value}
       ref={ref}
     >
-
-      <Select.ItemIndicator className="absolute left-0 ml-2">
-        <CheckMarkIcon className="ml-2" />
+      <Select.ItemIndicator className="absolute right-2">
+        <CheckMarkIcon />
       </Select.ItemIndicator>
 
       <Select.ItemText>{props.children}</Select.ItemText>
-
     </Select.Item>
   );
 });

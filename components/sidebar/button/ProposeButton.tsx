@@ -35,7 +35,7 @@ export const ProposeButton = (props: Props) => {
     >
       <BaseButton
         icon={<AddSquareIcon />}
-        text="Propose Claim"
+        text={<>Propose Claim</>}
       />
     </Link>
   );

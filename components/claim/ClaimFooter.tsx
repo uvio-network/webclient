@@ -40,7 +40,7 @@ export const ClaimFooter = (props: Props) => {
                 icon={<TriangleUpIcon className="mb-[1px]" />}
                 onClick={onClick}
                 position="right"
-                text={textAgree}
+                text={<>{textAgree}</>}
               />
             )}
 
@@ -93,7 +93,7 @@ export const ClaimFooter = (props: Props) => {
                 icon={<TriangleDownIcon className="mb-[1px]" />}
                 onClick={onClick}
                 position="left"
-                text={textDisagree}
+                text={<>{textDisagree}</>}
               />
             )}
 

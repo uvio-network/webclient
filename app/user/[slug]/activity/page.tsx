@@ -10,7 +10,7 @@ export default function Page({ params }: { params: { slug: string } }) {
       <ClaimList
         comments={false}
         query={["claim", "vote", params.slug]}
-        request={[{ vote: params.slug }]}
+        request={{ vote: params.slug }}
       />
     </>
   );

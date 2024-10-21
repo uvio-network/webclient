@@ -14,7 +14,7 @@ export const LifecycleButton = (props: Props) => {
         <BaseButton
           icon={<CycleIcon />}
           onClick={props.onClick}
-          text="Disputed Claims"
+          text={<>Disputed Claims</>}
         />
       </Link>
 
@@ -22,7 +22,7 @@ export const LifecycleButton = (props: Props) => {
         <BaseButton
           icon={<CycleIcon />}
           onClick={props.onClick}
-          text="Proposed Claims"
+          text={<>Proposed Claims</>}
         />
       </Link>
 
@@ -30,7 +30,7 @@ export const LifecycleButton = (props: Props) => {
         <BaseButton
           icon={<CycleIcon />}
           onClick={props.onClick}
-          text="Market Resolutions"
+          text={<>Claim Resolutions</>}
         />
       </Link>
 
@@ -38,7 +38,7 @@ export const LifecycleButton = (props: Props) => {
         <BaseButton
           icon={<CycleIcon />}
           onClick={props.onClick}
-          text="Settled Markets"
+          text={<>Settled Claims</>}
         />
       </Link>
     </>

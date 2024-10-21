@@ -18,7 +18,7 @@ import { VerticalSeparator } from "@/components/layout/VerticalSeparator";
 interface Props {
   comments: boolean;
   query: string[];
-  request: PostSearchRequest[];
+  request: PostSearchRequest;
 }
 
 export const ClaimList = (props: Props) => {
@@ -83,7 +83,7 @@ export const ClaimList = (props: Props) => {
             </div>
           )}
 
-          {props.comments && (
+          {props.comments && x.comment().length > 0 && (
             <>
               <PageHeader
                 titl="Comments"

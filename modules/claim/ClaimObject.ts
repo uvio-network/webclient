@@ -250,7 +250,7 @@ export class ClaimObject {
   }
 
   pending(): boolean {
-    return this.lifecycle().state() === "pending";
+    return this.lifecycle().pending();
   }
 
   pendingVote(): boolean {

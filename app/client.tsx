@@ -12,7 +12,7 @@ export const Client = () => {
       <ClaimList
         comments={false}
         query={["claim", "time", "latest"]}
-        request={[{ time: "latest" }]}
+        request={{ time: "latest" }}
       />
     </>
   );

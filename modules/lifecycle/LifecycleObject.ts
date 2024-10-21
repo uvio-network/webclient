@@ -19,6 +19,8 @@ export class LifecycleObject {
   }
 
   color(): "gray" | "green" | "blue" | "rose" {
+    if (this.pending()) return "rose";
+
     if (this.phs === "dispute") return "rose";
     if (this.phs === "propose") return "blue";
     if (this.phs === "resolve") return "blue";
@@ -28,13 +30,20 @@ export class LifecycleObject {
     return "gray";
   }
 
-  // phase can either be "dispute", "propose", "resolve" or "settled".
+  pending(): boolean {
+    return this.status() === "pending";
+  }
+
+  // phase can either be "dispute", "propose", "resolve" or "settled" if its
+  // system status is "onchain". If the system status is "pending", then
+  // "pending" is returned.
   phase(): string {
+    if (this.pending()) return this.status();
     return this.phs;
   }
 
-  // state can either be "pending" or "onchain".
-  state(): string {
+  // status can either be "pending" or "onchain".
+  status(): string {
     return this.sta;
   }
 }

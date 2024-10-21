@@ -19,7 +19,7 @@ export const ClaimContent = (props: Props) => {
   const router = useRouter();
 
   const claimPage = "/claim/" + props.claim.id();
-  const isPage = ClaimPage(usePathname());
+  const isPage = ClaimPage(usePathname()) !== "";
   const limit = props.embed === true ? 25 : 70;
 
   const process = (txt: string): string => {

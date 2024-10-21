@@ -10,7 +10,7 @@ export default function Page() {
       <ClaimList
         comments={false}
         query={["claim", "lifecycle", "dispute"]}
-        request={[{ lifecycle: "dispute" }]}
+        request={{ lifecycle: "dispute" }}
       />
     </>
   );

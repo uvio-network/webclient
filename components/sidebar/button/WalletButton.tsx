@@ -99,7 +99,7 @@ export const WalletButton = (props: Props) => {
             effect={true}
             icon={<CurrentPulseIcon />}
             onClick={props.onClick}
-            text={allocated[T].balance.toFixed(allocated[T].precision)}
+            text={<>{allocated[T].balance.toFixed(allocated[T].precision)}</>}
           />
         </Link>
       )}
@@ -110,7 +110,7 @@ export const WalletButton = (props: Props) => {
             effect={true}
             icon={<CurrencyDollarIcon />}
             onClick={props.onClick}
-            text={available[T].balance.toFixed(available[T].precision)}
+            text={<>{available[T].balance.toFixed(available[T].precision)}</>}
           />
         </Link>
       )}

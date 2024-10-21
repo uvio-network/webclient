@@ -16,7 +16,7 @@ export const Client = (props: Props) => {
       <ClaimList
         comments={true}
         query={["claim", "id", props.slug]}
-        request={[{ id: props.slug }]}
+        request={{ id: props.slug }}
       />
     </>
   );

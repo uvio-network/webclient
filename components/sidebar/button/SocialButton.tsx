@@ -26,7 +26,7 @@ export const SocialButton = (props: Props) => {
         <BaseButton
           icon={<DiscordLineIcon />}
           onClick={props.onClick}
-          text="Discord"
+          text={<>Discord</>}
         />
       </Link>
 
@@ -34,7 +34,7 @@ export const SocialButton = (props: Props) => {
         <BaseButton
           icon={<GitBookIcon />}
           onClick={props.onClick}
-          text="Documentation"
+          text={<>Documentation</>}
         />
       </Link>
 
@@ -42,7 +42,7 @@ export const SocialButton = (props: Props) => {
         <BaseButton
           icon={<GithubIcon />}
           onClick={props.onClick}
-          text="Github"
+          text={<>Github</>}
         />
       </Link>
 
@@ -50,7 +50,7 @@ export const SocialButton = (props: Props) => {
         <BaseButton
           icon={<TwitterLineIcon />}
           onClick={onClick}
-          text="Twitter"
+          text={<>Twitter</>}
         />
       </Link>
     </>
