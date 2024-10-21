@@ -2,31 +2,30 @@ import { combine } from "zustand/middleware";
 import { create } from "zustand";
 import { QueryClient } from "@tanstack/react-query";
 
-export interface RefreshMessage {
+export interface ClaimQueryMessage {
+  client: QueryClient;
   refresh: () => void;
 };
 
-export interface QueryMessage {
-  client: QueryClient;
-};
-
-const newQueryMessage = (): QueryMessage => {
+const newClaimQueryMessage = (): ClaimQueryMessage => {
   return {
     client: new QueryClient(),
+    refresh: () => { },
   };
 };
 
 export const QueryStore = create(
   combine(
     {
-      claim: {} as RefreshMessage,
-      query: newQueryMessage(),
+      claim: newClaimQueryMessage(),
     },
     (set) => ({
-      updateClaim: (f: () => void) => {
-        set(() => {
+      updateClaimRefresh: (f: () => void) => {
+        set((state: { claim: ClaimQueryMessage }) => {
           return {
+            ...state,
             claim: {
+              ...state.claim,
               refresh: f,
             },
           };

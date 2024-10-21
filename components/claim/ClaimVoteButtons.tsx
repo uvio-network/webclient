@@ -12,7 +12,7 @@ interface Props {
 export const ClaimVoteButtons = (props: Props) => {
   const hasVoted = props.claim.voted();
   const isExpired = props.claim.expired();
-  const isResolve = props.claim.lifecycle() === "resolve" ? true : false;
+  const isResolve = props.claim.isResolve();
   const isSelected = props.claim.selected();
   const isUser = props.user !== undefined ? true : false;
 

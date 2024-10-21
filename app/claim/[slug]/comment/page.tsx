@@ -18,7 +18,7 @@ export default function Page(props: Props) {
       queryKey: ["claim", props.params.slug, "comment"],
       queryFn: NewSearchParentFunc({ id: props.params.slug }),
     },
-    QueryStore.getState().query.client,
+    QueryStore.getState().claim.client,
   )
 
   React.useEffect(() => {

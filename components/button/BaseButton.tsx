@@ -8,7 +8,7 @@ interface Props {
   background?: string;
   color?: string;
   confirm?: boolean;
-  effect?: boolean;
+  effect?: string;
   font?: string;
   hover?: string;
   margin?: string;
@@ -16,7 +16,7 @@ interface Props {
   padding?: string;
   position?: string; // text position, either left or right from the icon
   icon: React.ReactElement;
-  text?: string;
+  text?: React.ReactElement;
   timeout?: number;
 }
 
@@ -51,9 +51,9 @@ export const BaseButton = React.forwardRef<HTMLDivElement, Props>(function BaseB
   const render = (props: Props) => {
     return (
       <>
-        {props.text && props.text !== "" && props.position === "left" && (
+        {props.text && props.position === "left" && (
           <div className={`my-auto ${props.margin ? props.margin : "mr-2"}`}>
-            {props.text}
+            {props.text && React.cloneElement(props.text, {})}
           </div>
         )}
         {props.confirm === true && click ? (
@@ -63,9 +63,9 @@ export const BaseButton = React.forwardRef<HTMLDivElement, Props>(function BaseB
             {props.icon && React.cloneElement(props.icon, {})}
           </>
         )}
-        {props.text && props.text !== "" && (!props.position || props.position === "right") && (
+        {props.text && (!props.position || props.position === "right") && (
           <div className={`my-auto ${props.margin ? props.margin : "ml-2"}`}>
-            {props.text}
+            {props.text && React.cloneElement(props.text, {})}
           </div>
         )}
       </>
@@ -86,8 +86,8 @@ export const BaseButton = React.forwardRef<HTMLDivElement, Props>(function BaseB
       onClick={disabled ? undefined : onClick}
       ref={ref}
     >
-      {props.effect === true && props.text ? (
-        <EffectButton value={props.text}>
+      {props.effect && props.text ? (
+        <EffectButton value={props.effect}>
           {render(props)}
         </EffectButton>
       ) : (

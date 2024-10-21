@@ -15,15 +15,14 @@ interface Props {
 export const ClaimFooter = (props: Props) => {
   const isClaim = props.claim.kind() === "claim";
   const isComment = props.claim.kind() === "comment";
-  const isResolve = props.claim.lifecycle() === "resolve";
 
   const token = isClaim ? props.claim.token() : props.claim.parent()!.token();
 
   const postAgree = props.claim.summary().post.agreement;
   const postDisagree = props.claim.summary().post.disagreement;
 
-  const textAgree = votStr(isComment, isResolve, props.claim, postAgree, token);
-  const textDisagree = votStr(isComment, isResolve, props.claim, postDisagree, token);
+  const textAgree = votStr(isComment, props.claim, postAgree, token);
+  const textDisagree = votStr(isComment, props.claim, postDisagree, token);
 
   const onClick = () => {
     ToastSender.Info("It's comming just chill ok!");
@@ -34,22 +33,22 @@ export const ClaimFooter = (props: Props) => {
       <div className="flex-1 w-full">
         <div className="grid place-content-start w-full">
           <div className="grid place-content-start">
-            {isClaim && !isResolve && (
+            {isClaim && !props.claim.isResolve() && (
               <BaseButton
-                effect={true}
+                effect={textAgree}
                 font="font-normal"
                 icon={<TriangleUpIcon className="mb-[1px]" />}
                 onClick={onClick}
                 position="right"
-                text={textAgree}
+                text={<>{textAgree}</>}
               />
             )}
 
-            {(isResolve || isComment) && postAgree !== 0 && (
+            {(props.claim.isResolve() || isComment) && postAgree !== 0 && (
               <Tooltip
                 content={
                   <>
-                    {isResolve && (
+                    {props.claim.isResolve() && (
                       <>
                         The amount of votes cast on this resolution.
                       </>
@@ -87,22 +86,22 @@ export const ClaimFooter = (props: Props) => {
       <div className="flex-1 w-full">
         <div className="grid place-content-end w-full">
           <div className="grid place-content-end">
-            {isClaim && !isResolve && (
+            {isClaim && !props.claim.isResolve() && (
               <BaseButton
-                effect={true}
+                effect={textDisagree}
                 font="font-normal"
                 icon={<TriangleDownIcon className="mb-[1px]" />}
                 onClick={onClick}
                 position="left"
-                text={textDisagree}
+                text={<>{textDisagree}</>}
               />
             )}
 
-            {(isResolve || isComment) && postDisagree !== 0 && (
+            {(props.claim.isResolve() || isComment) && postDisagree !== 0 && (
               <Tooltip
                 content={
                   <>
-                    {isResolve && (
+                    {props.claim.isResolve() && (
                       <>
                         The amount of votes cast on this resolution.
                       </>
@@ -132,11 +131,11 @@ export const ClaimFooter = (props: Props) => {
   );
 };
 
-const votStr = (com: boolean, res: boolean, cla: ClaimObject, num: number, tok: string): string => {
+const votStr = (com: boolean, cla: ClaimObject, num: number, tok: string): string => {
   // if isComment on propose, then with token
   // if isComment on resolve, then without token
   if (com) {
-    if (cla.parent()!.lifecycle() === "resolve") {
+    if (cla.parent()!.isResolve()) {
       return num.toFixed(0);
     } else {
       return num.toFixed(2) + " " + tok;
@@ -145,7 +144,7 @@ const votStr = (com: boolean, res: boolean, cla: ClaimObject, num: number, tok: 
 
   // if isPropose, then with token
   // if isResolve, then without token
-  if (res) {
+  if (cla.isResolve()) {
     return num.toFixed(0);
   } else {
     return num.toFixed(2) + " " + tok;

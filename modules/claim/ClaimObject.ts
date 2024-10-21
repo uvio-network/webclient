@@ -5,6 +5,7 @@ import { ChainStore } from "@/modules/chain/ChainStore";
 import { EmptyPostSearchResponse } from "@/modules/api/post/search/Response";
 import { EmptyUserSearchResponse } from "@/modules/api/user/search/Response";
 import { EmptyVoteObject } from "@/modules/vote/VoteObject";
+import { LifecycleObject } from "@/modules/lifecycle/LifecycleObject";
 import { NewSummary } from "@/modules/summary/Summary";
 import { PostSearchResponse } from "@/modules/api/post/search/Response";
 import { SplitList } from "@/modules/string/SplitList";
@@ -26,6 +27,7 @@ export class ClaimObject {
   private prnt: PostSearchResponse | undefined;
   private vote: VoteSearchResponse[];
 
+  private claimLifecycle: LifecycleObject;
   private claimOwner: UserObject;
   private claimParent: ClaimObject | undefined;
   private claimSummary: Summary;
@@ -47,14 +49,22 @@ export class ClaimObject {
 
     {
       this.claimOwner = new UserObject(user);
+
       if (prnt instanceof ClaimObject) {
-        this.claimParent = prnt;
+        {
+          this.claimParent = prnt;
+        }
       } else if (prnt === undefined) {
-        this.claimParent = undefined;
+        {
+          this.claimParent = undefined;
+        }
       } else {
-        this.claimParent = new ClaimObject(prnt, EmptyUserSearchResponse(), undefined, []);
+        {
+          this.claimParent = new ClaimObject(prnt, EmptyUserSearchResponse(), undefined, []);
+        }
       }
 
+      this.claimLifecycle = new LifecycleObject(post.lifecycle, this.claimParent?.valid() || false);
       this.claimSummary = NewSummary(post, vote.map((x) => (new VoteObject(x))));
     }
   }
@@ -142,7 +152,7 @@ export class ClaimObject {
     // We adjust the expired flag for every propose because of the staking
     // threshold in the smart contracts. Before the set expiry, there is a
     // moment in time when staking is not possible anymore.
-    if (this.lifecycle() === "propose" || this.lifecycle() === "dispute") {
+    if (this.isPropose() || this.isDispute()) {
       const exp = this.expiry().unix();
       const now = moment().utc().unix();
       const end = exp - this.threshold();
@@ -169,6 +179,22 @@ export class ClaimObject {
     return this.post.hash;
   }
 
+  isDispute(): boolean {
+    return this.lifecycle().phase() === "dispute";
+  }
+
+  isPropose(): boolean {
+    return this.lifecycle().phase() === "propose";
+  }
+
+  isResolve(): boolean {
+    return this.lifecycle().phase() === "resolve";
+  }
+
+  isSettled(): boolean {
+    return this.lifecycle().phase() === "settled";
+  }
+
   kind(): string {
     return this.post.kind;
   }
@@ -187,13 +213,8 @@ export class ClaimObject {
     return EmptyVoteObject();
   }
 
-  lifecycle(): string {
-    if (this.post.lifecycle === "") {
-      return "";
-    }
-
-    const spl = SplitList(this.post.lifecycle, ":");
-    return spl[0].toLowerCase();
+  lifecycle(): LifecycleObject {
+    return this.claimLifecycle;
   }
 
   markdown(): string {
@@ -218,13 +239,22 @@ export class ClaimObject {
     return this.claimParent;
   }
 
-  pending(): boolean {
-    if (this.post.lifecycle === "") {
-      return false;
-    }
+  patchVote(): boolean {
+    if (this.pending()) return false;
+    if (this.summary().post.minimum > 0) return false;
 
-    const spl = SplitList(this.post.lifecycle, ":");
-    return spl[1].toLowerCase() === "pending";
+    if (this.getVote().length === 0) return true;
+    if (this.getVote().length === 1 && this.pendingVote()) return true;
+
+    return false;
+  }
+
+  pending(): boolean {
+    return this.lifecycle().pending();
+  }
+
+  pendingVote(): boolean {
+    return this.latestVote().pending();
   }
 
   precision(): number {
@@ -313,6 +343,6 @@ export class ClaimObject {
   }
 
   voted(): boolean {
-    return this.lifecycle() === "resolve" && this.selected() && this.summary().vote.hsitg
+    return this.isResolve() && this.selected() && this.summary().vote.hsitg
   }
-}
+};

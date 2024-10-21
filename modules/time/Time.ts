@@ -34,6 +34,10 @@ export class Time {
   currentYear(): string {
     return this.allYears()[0];
   }
+
+  nextDay(): string {
+    return FormatDay(this.mom.add(1, "day").date());
+  }
 };
 
 export const FormatDay = (day: number): string => {

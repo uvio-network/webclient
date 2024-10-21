@@ -11,9 +11,9 @@ import { UserSearchResponse } from "@/modules/api/user/search/Response";
 import { VoteSearch } from "@/modules/api/vote/search/Search";
 import { VoteSearchResponse } from "@/modules/api/vote/search/Response";
 
-export const NewClaimList = async (tok: string, req: PostSearchRequest[]): Promise<ClaimObject[]> => {
+export const NewClaimList = async (tok: string, req: PostSearchRequest): Promise<ClaimObject[]> => {
   try {
-    const pos = await PostSearch(tok, req);
+    const pos = await PostSearch(tok, [req]);
 
     if (pos.length === 0) {
       return [];
@@ -21,7 +21,7 @@ export const NewClaimList = async (tok: string, req: PostSearchRequest[]): Promi
 
     const [use, vot] = await Promise.all([
       UserSearch(tok, UniqueOwners(pos).map(x => ({ id: x }))),
-      tok && tok !== "" ? VoteSearch(tok, pos.map((x) => ({ owner: "self", claim: x.id }))) : Promise.resolve([]),
+      tok && tok !== "" ? VoteSearch(tok, pos.filter((x) => (x.kind === "claim")).map((x) => ({ owner: "self", claim: x.id }))) : Promise.resolve([]),
     ]);
 
     const pmp = new Map<string, PostSearchResponse>();

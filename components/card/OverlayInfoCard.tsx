@@ -11,10 +11,6 @@ interface Props {
 export const OverlayInfoCard = (props: Props) => {
   const editor = EditorStore.getState();
 
-  const isDispute = props.claim.lifecycle() === "dispute" ? true : false;
-  const isPropose = props.claim.lifecycle() === "propose" ? true : false;
-  const isResolve = props.claim.lifecycle() === "resolve" ? true : false;
-
   const isStake = props.claim.latestVote().kind() === "stake" ? true : false;
   const isTruth = props.claim.latestVote().kind() === "truth" ? true : false;
 
@@ -37,8 +33,8 @@ export const OverlayInfoCard = (props: Props) => {
                   Your claim could <strong>not</strong> be confirmed onchain.
                   Please try to submit your
 
-                  {isDispute && " dispute "}
-                  {isPropose && " proposal "}
+                  {props.claim.isDispute() && " dispute "}
+                  {props.claim.isPropose() && " proposal "}
 
                   {hasMinimum || hasVote ? " once more." : ` once more using your desired amount of ${props.claim.token()} tokens.`}
                 </>
@@ -58,7 +54,7 @@ export const OverlayInfoCard = (props: Props) => {
             </>
           ) : (
             <>
-              {isResolve ? (
+              {props.claim.isResolve() ? (
                 <>
                   You are verifing that this claim was in fact <strong>{editor.option ? "True" : "False"}</strong>.
                   Your vote cannot be undone.

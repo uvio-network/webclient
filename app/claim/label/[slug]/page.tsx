@@ -8,8 +8,9 @@ export default function Page({ params }: { params: { slug: string } }) {
     <>
       <PageHeader titl={`Claims with label "${params.slug}"`} />
       <ClaimList
+        comments={false}
         query={["claim", "labels", params.slug]}
-        request={[{ labels: params.slug }]}
+        request={{ labels: params.slug }}
       />
     </>
   );

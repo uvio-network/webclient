@@ -16,6 +16,7 @@ import { SubmitVote } from "@/modules/editor/SubmitVote";
 import { TokenStore } from "@/modules/token/TokenStore";
 import { ToTitle } from "@/modules/string/ToTitle";
 import { useShallow } from "zustand/react/shallow";
+import { TrimWhitespace } from "@/modules/string/TrimWhitespace";
 
 interface Props {
   claim: ClaimObject;
@@ -30,20 +31,8 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
     overlay: state.overlay,
   })));
 
-  const isDispute = props.claim.lifecycle() === "dispute" ? true : false;
-  const isPropose = props.claim.lifecycle() === "propose" ? true : false;
-  const isResolve = props.claim.lifecycle() === "resolve" ? true : false;
-
-  const hasNoVotes = props.claim.getVote().length === 0;
-  const hasOneVote = props.claim.getVote().length === 1;
-
-  const pendingClaim = props.claim.pending();
-  const pendingVote = props.claim.latestVote().pending();
-
-  const mustBePatched = (!pendingClaim && ((hasNoVotes) || (hasOneVote && pendingVote))) ? true : false;
-
   React.useEffect(() => {
-    if (pendingClaim) {
+    if (props.claim.pending()) {
       // Note that the pending claim's stake value is managed in the
       // ClaimVoteValue component.
 
@@ -60,7 +49,7 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
         EditorStore.getState().updateYear(props.claim.expiry().year());
       }
 
-      if (pendingVote) {
+      if (props.claim.latestVote().pending()) {
         EditorStore.getState().updateVote(props.claim.latestVote().getVote());
       }
     } else {
@@ -72,27 +61,27 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
       // already into a smart contract. If the latest vote is then still
       // pending, then that means we need to update the pending vote with the
       // hash of the confirmed claim, without doing any more contract writes.
-      if (mustBePatched) {
+      if (props.claim.patchVote()) {
         EditorStore.getState().updateOption(true);
         EditorStore.getState().updatePatch(true);
         EditorStore.getState().updateReceipt(SuccessReceipt(props.claim.hash()));
         EditorStore.getState().updateVote(props.claim.latestVote().getVote());
-      } else if (pendingVote) {
+      } else if (props.claim.latestVote().pending()) {
         EditorStore.getState().updateOption(props.claim.latestVote().option());
         EditorStore.getState().updatePending(true);
         EditorStore.getState().updateVote(props.claim.latestVote().getVote());
       }
 
-      if (overlay || mustBePatched || pendingVote) {
-        if (isResolve) {
+      if (overlay || props.claim.patchVote() || props.claim.latestVote().pending()) {
+        if (props.claim.isResolve()) {
           EditorStore.getState().updateKind("truth");
           EditorStore.getState().updatePropose(props.claim.parent()!)
           EditorStore.getState().updateResolve(props.claim)
-        } else if (isDispute) {
+        } else if (props.claim.isDispute()) {
           EditorStore.getState().updateKind("stake");
           EditorStore.getState().updatePropose(props.claim)
           EditorStore.getState().updateResolve(props.claim.parent()!)
-        } else if (isPropose) {
+        } else if (props.claim.isPropose()) {
           EditorStore.getState().updateKind("stake");
           EditorStore.getState().updatePropose(props.claim)
         }
@@ -103,12 +92,12 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
       }
     }
 
-    if (!overlay && !pendingClaim && !pendingVote) {
+    if (!overlay && !props.claim.pending() && !props.claim.latestVote().pending()) {
       EditorStore.getState().delete();
     }
-  }, [props.claim, overlay, isDispute, isPropose, isResolve, pendingClaim, pendingVote]);
+  }, [props.claim, overlay]);
 
-  if (!overlay && !pendingClaim && !pendingVote) {
+  if (!overlay && !props.claim.pending() && !props.claim.latestVote().pending()) {
     return <></>;
   }
 
@@ -123,14 +112,15 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
 
         <div className="flex-1 w-full">
           <button
-            className={`
-              flex px-2 py-1 sm:py-4 w-full h-full rounded items-center justify-center
+            className={TrimWhitespace(`
+              flex px-2 py-1 sm:py-4 w-full h-full
+              rounded items-center justify-center
               ${disabled ? "text-gray-700 bg-sky-300 cursor-not-allowed" : "text-gray-900 bg-sky-400 hover:text-black hover:bg-sky-500"}
-            `}
+            `)}
             disabled={disabled}
             type="button"
             onClick={() => {
-              if (pendingClaim) {
+              if (props.claim.pending()) {
                 SubmitPost({
                   after: () => {
                     setProcessing("Confirming Onchain");
@@ -150,7 +140,7 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
                     setDisabled(false);
                     setProcessing("");
 
-                    if (!isResolve) {
+                    if (!props.claim.isResolve()) {
                       TokenStore.getState().updateBalance();
                     }
                   },
@@ -175,7 +165,7 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
                     setProcessing("Signing Transaction");
                   },
                 });
-              } else if (overlay || mustBePatched || pendingVote) {
+              } else if (overlay || props.claim.patchVote() || props.claim.latestVote().pending()) {
                 SubmitVote({
                   after: () => {
                     setProcessing("Confirming Onchain");
@@ -195,7 +185,7 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
                     setDisabled(false);
                     setProcessing("");
 
-                    if (!isResolve) {
+                    if (!props.claim.isResolve()) {
                       TokenStore.getState().updateBalance();
                     }
                   },
@@ -210,7 +200,7 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
 
                     EditorStore.getState().delete();
 
-                    if (!isResolve) {
+                    if (!props.claim.isResolve()) {
                       TokenStore.getState().updateBalance();
                     }
                   },
@@ -220,7 +210,7 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
                   },
                   valid: () => {
                     setDisabled(true);
-                    if (mustBePatched) {
+                    if (props.claim.patchVote()) {
                       setProcessing(`Submitting ${EditorStore.getState().kind === "stake" ? "Stake" : "Vote"}`);
                     } else {
                       setProcessing("Signing Transaction");
@@ -249,7 +239,7 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
                     </>
                   ) : (
                     <>
-                      {isResolve ? (
+                      {props.claim.isResolve() ? (
                         <>
                           Verify with {ToTitle(String(option))}
                         </>

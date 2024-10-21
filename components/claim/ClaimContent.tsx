@@ -2,23 +2,24 @@
 
 import * as React from "react";
 
-import { ClaimObject } from "@/modules/claim/ClaimObject";
+import { ClaimPage } from "@/modules/claim/ClaimPage";
 import { LimitMarkdown } from "@/modules/string/LimitMarkdown";
 import { RenderMarkdown } from "@/components/markdown/RenderMarkdown";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 
 interface Props {
-  claim: ClaimObject;
+  claim: string;
   editor: boolean;
   embed: boolean;
+  markdown: string;
 }
 
 export const ClaimContent = (props: Props) => {
   const router = useRouter();
 
-  const claimPage = "/claim/" + props.claim.id();
-  const isPage = usePathname() === "/claim/" + props.claim.id() ? true : false;
+  const claimPage = "/claim/" + props.claim;
+  const isPage = ClaimPage(usePathname()) !== "";
   const limit = props.embed === true ? 25 : 70;
 
   const process = (txt: string): string => {
@@ -63,7 +64,7 @@ export const ClaimContent = (props: Props) => {
       <RenderMarkdown
         editor={props.editor}
         embed={props.embed}
-        markdown={process(props.claim.markdown())}
+        markdown={process(props.markdown)}
       />
     </div>
   );

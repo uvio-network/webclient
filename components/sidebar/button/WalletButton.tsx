@@ -91,15 +91,18 @@ export const WalletButton = (props: Props) => {
     };
   }, [ready, user]);
 
+  const alo = allocated[T] ? allocated[T].balance.toFixed(allocated[T].precision) : "";
+  const avl = available[T] ? available[T].balance.toFixed(available[T].precision) : "";
+
   return (
     <>
       {allocated[T] && user && (
         <Link href={"/user/" + user.id() + "/activity"}>
           <BaseButton
-            effect={true}
+            effect={alo}
             icon={<CurrentPulseIcon />}
             onClick={props.onClick}
-            text={allocated[T].balance.toFixed(allocated[T].precision)}
+            text={<>{alo}</>}
           />
         </Link>
       )}
@@ -107,10 +110,10 @@ export const WalletButton = (props: Props) => {
       {available[T] && (
         <Link href={"/wallet/contract"}>
           <BaseButton
-            effect={true}
+            effect={avl}
             icon={<CurrencyDollarIcon />}
             onClick={props.onClick}
-            text={available[T].balance.toFixed(available[T].precision)}
+            text={<>{avl}</>}
           />
         </Link>
       )}
