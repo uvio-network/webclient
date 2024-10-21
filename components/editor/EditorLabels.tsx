@@ -27,10 +27,10 @@ export const EditorLabels = (props: Props) => {
     );
   };
 
-  const lif = new LifecycleObject("propose", false);
+  const lif = new LifecycleObject("propose:onchain", false);
 
   return (
-    <div className="flex h-8">
+    <div className="flex h-full py-[5px]">
       <BaseLabel
         className="cursor-default"
         color={lif.color()}
