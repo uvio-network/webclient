@@ -67,8 +67,8 @@ export const TreeContainer = (props: Props) => {
                 {
                   "true": bldStr,
                   "false": bldStr,
+                  "invalid": bldStr, // must run before "valid"
                   "valid": bldStr,
-                  "invalid": bldStr,
                 },
               )
             }} />
