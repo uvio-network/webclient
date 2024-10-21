@@ -1,3 +1,5 @@
+import { TrimWhitespace } from "./TrimWhitespace";
+
 // SplitList takes a comma separated string and returns a string array contain
 // its comma separated words.
 //
@@ -7,5 +9,5 @@
 //
 export const SplitList = (inp: string, sep: string = ","): string[] => {
   if (!inp || inp === "") return [];
-  return inp.split(sep).map(word => word.trim());
+  return inp.split(sep).map((x) => TrimWhitespace(x));
 };

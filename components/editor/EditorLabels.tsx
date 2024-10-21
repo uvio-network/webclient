@@ -39,7 +39,7 @@ export const EditorLabels = (props: Props) => {
       />
 
       <LabelList
-        labels={SplitList(edi.labels).map((str) => str.toLowerCase().replace(/\s+/g, "-"))}
+        labels={SplitList(edi.labels).map((str) => str.toLowerCase().replace(" ", "-"))}
         target="_blank"
       />
     </div>

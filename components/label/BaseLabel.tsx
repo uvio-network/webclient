@@ -2,7 +2,7 @@ import { TrimWhitespace } from "@/modules/string/TrimWhitespace";
 
 interface Props {
   className?: string;
-  color: "gray" | "green" | "blue" | "rose";
+  color: "blue" | "gray" | "green" | "rose";
   dashed?: boolean;
   text: string;
 }

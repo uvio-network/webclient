@@ -3,6 +3,7 @@ import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 import { Components } from "react-markdown";
+import { TrimWhitespace } from "@/modules/string/TrimWhitespace";
 
 interface Props {
   editor?: boolean;
@@ -14,10 +15,10 @@ export const RenderMarkdown = (props: Props) => {
   return (
     <Markdown
       allowedElements={allowedElements}
-      className={`
+      className={TrimWhitespace(`
         w-full dark:font-light
         ${props.embed === true ? "text-sm" : "text-base"}
-      `}
+      `)}
       components={components(props.editor || false, props.embed || false)}
       remarkPlugins={[remarkGfm]}
       skipHtml={true}
@@ -47,19 +48,19 @@ const components = (edi: boolean, emb: boolean): Components => {
   return {
     h1(props) {
       return <h1
-        className={`
+        className={TrimWhitespace(`
           text-black dark:text-white font-normal
           ${emb === true ? "mt-2 text-xl" : "mt-4 text-2xl"}
-        `}
+        `)}
         {...getRst(props)}
       />;
     },
     h3(props) {
       return <h3
-        className={`
+        className={TrimWhitespace(`
           text-black dark:text-white font-normal
           ${emb === true ? "mt-2 text-lg" : "mt-4 text-xl"}
-        `}
+        `)}
         {...getRst(props)}
       />;
     },
@@ -79,66 +80,60 @@ const components = (edi: boolean, emb: boolean): Components => {
       // internat " ... show more" links would reload the entire app only to get
       // to the specified claim page. And we do not want that behaviour.
       return <Link
-        className={`
+        className={TrimWhitespace(`
           text-blue-400
-        `}
+        `)}
         target={props.href?.startsWith("/claim/") && edi === false ? "" : "_blank"}
         {...getRst(props)}
       />;
     },
     p(props) {
       return <p
-        className={`
+        className={TrimWhitespace(`
           ${emb === true ? "mt-2" : "mt-4"}
-        `}
+        `)}
         {...getRst(props)}
       />;
     },
     ol(props) {
       return <ol
-        className={`
+        className={TrimWhitespace(`
           list-decimal list-inside
           ${emb === true ? "mt-2" : "mt-4"}
-        `}
+        `)}
         {...getRst(props)}
       />;
     },
     ul(props) {
       return <ul
-        className={`
+        className={TrimWhitespace(`
           list-disc list-inside
           ${emb === true ? "mt-2" : "mt-4"}
-        `}
-        {...getRst(props)}
-      />;
-    },
-    li(props) {
-      return <li
-        className={``}
+        `)}
         {...getRst(props)}
       />;
     },
     hr(props) {
       return <hr
-        className={`
+        className={TrimWhitespace(`
           border-color
           ${emb === true ? "mt-2" : "mt-4"}
-        `}
+        `)}
         {...getRst(props)}
       />;
     },
     strong(props) {
       return <strong
-        className={`font-bold`}
+        className="font-bold"
         {...getRst(props)}
       />;
     },
     blockquote(props) {
       return <blockquote
-        className={`
+        className={TrimWhitespace(`
           px-4 border-l-4 border-blue-400 text-sm text-gray-500 dark:text-gray-400 font-mono
           ${emb === true ? "mt-2" : "mt-4"}
-        `}
+        `)}
         {...getRst(props)}
       />;
     },

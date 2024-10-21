@@ -18,7 +18,7 @@ export class LifecycleObject {
     this.val = val;
   }
 
-  color(): "gray" | "green" | "blue" | "rose" {
+  color(): "blue" | "gray" | "green" | "rose" {
     if (this.pending()) return "rose";
 
     if (this.phs === "dispute") return "rose";

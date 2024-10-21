@@ -1,7 +1,8 @@
 import moment from "moment";
 
 import { EditorStore } from "@/modules/editor/EditorStore";
-import { SelectBox, SelectItem } from "@/components/select/SelectBox";
+import { SelectBox } from "@/components/select/SelectBox";
+import { SelectItem } from "@/components/select/SelectBox";
 import { Time } from "@/modules/time/Time";
 
 export const EditorExpiry = () => {
