@@ -50,7 +50,7 @@ export const ClaimFooterCard = (props: Props) => {
           sideOffset={5}
         >
           <div className="text-gray-500 dark:text-gray-400 text-sm">
-            {props.claim.lifecycle() === "resolve" ? (
+            {props.claim.isResolve() ? (
               <ClaimFooterCardResolve claim={props.claim} />
             ) : (
               <ClaimFooterCardPropose claim={props.claim} />

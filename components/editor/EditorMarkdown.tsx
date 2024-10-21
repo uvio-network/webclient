@@ -36,18 +36,20 @@ export const EditorMarkdown = (props: Props) => {
         <div>
           <div className="m-2 px-2 pb-2 background-overlay rounded border border-color">
             <ClaimContent
-              claim={props.claim}
+              claim={props.claim.id()}
               editor={true}
               embed={true}
+              markdown={props.claim.markdown()}
             />
           </div>
 
           {props.claim.parent() && (
             <div className="m-2 px-2 pb-2 background-overlay rounded border border-color">
               <ClaimContent
-                claim={props.claim.parent()!}
+                claim={props.claim.parent()!.id()}
                 editor={true}
                 embed={true}
+                markdown={props.claim.parent()!.markdown()}
               />
             </div>
           )}

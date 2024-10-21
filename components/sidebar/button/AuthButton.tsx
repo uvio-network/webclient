@@ -26,7 +26,7 @@ export const AuthButton = (props: Props) => {
             logout();
             props.onClick();
           }}
-          text="Logout"
+          text={<>Logout</>}
         />
       ) : (
         <BaseButton
@@ -35,7 +35,7 @@ export const AuthButton = (props: Props) => {
             login();
             props.onClick();
           }}
-          text="Login"
+          text={<>Login</>}
         />
       )}
     </>

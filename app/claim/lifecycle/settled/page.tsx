@@ -1,17 +1,16 @@
 "use client";
 
 import { ClaimList } from "@/components/claim/ClaimList";
-import { ClaimObject } from "@/modules/claim/ClaimObject";
 import { PageHeader } from "@/components/layout/PageHeader";
 
 export default function Page() {
   return (
     <>
-      <PageHeader titl="Market Resolutions" />
+      <PageHeader titl="Settled Claims" />
       <ClaimList
-        filter={(cla: ClaimObject): boolean => (cla.lifecycle() === "balance")}
+        comments={false}
         query={["claim", "lifecycle", "balance"]}
-        request={[{ lifecycle: "balance" }]}
+        request={{ lifecycle: "balance" }}
       />
     </>
   );

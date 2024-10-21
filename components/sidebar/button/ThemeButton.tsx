@@ -108,7 +108,7 @@ export const ThemeButton = (props: Props) => {
             props.onClick();
           }}
           icon={<ThemeLightIcon />}
-          text="Lights On"
+          text={<>Lights On</>}
         />
       )}
 
@@ -120,7 +120,7 @@ export const ThemeButton = (props: Props) => {
             props.onClick();
           }}
           icon={<ThemeDarkIcon />}
-          text="Dark Mode"
+          text={<>Dark Mode</>}
         />
       )}
 
@@ -132,7 +132,7 @@ export const ThemeButton = (props: Props) => {
             props.onClick();
           }}
           icon={<ThemeSystemIcon />}
-          text="System Theme"
+          text={<>System Theme</>}
         />
       )}
     </>

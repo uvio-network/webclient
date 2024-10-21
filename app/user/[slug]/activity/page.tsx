@@ -8,8 +8,9 @@ export default function Page({ params }: { params: { slug: string } }) {
     <>
       <PageHeader titl="User Activity" />
       <ClaimList
+        comments={false}
         query={["claim", "vote", params.slug]}
-        request={[{ vote: params.slug }]}
+        request={{ vote: params.slug }}
       />
     </>
   );

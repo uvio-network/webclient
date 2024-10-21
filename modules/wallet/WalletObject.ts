@@ -30,7 +30,7 @@ export class WalletObject implements Signer {
     }
 
     if (wal.connectorType !== "embedded" && wal.connectorType !== "injected") {
-      throw "unknown connector type";
+      throw `Your wallet could not be connected because of the invalid connector type "${wal.connectorType}".`;
     }
 
     return this;

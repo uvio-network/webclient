@@ -27,7 +27,7 @@ export const PageHeader = (props: Props) => {
             background="none"
             icon={props.icon}
             position="left"
-            text={props.titl}
+            text={<>{props.titl}</>}
           />
         </Link>
       ) : (
