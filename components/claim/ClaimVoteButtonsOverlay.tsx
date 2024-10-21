@@ -16,6 +16,7 @@ import { SubmitVote } from "@/modules/editor/SubmitVote";
 import { TokenStore } from "@/modules/token/TokenStore";
 import { ToTitle } from "@/modules/string/ToTitle";
 import { useShallow } from "zustand/react/shallow";
+import { TrimWhitespace } from "@/modules/string/TrimWhitespace";
 
 interface Props {
   claim: ClaimObject;
@@ -111,10 +112,11 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
 
         <div className="flex-1 w-full">
           <button
-            className={`
-              flex px-2 py-1 sm:py-4 w-full h-full rounded items-center justify-center
+            className={TrimWhitespace(`
+              flex px-2 py-1 sm:py-4 w-full h-full
+              rounded items-center justify-center
               ${disabled ? "text-gray-700 bg-sky-300 cursor-not-allowed" : "text-gray-900 bg-sky-400 hover:text-black hover:bg-sky-500"}
-            `}
+            `)}
             disabled={disabled}
             type="button"
             onClick={() => {

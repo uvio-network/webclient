@@ -35,7 +35,7 @@ export const ClaimFooter = (props: Props) => {
           <div className="grid place-content-start">
             {isClaim && !props.claim.isResolve() && (
               <BaseButton
-                effect={true}
+                effect={textAgree}
                 font="font-normal"
                 icon={<TriangleUpIcon className="mb-[1px]" />}
                 onClick={onClick}
@@ -88,7 +88,7 @@ export const ClaimFooter = (props: Props) => {
           <div className="grid place-content-end">
             {isClaim && !props.claim.isResolve() && (
               <BaseButton
-                effect={true}
+                effect={textDisagree}
                 font="font-normal"
                 icon={<TriangleDownIcon className="mb-[1px]" />}
                 onClick={onClick}

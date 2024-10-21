@@ -8,7 +8,7 @@ interface Props {
   background?: string;
   color?: string;
   confirm?: boolean;
-  effect?: boolean;
+  effect?: string;
   font?: string;
   hover?: string;
   margin?: string;
@@ -86,8 +86,8 @@ export const BaseButton = React.forwardRef<HTMLDivElement, Props>(function BaseB
       onClick={disabled ? undefined : onClick}
       ref={ref}
     >
-      {props.effect === true && props.text ? (
-        <EffectButton value={props.text}>
+      {props.effect && props.text ? (
+        <EffectButton value={props.effect}>
           {render(props)}
         </EffectButton>
       ) : (

@@ -32,18 +32,19 @@ export const ClaimList = (props: Props) => {
     valid: state.valid,
   })));
 
-  const { query, updateClaim } = QueryStore.getState();
-
-  const posts = useQuery({
-    queryKey: [...props.query, "NewClaimList"],
-    queryFn: async () => {
-      return NewClaimTree(await NewClaimList(token, props.request));
+  const posts = useQuery(
+    {
+      queryKey: [...props.query, "NewClaimList"],
+      queryFn: async () => {
+        return NewClaimTree(await NewClaimList(token, props.request));
+      },
+      enabled: !authorizing && valid,
+      staleTime: 5000, // this prevents NewClaimList to be called multiple times
     },
-    enabled: !authorizing && valid,
-    staleTime: 5000, // this prevents NewClaimList to be called multiple times
-  }, query.client)
+    QueryStore.getState().claim.client,
+  )
 
-  updateClaim(() => {
+  QueryStore.getState().updateClaimRefresh(() => {
     posts.refetch();
   });
 

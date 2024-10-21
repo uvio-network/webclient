@@ -32,7 +32,7 @@ export const SelectBox = (props: Props) => {
           dark:data-[placeholder]:text-gray-500
         `}
       >
-        <Select.Value placeholder={<>{props.selected.val}</>} >
+        <Select.Value placeholder={<>{props.selected.val}</>}>
           {props.selected.val}
         </Select.Value>
       </Select.Trigger>

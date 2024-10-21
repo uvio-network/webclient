@@ -29,11 +29,20 @@ export const TreeContainer = (props: Props) => {
 
   const [current, setCurrent] = React.useState<ClaimObject>(props.tree.current(claimPage));
 
-  const isOwner = props.user && current.owner().id() === props.user.id() ? true : false;
   const isPage = claimPage !== "";
-  const isPending = current.pending();
+
+  const isClaimOwner = props.user && current.owner().id() === props.user.id() ? true : false;
+  const isClaimPending = current.pending();
+
+  const isVoteOwner = props.user && current.latestVote().owner() === props.user.id() ? true : false;
+  const isVotePending = current.pendingVote();
+
   const isResolve = current.isResolve();
   const isSettled = current.isSettled();
+
+  React.useEffect(() => {
+    setCurrent(props.tree.current(claimPage));
+  }, [props.tree, claimPage]);
 
   return (
     <div
@@ -100,14 +109,14 @@ export const TreeContainer = (props: Props) => {
 
       {!isSettled && isPage && (
         <>
-          {!isPending && (
+          {!isClaimPending && (
             <ClaimVoteButtons
               claim={current}
               user={props.user}
             />
           )}
 
-          {(!isPending || (isPending && isOwner)) && (
+          {((!isClaimPending && !isVotePending) || (isClaimPending && isClaimOwner) || (isVotePending && isVoteOwner)) && (
             <ClaimVoteButtonsOverlay
               claim={current}
             />
