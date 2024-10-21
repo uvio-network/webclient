@@ -6,7 +6,7 @@ import { PageHeader } from "@/components/layout/PageHeader";
 export default function Page() {
   return (
     <>
-      <PageHeader titl="Market Resolutions" />
+      <PageHeader titl="Resolving Claims" />
       <ClaimList
         comments={false}
         query={["claim", "lifecycle", "resolve"]}

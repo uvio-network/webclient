@@ -26,9 +26,10 @@ export const CommentContainer = (props: Props) => {
 
       <div className="my-4">
         <ClaimContent
-          claim={props.comment}
+          claim={props.comment.id()}
           editor={false}
           embed={false}
+          markdown={props.comment.markdown()}
         />
       </div>
 

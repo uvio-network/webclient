@@ -30,7 +30,7 @@ export const LifecycleButton = (props: Props) => {
         <BaseButton
           icon={<CycleIcon />}
           onClick={props.onClick}
-          text={<>Claim Resolutions</>}
+          text={<>Resolving Claims</>}
         />
       </Link>
 

@@ -12,10 +12,12 @@ import { ClaimTree } from "@/modules/claim/ClaimTree";
 import { ClaimVoteButtons } from "@/components/claim/ClaimVoteButtons";
 import { ClaimVoteButtonsOverlay } from "@/components/claim/ClaimVoteButtonsOverlay";
 import { HorizontalSeparator } from "@/components/layout/HorizontalSeparator";
+import { InfoCard } from "@/components/card/InfoCard";
 import { LabelList } from "@/components/label/LabelList";
 import { TrimWhitespace } from "@/modules/string/TrimWhitespace";
 import { usePathname } from "next/navigation";
 import { UserObject } from "@/modules/user/UserObject";
+import { ProcessString } from "@/modules/string/ProcessString";
 
 interface Props {
   tree: ClaimTree;
@@ -47,26 +49,31 @@ export const TreeContainer = (props: Props) => {
 
       <div className="my-4">
         <ClaimContent
-          claim={props.tree.latest()}
+          claim={props.tree.current().id()}
           editor={false}
           embed={false}
+          markdown={props.tree.latest().markdown()}
         />
       </div>
 
       {isPage && (isResolve || isSettled) && (
-        <>
-          <div className="relative h-px my-2">
-            <HorizontalSeparator />
-          </div>
-
-          <div className="my-4">
-            <ClaimContent
-              claim={current}
-              editor={false}
-              embed={false}
-            />
-          </div>
-        </>
+        <InfoCard
+          close={false}
+          color="gray"
+          text={
+            <span dangerouslySetInnerHTML={{
+              __html: ProcessString(
+                current.markdown(),
+                {
+                  "true": bldStr,
+                  "false": bldStr,
+                  "valid": bldStr,
+                  "invalid": bldStr,
+                },
+              )
+            }} />
+          }
+        />
       )}
 
       {isPage && (
@@ -115,4 +122,8 @@ export const TreeContainer = (props: Props) => {
       )}
     </div>
   );
+};
+
+const bldStr = (x: string): string => {
+  return `<strong>${x}</strong>`;
 };
