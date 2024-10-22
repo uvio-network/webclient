@@ -2,6 +2,7 @@ import * as ToastSender from "@/components/toast/ToastSender";
 
 import { ClaimObject } from "@/modules/claim/ClaimObject";
 import { EditorStore } from "@/modules/editor/EditorStore";
+import { TokenStore } from "@/modules/token/TokenStore";
 import { UserObject } from "@/modules/user/UserObject";
 
 interface Props {
@@ -15,6 +16,9 @@ export const ClaimVoteButtons = (props: Props) => {
   const isResolve = props.claim.isResolve();
   const isSelected = props.claim.selected();
   const isUser = props.user !== undefined ? true : false;
+
+  const minimum = props.claim.summary().post.minimum;
+  const token = props.claim.token();
 
   const isActive = claAct(isResolve, isExpired, isSelected, isUser, hasVoted);
 
@@ -35,6 +39,10 @@ export const ClaimVoteButtons = (props: Props) => {
 
         if (hasVoted) {
           return ToastSender.Info("You have cast your vote already.");
+        }
+      } else {
+        if (minimum > avlBal(token)) {
+          return ToastSender.Error(`You do not have the required minimum of ${minimum} ${token}.`);
         }
       }
 
@@ -74,6 +82,10 @@ export const ClaimVoteButtons = (props: Props) => {
       </div>
     </div>
   );
+};
+
+const avlBal = (sym: string): number => {
+  return TokenStore.getState().available[sym]?.balance || 0;
 };
 
 const claAct = (res: boolean, exp: boolean, sel: boolean, use: boolean, vot: boolean): boolean => {

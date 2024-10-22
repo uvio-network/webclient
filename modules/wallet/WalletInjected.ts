@@ -1,6 +1,6 @@
 import * as Privy from "@privy-io/react-auth";
 
-import { Address, BaseError, SwitchChainError } from "viem";
+import { Address } from "viem";
 import { ChainStore } from "@/modules/chain/ChainStore";
 import { createWalletClient } from "viem";
 import { custom } from "viem";
