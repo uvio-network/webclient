@@ -23,7 +23,7 @@ export const OverlayInfoCard = (props: Props) => {
   return (
     <InfoCard
       close={(!pendingClaim && !pendingVote)}
-      color={pendingClaim || pendingVote ? "red" : "blue"}
+      color={pendingClaim || pendingVote ? "red" : "yellow"}
       text={
         <>
           {(pendingClaim || pendingVote) ? (

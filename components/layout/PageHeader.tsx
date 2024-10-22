@@ -13,9 +13,11 @@ interface Props {
 }
 
 export const PageHeader = (props: Props) => {
-  const { loading } = LoadingStore();
+  const { loaded } = LoadingStore();
 
-  if (loading) return <></>;
+  if (!loaded) {
+    return <></>;
+  }
 
   return (
     <div className="grid place-content-end">

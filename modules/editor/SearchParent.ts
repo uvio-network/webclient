@@ -35,9 +35,9 @@ export const NewSearchParentFunc = (req: PostSearchRequest) => {
     for (const x of pos) {
       if (x.kind === "claim" && x.id === req.id) {
         return new ClaimObject(x, EmptyUserSearchResponse(), child, []);
-      } else {
-        return undefined;
       }
     }
+
+    return undefined;
   };
 };

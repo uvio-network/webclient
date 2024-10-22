@@ -8,7 +8,7 @@ export default function Page() {
   return (
     <EditorForm
       EditorStake={<EditorStake disabled={false} />}
-      InfoCard={<FundingInfoCard />}
+      InfoCard={<FundingInfoCard prefix="By proposing a new Claim" />}
       Kind="claim"
       SendButtonTitle="Propose Claim"
     />

@@ -11,9 +11,11 @@ interface Props {
 }
 
 export const EditorButton = (props: Props) => {
-  const { loading } = LoadingStore();
+  const { loaded } = LoadingStore();
 
-  if (loading) return <></>;
+  if (!loaded) {
+    return <></>;
+  }
 
   return (
     <button

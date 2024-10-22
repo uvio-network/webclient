@@ -7,19 +7,15 @@ import { UserStore } from "@/modules/user/UserStore";
 import { useShallow } from "zustand/react/shallow";
 
 export const AuthPage = ({ children }: { children: React.ReactNode }) => {
-  const { authorizing, loaded, loading } = LoadingStore();
+  const { loaded } = LoadingStore();
+
   const { valid } = UserStore(useShallow((state) => ({
     valid: state.valid,
   })));
 
-  React.useEffect(() => {
-    if (!authorizing) {
-      loaded();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authorizing]);
-
-  if (loading || authorizing) return <></>;
+  if (!loaded) {
+    return <></>;
+  }
 
   return (
     <>
@@ -29,7 +25,7 @@ export const AuthPage = ({ children }: { children: React.ReactNode }) => {
         </div>
       ) : (
         <>
-          {!authorizing && (
+          {loaded && (
             <div>
               You need to login to see this page.
             </div>

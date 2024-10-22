@@ -57,9 +57,11 @@ export const Sidebar = () => {
   }, []);
 
   {
-    const { loading } = LoadingStore();
+    const { loaded } = LoadingStore();
 
-    if (loading) return <></>;
+    if (!loaded) {
+      return <></>;
+    }
   }
 
   return (

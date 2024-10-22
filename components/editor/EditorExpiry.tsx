@@ -9,53 +9,40 @@ import { Time } from "@/modules/time/Time";
 import { useShallow } from "zustand/react/shallow";
 
 export const EditorExpiry = () => {
-  const { day, mon, yea } = EditorStore(useShallow((state) => ({
-    day: state.day,
-    mon: state.month,
-    yea: state.year,
-  })));
-
-  const edi = EditorStore.getState();
   const tim = new Time(moment());
 
-  React.useEffect(() => {
-    if (!day) {
-      edi.updateDay(tim.nextDay());
-    }
-  }, [day]);
+  const { day, mon, yea } = EditorStore(useShallow((state) => ({
+    day: state.day || tim.nextDay(),
+    mon: state.month || tim.currentMonth(),
+    yea: state.year || tim.currentYear(),
+  })));
 
   React.useEffect(() => {
-    if (!mon) {
-      edi.updateMonth(tim.currentMonth());
-    }
-  }, [mon]);
-
-  React.useEffect(() => {
-    if (!yea) {
-      edi.updateYear(tim.currentYear());
-    }
-  }, [yea]);
+    EditorStore.getState().updateDay(day);
+    EditorStore.getState().updateMonth(mon);
+    EditorStore.getState().updateYear(yea);
+  }, [day, mon, yea]);
 
   return (
     <div className="h-full grid grid-cols-12 gap-2">
       <div className="col-span-3">
         <SelectBox
-          onSelect={edi.updateDay}
-          selected={sinSel(day ? day.toString() : tim.nextDay())}
+          onSelect={EditorStore.getState().updateDay}
+          selected={sinSel(day.toString())}
           values={strSel(tim.allDays())}
         />
       </div>
       <div className="col-span-3">
         <SelectBox
-          onSelect={edi.updateMonth}
-          selected={sinSel(mon ? mon.toString() : tim.currentMonth())}
+          onSelect={EditorStore.getState().updateMonth}
+          selected={sinSel(mon.toString())}
           values={strSel(tim.allMonths())}
         />
       </div>
       <div className="col-span-6">
         <SelectBox
-          onSelect={edi.updateYear}
-          selected={sinSel(yea ? yea.toString() : tim.currentYear())}
+          onSelect={EditorStore.getState().updateYear}
+          selected={sinSel(yea.toString())}
           values={strSel(tim.allYears())}
         />
       </div>

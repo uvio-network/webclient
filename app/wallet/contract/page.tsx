@@ -9,7 +9,6 @@ import { BaseButton } from "@/components/button/BaseButton";
 import { ChainStore } from "@/modules/chain/ChainStore";
 import { CopyIcon } from "@/components/icon/CopyIcon";
 import { EditorButton } from "@/components/editor/EditorButton";
-import { LoadingStore } from "@/components/loading/LoadingStore";
 import { OpenLinkIcon } from "@/components/icon/OpenLinkIcon";
 import { RefreshIcon } from "@/components/icon/RefreshIcon";
 import { TokenConfig } from "@/modules/token/TokenConfig";
@@ -28,15 +27,12 @@ export default function Page() {
     ToastSender.Info("It's comming just chill ok!");
   };
 
-  {
-    const { loaded, loading } = LoadingStore();
-
-    React.useEffect(() => {
-      loaded();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    if (!ready || loading) return <></>;
+  if (!ready) {
+    return (
+      <>
+        loading wallet
+      </>
+    );
   }
 
   return (

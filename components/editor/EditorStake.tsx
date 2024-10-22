@@ -8,10 +8,9 @@ interface Props {
 }
 
 export const EditorStake = (props: Props) => {
-  const [stake, setStake] = React.useState<string>("10.00 UVX");
-
-  const { propose } = EditorStore(useShallow((state) => ({
+  const { stake, propose } = EditorStore(useShallow((state) => ({
     propose: state.propose,
+    stake: state.stake,
   })));
 
   React.useEffect(() => {
@@ -20,9 +19,7 @@ export const EditorStake = (props: Props) => {
       const tok = propose.token();
       const pre = propose.precision();
 
-      setStake(`${amo.toFixed(pre)} ${tok}`);
-    } else {
-      setStake("10.00 UVX");
+      EditorStore.getState().updateStake(`${amo.toFixed(pre)} ${tok}`);
     }
   }, [propose, props.disabled]);
 
@@ -33,7 +30,7 @@ export const EditorStake = (props: Props) => {
       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
         EditorStore.getState().updateStake(e.currentTarget.value);
       }}
-      placeholder={stake}
+      placeholder={stake || "10.00 UVX"}
       type="text"
     />
   );

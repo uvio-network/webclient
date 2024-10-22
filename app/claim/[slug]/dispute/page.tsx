@@ -33,7 +33,7 @@ export default function Page(props: Props) {
   return (
     <EditorForm
       EditorStake={<EditorStake disabled={true} />}
-      InfoCard={<FundingInfoCard />}
+      InfoCard={<FundingInfoCard prefix="By disputing the referenced Claim" />}
       Kind="claim"
       SendButtonTitle="Dispute Claim"
     />
