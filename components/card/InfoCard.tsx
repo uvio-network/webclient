@@ -18,7 +18,7 @@ export const InfoCard = (props: Props) => {
     <div
       className={TrimWhitespace(`
         relative flex my-2 p-4 rounded
-        ${props.color === "gray" && "background-overlay"}
+        ${props.color === "gray" && "background-overlay border border-color"}
         ${props.color === "blue" && "bg-amber-300 text-black"}
         ${props.color === "red" && "bg-rose-400 text-black"}
       `)}

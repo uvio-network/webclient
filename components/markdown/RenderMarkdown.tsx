@@ -16,7 +16,7 @@ export const RenderMarkdown = (props: Props) => {
     <Markdown
       allowedElements={allowedElements}
       className={TrimWhitespace(`
-        w-full dark:font-light
+        flex-grow w-full h-full dark:font-light
         ${props.embed === true ? "text-sm" : "text-base"}
       `)}
       components={components(props.editor || false, props.embed || false)}
@@ -50,7 +50,7 @@ const components = (edi: boolean, emb: boolean): Components => {
       return <h1
         className={TrimWhitespace(`
           text-black dark:text-white font-normal
-          ${emb === true ? "mt-2 text-xl" : "mt-4 text-2xl"}
+          ${emb === true ? "mb-2 text-xl" : "mb-4 text-2xl"}
         `)}
         {...getRst(props)}
       />;
@@ -59,7 +59,7 @@ const components = (edi: boolean, emb: boolean): Components => {
       return <h3
         className={TrimWhitespace(`
           text-black dark:text-white font-normal
-          ${emb === true ? "mt-2 text-lg" : "mt-4 text-xl"}
+          ${emb === true ? "mb-2 text-lg" : "mb-4 text-xl"}
         `)}
         {...getRst(props)}
       />;
@@ -90,7 +90,7 @@ const components = (edi: boolean, emb: boolean): Components => {
     p(props) {
       return <p
         className={TrimWhitespace(`
-          ${emb === true ? "mt-2" : "mt-4"}
+          ${emb === true ? "mb-2" : "mb-4"}
         `)}
         {...getRst(props)}
       />;
@@ -99,7 +99,7 @@ const components = (edi: boolean, emb: boolean): Components => {
       return <ol
         className={TrimWhitespace(`
           list-decimal list-inside
-          ${emb === true ? "mt-2" : "mt-4"}
+          ${emb === true ? "mb-2" : "mb-4"}
         `)}
         {...getRst(props)}
       />;
@@ -108,7 +108,7 @@ const components = (edi: boolean, emb: boolean): Components => {
       return <ul
         className={TrimWhitespace(`
           list-disc list-inside
-          ${emb === true ? "mt-2" : "mt-4"}
+          ${emb === true ? "mb-2" : "mb-4"}
         `)}
         {...getRst(props)}
       />;
@@ -117,7 +117,7 @@ const components = (edi: boolean, emb: boolean): Components => {
       return <hr
         className={TrimWhitespace(`
           border-color
-          ${emb === true ? "mt-2" : "mt-4"}
+          ${emb === true ? "mb-2" : "mb-4"}
         `)}
         {...getRst(props)}
       />;
@@ -132,7 +132,7 @@ const components = (edi: boolean, emb: boolean): Components => {
       return <blockquote
         className={TrimWhitespace(`
           px-4 border-l-4 border-blue-400 text-sm text-gray-500 dark:text-gray-400 font-mono
-          ${emb === true ? "mt-2" : "mt-4"}
+          ${emb === true ? "mb-2" : "mb-4"}
         `)}
         {...getRst(props)}
       />;

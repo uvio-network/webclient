@@ -21,7 +21,6 @@ export const EmptyClaimObject = (): ClaimObject => {
 };
 
 export class ClaimObject {
-  private embd: number;
   private post: PostSearchResponse;
   private user: UserSearchResponse;
   private prnt: PostSearchResponse | undefined;
@@ -34,7 +33,6 @@ export class ClaimObject {
 
   constructor(post: PostSearchResponse, user: UserSearchResponse, prnt: ClaimObject | PostSearchResponse | undefined, vote: VoteSearchResponse[]) {
     {
-      this.embd = 0;
       this.post = post;
       this.user = user;
       if (prnt instanceof ClaimObject) {
@@ -90,14 +88,6 @@ export class ClaimObject {
   }
 
   //
-  // setter
-  //
-
-  setEmbd(emb: number) {
-    return this.embd = emb;
-  }
-
-  //
   // extern
   //
 
@@ -142,10 +132,6 @@ export class ClaimObject {
 
   contract(): Address {
     return this.post.contract as Address;
-  }
-
-  embed(): number {
-    return this.embd;
   }
 
   expired(): boolean {
