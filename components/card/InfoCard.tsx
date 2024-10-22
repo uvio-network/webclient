@@ -9,7 +9,7 @@ import { XMarkIcon } from "@/components/icon/XMarkIcon";
 
 interface Props {
   close: boolean;
-  color: "blue" | "gray" | "red";
+  color: "gray" | "red" | "yellow";
   text: React.ReactElement | undefined;
 }
 
@@ -19,8 +19,8 @@ export const InfoCard = (props: Props) => {
       className={TrimWhitespace(`
         relative flex my-2 p-4 rounded
         ${props.color === "gray" && "background-overlay border border-color"}
-        ${props.color === "blue" && "bg-amber-300 text-black"}
         ${props.color === "red" && "bg-rose-400 text-black"}
+        ${props.color === "yellow" && "bg-amber-300 text-black"}
       `)}
     >
       <div className="w-full text-sm">

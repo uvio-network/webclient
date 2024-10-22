@@ -52,7 +52,7 @@ export const AuthProvider = () => {
     // interface is ready and that the user could not be authenticated in Privy,
     // we signal our own loading store to continue rendering.
     if (!authenticated && ready) {
-      LoadingStore.getState().authorized();
+      LoadingStore.getState().setAuthorized();
     }
 
     // It may happen that users disconnect from our dApp using the permission
@@ -74,6 +74,14 @@ export const AuthProvider = () => {
       // because consecutive logins need to be treated separately.
       setAlreadyLoggedIn(false);
       setLogin(false);
+
+      // At this point the user has been authorized and we start to propagate
+      // the authorized state across the webclient. Calling setAuthorized() sets
+      // "authorizing" to false, which allows the webclient to move on to the
+      // next loading stage. Note that we propagate the loading state here in
+      // order to guarantee the user frontend access, even if wallet or
+      // apiserver issues inside of setupAuth() were to happen.
+      LoadingStore.getState().setAuthorized();
 
       // Finally process all external API calls and all data collected up to
       // this point in order to update our internal user store.
@@ -133,7 +141,6 @@ const setupAuth = async (user: Privy.User, wallet: Privy.ConnectedWallet) => {
     // wallets depends on the user object being properly prepared and available.
     {
       await EnsureUser(wal.address(), tok);
-      LoadingStore.getState().authorized();
       await EnsureWallets(wal, tok);
     }
 

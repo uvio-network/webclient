@@ -1,6 +1,6 @@
 import * as Privy from "@privy-io/react-auth";
 
-import { Address } from "viem";
+import { Address, BaseError, SwitchChainError } from "viem";
 import { ChainStore } from "@/modules/chain/ChainStore";
 import { createWalletClient } from "viem";
 import { custom } from "viem";
@@ -16,14 +16,32 @@ import { WalletClient } from "viem";
 
 export const NewWalletInjected = async (wal: Privy.ConnectedWallet): Promise<Signer> => {
   const active = ChainStore.getState().getActive();
-
-  await wal.switchChain(active.id);
   const provider = await wal.getEthereumProvider();
 
   const cli = createWalletClient({
     chain: active,
     transport: custom(provider),
   });
+
+  // This entire wallet ecosystem is an absolute disaster. If users choose to
+  // connect with their own wallet, then they may not have the required chain
+  // configured. E.g. Base Sepolia is not widely established in standard
+  // configurations. Switching to the active chain may fail for that reason, but
+  // it is practically impossible to assert a specific error or error structure.
+  // So below we take a guess, close our eyes and pray.
+  try {
+    {
+      await cli.switchChain({ id: active.id });
+    }
+  } catch {
+    try {
+      await cli.addChain({ chain: active });
+    } catch { }
+
+    {
+      await cli.switchChain({ id: active.id });
+    }
+  }
 
   return new Injected(cli, wal);
 };

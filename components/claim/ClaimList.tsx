@@ -22,14 +22,13 @@ interface Props {
 }
 
 export const ClaimList = (props: Props) => {
-  const { authorizing } = LoadingStore(useShallow((state) => ({
-    authorizing: state.authorizing,
+  const { loaded } = LoadingStore(useShallow((state) => ({
+    loaded: state.loaded,
   })));
 
-  const { token, user, valid } = UserStore(useShallow((state) => ({
+  const { token, user } = UserStore(useShallow((state) => ({
     token: state.token,
     user: state.object,
-    valid: state.valid,
   })));
 
   const posts = useQuery(
@@ -38,8 +37,7 @@ export const ClaimList = (props: Props) => {
       queryFn: async () => {
         return NewClaimTree(await NewClaimList(token, props.request));
       },
-      enabled: !authorizing && valid,
-      staleTime: 5000, // this prevents NewClaimList to be called multiple times
+      enabled: false,  // never refetch automatically, use the refetch callback below
     },
     QueryStore.getState().claim.client,
   )
@@ -49,16 +47,21 @@ export const ClaimList = (props: Props) => {
   });
 
   {
-    const { loaded, loading } = LoadingStore();
-
     React.useEffect(() => {
-      if (!posts.isPending) {
-        loaded();
+      // If the webclient finished loading, then either "loaded" will be true.
+      // If the user was found to be logged in, then "token" above will be the
+      // user's access token. With that we fetch the claims list again together
+      // with the user's votes, if any, in order to show the user their own
+      // activity.
+      if (loaded) {
+        posts.refetch();
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [posts.isPending]);
+    }, [loaded]);
+  }
 
-    if (loading) return <></>;
+  if (posts.isPending) {
+    return <></>;
   }
 
   if (posts.data?.length === 0 && !posts.isPending) {

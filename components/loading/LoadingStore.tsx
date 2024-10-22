@@ -4,25 +4,25 @@ import { create } from "zustand";
 export const LoadingStore = create(
   combine(
     {
-      authorizing: true,
-      loading: true,
+      authorized: false,
+      loaded: false,
     },
     (set, get) => ({
-      authorized: () => {
+      setAuthorized: () => {
         set(() => {
           return {
-            authorizing: false,
+            authorized: true,
           };
         });
       },
-      loaded: () => {
-        if (get().loading === false) {
+      setLoaded: () => {
+        if (get().loaded) {
           return;
         }
 
         set(() => {
           return {
-            loading: false,
+            loaded: true,
           };
         });
       },

@@ -7,21 +7,19 @@ import { AppProvider } from "@/components/app/AppProvider";
 import { LoadingStore } from "@/components/loading/LoadingStore";
 
 export const LoadingPage = ({ children }: { children: React.ReactNode }) => {
-  const { loading } = LoadingStore();
+  const { authorized, loaded } = LoadingStore();
+
+  React.useEffect(() => {
+    if (authorized) {
+      LoadingStore.getState().setLoaded();
+    }
+  }, [authorized]);
 
   return (
     <>
       <AppProvider />
 
-      {loading ? (
-        <div className="flex items-center justify-center min-h-screen">
-          <AppLogo
-            height="54px"
-            width="336px"
-          />
-          {children}
-        </div>
-      ) : (
+      {loaded ? (
         <div className="py-4 px-2 background justify-items-center">
           <div className="m-auto h-full w-full max-w-xl">
             {/*
@@ -38,6 +36,14 @@ export const LoadingPage = ({ children }: { children: React.ReactNode }) => {
             </div>
           </div>
         </div >
+      ) : (
+        <div className="flex items-center justify-center min-h-screen">
+          <AppLogo
+            height="54px"
+            width="336px"
+          />
+          {children}
+        </div>
       )}
     </>
   );

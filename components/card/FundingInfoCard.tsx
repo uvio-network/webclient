@@ -4,8 +4,14 @@ import { EditorStore } from "@/modules/editor/EditorStore";
 import { InfoCard } from "@/components/card/InfoCard";
 import { useShallow } from "zustand/react/shallow";
 
-export const FundingInfoCard = () => {
-  const [funding, setFunding] = React.useState<string>("your funds");
+const defaultFunding = " your funds ";
+
+interface Props {
+  prefix?: string;
+}
+
+export const FundingInfoCard = (props: Props) => {
+  const [funding, setFunding] = React.useState<string>(defaultFunding);
 
   const { stake } = EditorStore(useShallow((state) => ({
     stake: state.stake,
@@ -20,19 +26,21 @@ export const FundingInfoCard = () => {
       if (amo.num !== 0 && sym !== "" && tok !== undefined) {
         setFunding(`${amo.num.toFixed(tok.precision)} ${sym}`);
       } else {
-        setFunding("your funds");
+        setFunding(defaultFunding);
       }
+    } else {
+      setFunding(defaultFunding);
     }
   }, [stake]);
 
   return (
     <InfoCard
       close={false}
-      color="gray"
+      color="yellow"
       text={
         <>
-          You are about to lock up {funding} until this new market resolves.
-          There is no guarantee of repayment.
+          {props.prefix ? `${props.prefix} you` : "You"} lock up {funding} until
+          this new market resolves. There is no guarantee of repayment.
         </>
       }
     />
