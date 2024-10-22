@@ -27,7 +27,7 @@ export const ValidateStake = (): boolean => {
       return ToastSender.Error(`You can only stake one of the whitelisted tokens: ${lis}.`);
     }
     if (amo.num > avlBal(sym)) {
-      return ToastSender.Error(`You do not seem to have enough tokens to stake ${amo.num} ${sym}.`);
+      return ToastSender.Error(`You do not have the required minimum of ${amo.num} ${sym}.`);
     }
   }
 

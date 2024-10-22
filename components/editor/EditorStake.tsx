@@ -8,7 +8,7 @@ interface Props {
 }
 
 export const EditorStake = (props: Props) => {
-  const { stake, propose } = EditorStore(useShallow((state) => ({
+  const { propose, stake } = EditorStore(useShallow((state) => ({
     propose: state.propose,
     stake: state.stake,
   })));
