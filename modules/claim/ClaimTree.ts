@@ -58,7 +58,11 @@ export class ClaimTree {
 
   current(cur?: string): ClaimObject {
     if (cur && cur !== "") {
-      return this.cla.find((x) => x.id() === cur)!;
+      const cla = this.cla.find((x) => x.id() === cur);
+
+      if (cla !== undefined && cla.kind() === "claim") {
+        return cla;
+      }
     }
 
     return this.cur;
