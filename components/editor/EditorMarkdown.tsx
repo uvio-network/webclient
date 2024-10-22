@@ -13,28 +13,26 @@ interface Props {
 export const EditorMarkdown = (props: Props) => {
   const editor = EditorStore.getState();
 
-  if (props.write) {
-    return (
-      <textarea
-        className="block w-full min-h-96 background placeholder outline-none"
-        defaultValue={editor.markdown}
-        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-          editor.updateMarkdown(e.currentTarget.value);
-        }}
-        placeholder="# Title"
-      />
-    );
-  };
-
   return (
-    <div className="w-full min-h-96">
-      <RenderMarkdown
-        markdown={editor.markdown}
-      />
+    <div className="flex flex-col w-full">
+      {props.write ? (
+        <textarea
+          className="flex-grow w-full  min-h-72 background placeholder outline-none"
+          defaultValue={editor.markdown}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+            editor.updateMarkdown(e.currentTarget.value);
+          }}
+          placeholder="# Title"
+        />
+      ) : (
+        <RenderMarkdown
+          markdown={editor.markdown}
+        />
+      )}
 
       {props.claim && (
         <div>
-          <div className="m-2 px-2 pb-2 background-overlay rounded border border-color">
+          <div className="my-2 px-2 pt-2 background-overlay rounded border border-color">
             <ClaimContent
               claim={props.claim.id()}
               editor={true}
@@ -44,7 +42,7 @@ export const EditorMarkdown = (props: Props) => {
           </div>
 
           {props.claim.parent() && (
-            <div className="m-2 px-2 pb-2 background-overlay rounded border border-color">
+            <div className="my-2 px-2 pt-2 background-overlay rounded border border-color">
               <ClaimContent
                 claim={props.claim.parent()!.id()}
                 editor={true}

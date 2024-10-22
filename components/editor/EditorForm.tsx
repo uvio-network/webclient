@@ -11,6 +11,7 @@ import { SpinnerIcon } from "@/components/icon/SpinnerIcon";
 import { SubmitPost } from "@/modules/editor/SubmitPost";
 import { TokenStore } from "@/modules/token/TokenStore";
 import { useRouter } from "next/navigation";
+import { useShallow } from "zustand/react/shallow";
 
 interface Props {
   EditorStake: React.ReactElement | undefined;
@@ -23,6 +24,11 @@ export const EditorForm = (props: Props) => {
   const [disabled, setDisabled] = React.useState<boolean>(false);
   const [processing, setProcessing] = React.useState<string>("");
   const [write, setWrite] = React.useState<boolean>(true);
+
+  const { parent, resolve } = EditorStore(useShallow((state) => ({
+    parent: state.parent,   // if comment
+    resolve: state.resolve, // if dispute
+  })));
 
   const router = useRouter();
 
@@ -44,7 +50,7 @@ export const EditorForm = (props: Props) => {
   return (
     <div>
       <EditorButtonGroup write={write} setWrite={setWrite} />
-      <EditorMarkdown write={write} claim={undefined} />
+      <EditorMarkdown write={write} claim={parent || resolve} />
 
       {props.Kind === "claim" && (
         <>
