@@ -32,7 +32,7 @@ const newPar = (): Required<EncodeFunctionDataParameters> => {
 
   const cla = edi.claims.abi;
   const opt = edi.option;
-  const res = edi.resolve.id();
+  const pod = edi.propose.id();
 
   return {
     abi: [
@@ -40,7 +40,7 @@ const newPar = (): Required<EncodeFunctionDataParameters> => {
     ],
     functionName: "updateResolve",
     args: [
-      res, // claim, ID of the resolve
+      pod, // claim, ID of the propose or dispute
       opt, // vote, verify the truth with true or false
     ],
   };
