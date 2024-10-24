@@ -226,6 +226,7 @@ export class ClaimObject {
   }
 
   patchVote(): boolean {
+    if (this.isResolve()) return false;
     if (this.pending()) return false;
     if (this.summary().post.minimum > 0) return false;
 

@@ -58,7 +58,7 @@ export const ClaimVoteButtons = (props: Props) => {
       <div className="flex-1 w-full">
         <button
           className={`
-            p-4 w-full rounded
+            p-4 w-full rounded outline-none
             ${isActive ? "text-gray-900 hover:text-black bg-emerald-400 hover:bg-emerald-500" : "text-gray-400 dark:text-gray-500 bg-gray-200 dark:bg-gray-700 cursor-default"}
           `}
           onClick={onClick(true)}
@@ -71,7 +71,7 @@ export const ClaimVoteButtons = (props: Props) => {
       <div className="flex-1 w-full">
         <button
           className={`
-            p-4 w-full rounded
+            p-4 w-full rounded outline-none
             ${isActive ? "text-gray-900 hover:text-black bg-rose-400 hover:bg-rose-500" : "text-gray-400 dark:text-gray-500 bg-gray-200 dark:bg-gray-700 cursor-default"}
           `}
           onClick={onClick(false)}

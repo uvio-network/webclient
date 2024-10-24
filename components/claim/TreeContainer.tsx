@@ -52,7 +52,7 @@ export const TreeContainer = (props: Props) => {
     >
       <div className="my-4">
         <ClaimHeader
-          claim={props.tree.latest()}
+          claim={current}
         />
       </div>
 
@@ -78,6 +78,8 @@ export const TreeContainer = (props: Props) => {
                   "false": bldStr,
                   "invalid": bldStr, // must run before "valid"
                   "valid": bldStr,
+                  "your": rawStr,    // must run before "you"
+                  "you": bldStr,
                 },
               )
             }} />
@@ -135,4 +137,8 @@ export const TreeContainer = (props: Props) => {
 
 const bldStr = (x: string): string => {
   return `<strong>${x}</strong>`;
+};
+
+const rawStr = (x: string): string => {
+  return x;
 };

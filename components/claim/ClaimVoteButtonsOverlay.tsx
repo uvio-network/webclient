@@ -105,8 +105,13 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
     <div className="absolute bottom-12 w-full background">
       <OverlayInfoCard claim={props.claim} />
 
-      <div className="flex gap-x-2 h-14">
-        <div className="flex-1 w-full">
+      <div
+        className={TrimWhitespace(`
+          flex h-14
+          ${!props.claim.isResolve() ? "gap-x-2 " : ""}
+        `)}
+      >
+        <div className={!props.claim.isResolve() ? "flex-1 w-full" : ""}>
           <ClaimVoteValue claim={props.claim} />
         </div>
 
