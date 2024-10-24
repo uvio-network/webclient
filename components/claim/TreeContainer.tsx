@@ -14,7 +14,6 @@ import { ClaimVoteButtonsOverlay } from "@/components/claim/ClaimVoteButtonsOver
 import { HorizontalSeparator } from "@/components/layout/HorizontalSeparator";
 import { InfoCard } from "@/components/card/InfoCard";
 import { LabelList } from "@/components/label/LabelList";
-import { TrimWhitespace } from "@/modules/string/TrimWhitespace";
 import { usePathname } from "next/navigation";
 import { UserObject } from "@/modules/user/UserObject";
 import { ProcessString } from "@/modules/string/ProcessString";
@@ -45,11 +44,7 @@ export const TreeContainer = (props: Props) => {
   }, [props.tree, claimPage]);
 
   return (
-    <div
-      className={TrimWhitespace(`
-        relative w-full mb-6
-      `)}
-    >
+    <div className="relative w-full mb-6">
       <div className="my-4">
         <ClaimHeader
           claim={current}
@@ -87,20 +82,19 @@ export const TreeContainer = (props: Props) => {
         />
       )}
 
-      {isPage && (
-        <div className="flex my-4">
-          <ClaimLifecycleMenu
-            claims={props.tree.claims()}
-            current={current}
-            setCurrent={setCurrent}
-          />
+      <div className="flex my-4">
+        <ClaimLifecycleMenu
+          claims={isPage ? props.tree.claims() : [current]}
+          current={current}
+          link={isPage ? "" : `/claim/${current.id()}`}
+          setCurrent={setCurrent}
+        />
 
-          <LabelList
-            labels={props.tree.propose().labels()}
-            target={undefined}
-          />
-        </div>
-      )}
+        <LabelList
+          labels={props.tree.propose().labels()}
+          target={undefined}
+        />
+      </div>
 
       <div className="relative h-px my-2">
         <HorizontalSeparator
