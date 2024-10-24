@@ -2,6 +2,8 @@ import Link from "next/link";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
+import * as Config from "@/modules/config";
+
 import { Components } from "react-markdown";
 import { TrimWhitespace } from "@/modules/string/TrimWhitespace";
 
@@ -79,11 +81,13 @@ const components = (edi: boolean, emb: boolean): Components => {
       // for internal links. If we were to use plain <a> elements here, then our
       // internat " ... show more" links would reload the entire app only to get
       // to the specified claim page. And we do not want that behaviour.
+
+      const lnk = embLnk(props.href || "");
+
       return <Link
-        className={TrimWhitespace(`
-          text-blue-400
-        `)}
-        target={props.href?.startsWith("/claim/") && edi === false ? "" : "_blank"}
+        className="text-blue-400"
+        href={lnk}
+        target={lnk.startsWith("/claim/") && edi === false ? undefined : "_blank"}
         {...getRst(props)}
       />;
     },
@@ -140,7 +144,21 @@ const components = (edi: boolean, emb: boolean): Components => {
   };
 };
 
-const getRst = (props: any) => {
+const embLnk = (lnk: string): string => {
+  if (lnk.startsWith(Config.WebclientAppEndpoint)) {
+    {
+      lnk = lnk.slice(Config.WebclientAppEndpoint.length);
+    }
+
+    if (!lnk.startsWith("/")) {
+      lnk = "/" + lnk;
+    }
+  }
+
+  return lnk;
+};
+
+const getRst = (props: any): any => {
   const { node, ...rest } = props;
   return rest
 };
