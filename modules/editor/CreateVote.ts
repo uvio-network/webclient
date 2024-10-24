@@ -1,7 +1,7 @@
 import { EditorStore } from "@/modules/editor/EditorStore";
+import { EmptyVoteCreateRequest } from "@/modules/api/vote/create/Request";
 import { UserStore } from "@/modules/user/UserStore";
 import { VoteCreate } from "@/modules/api/vote/create/Create";
-import { EmptyVoteCreateRequest, VoteCreateRequest } from "@/modules/api/vote/create/Request";
 
 export const CreateVote = async () => {
   const edi = EditorStore.getState();
@@ -16,21 +16,26 @@ export const CreateVote = async () => {
 
   const req = EmptyVoteCreateRequest();
 
-  if (edi.kind === "claim" || edi.kind === "stake") {
+  if (edi.kind === "claim") {
     req.kind = "stake";
+    req.claim = edi.post.id;
+    req.value = edi.getAmount().num.toString();
+  }
+
+  if (edi.kind === "stake") {
+    req.kind = "stake";
+    req.claim = edi.propose.id();
     req.value = edi.getAmount().num.toString();
   }
 
   if (edi.kind === "truth") {
     req.kind = "truth";
+    req.claim = edi.resolve.id();
     req.value = "1";
   }
 
   {
-    req.claim = edi.post.id;
-    req.hash = "";
     req.lifecycle = "onchain";
-    req.meta = "";
     req.option = String(edi.option);
   }
 
