@@ -37,8 +37,8 @@ export class LifecycleObject {
   // phase can either be "dispute", "propose", "resolve" or "settled" if its
   // system status is "onchain". If the system status is "pending", then
   // "pending" is returned.
-  phase(): string {
-    if (this.pending()) return this.status();
+  phase(des?: boolean): string {
+    if (this.pending() && !des) return this.status();
     return this.phs;
   }
 
