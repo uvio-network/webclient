@@ -75,19 +75,18 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
       if (overlay || props.claim.patchVote() || props.claim.latestVote().pending()) {
         if (props.claim.isResolve()) {
           EditorStore.getState().updateKind("truth");
+          EditorStore.getState().updatePost(props.claim.parent()!.getPost());
           EditorStore.getState().updatePropose(props.claim.parent()!)
           EditorStore.getState().updateResolve(props.claim)
         } else if (props.claim.isDispute()) {
           EditorStore.getState().updateKind("stake");
+          EditorStore.getState().updatePost(props.claim.getPost());
           EditorStore.getState().updatePropose(props.claim)
           EditorStore.getState().updateResolve(props.claim.parent()!)
         } else if (props.claim.isPropose()) {
           EditorStore.getState().updateKind("stake");
-          EditorStore.getState().updatePropose(props.claim)
-        }
-
-        {
           EditorStore.getState().updatePost(props.claim.getPost());
+          EditorStore.getState().updatePropose(props.claim)
         }
       }
     }
