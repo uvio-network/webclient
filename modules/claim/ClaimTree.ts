@@ -1,4 +1,5 @@
 import { ClaimObject } from "@/modules/claim/ClaimObject";
+import { EmptyClaimObject } from "@/modules/claim/ClaimObject";
 
 export const NewClaimTree = (cla: ClaimObject[]): ClaimTree[] => {
   const grp = cla.reduce(
@@ -76,12 +77,43 @@ export class ClaimTree {
     return this.dis.length;
   }
 
-  latest(): ClaimObject {
-    if (this.dis.length === 0) {
-      return this.pro;
+  // latest returns the newest real claim created by real users. If cur is
+  // provided, then latest looks up the latest real parent.
+  latest(cur?: ClaimObject): ClaimObject {
+    if (!cur) {
+      if (this.dis.length === 0) {
+        return this.pro;
+      }
+
+      return this.dis[this.dis.length - 1];
     }
 
-    return this.dis[this.dis.length - 1];
+    if (cur.isPropose() || cur.isDispute()) {
+      return cur;
+    }
+
+    let act = false;
+
+    for (let i = this.cla.length - 1; i >= 0; i--) {
+      const x = this.cla[i];
+
+      // Skip all claims until we find the given current claim.
+      if (!act) {
+        if (x.id() === cur.id()) {
+          act = true;
+        }
+
+        {
+          continue;
+        }
+      }
+
+      if (x.isPropose() || x.isDispute()) {
+        return x;
+      }
+    }
+
+    return EmptyClaimObject();
   }
 
   propose(): ClaimObject {

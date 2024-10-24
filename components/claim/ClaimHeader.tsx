@@ -10,11 +10,10 @@ import { StarLineIcon } from "@/components/icon/StarLineIcon";
 
 interface Props {
   claim: ClaimObject;
+  latest: ClaimObject;
 }
 
 export const ClaimHeader = (props: Props) => {
-  const image = props.claim.owner().image();
-
   const onClick = () => {
     ToastSender.Info("It's comming just chill ok!");
   };
@@ -23,14 +22,14 @@ export const ClaimHeader = (props: Props) => {
     <div className="flex">
       <div className={`
         flex-none w-12 h-12 mr-2 rounded overflow-hidden
-        ${image === "" && "background-overlay border border-color"}
+        ${props.latest.owner().image() === "" && "background-overlay border border-color"}
       `}
       >
-        {image !== "" && (
-          <Link href={"/user/" + props.claim.owner().id()}>
+        {props.latest.owner().image() !== "" && (
+          <Link href={"/user/" + props.latest.owner().id()}>
             <Image
-              alt={props.claim.owner().name()}
-              src={image}
+              alt={props.latest.owner().name()}
+              src={props.latest.owner().image()}
               width={48}
               height={48}
             />
@@ -39,8 +38,8 @@ export const ClaimHeader = (props: Props) => {
       </div>
       <div className="flex-1 w-full">
         <div className="font-medium">
-          <Link href={"/user/" + props.claim.owner().id()}>
-            {props.claim.owner().name()}
+          <Link href={"/user/" + props.latest.owner().id()}>
+            {props.latest.owner().name()}
           </Link>
         </div>
         <div className="flex h-6">

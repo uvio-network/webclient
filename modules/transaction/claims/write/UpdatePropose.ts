@@ -43,7 +43,7 @@ const newPar = (): Required<EncodeFunctionDataParameters> => {
   const amo = edi.getAmount().big;
   const cla = edi.claims.abi;
   const opt = edi.option;
-  const pod = edi.post.id;
+  const pod = edi.propose.id();
   const tok = edi.getToken().abi;
 
   return {
@@ -53,7 +53,7 @@ const newPar = (): Required<EncodeFunctionDataParameters> => {
     ],
     functionName: "updatePropose",
     args: [
-      pod, // claim, ID of the propose
+      pod, // claim, ID of the propose or dispute
       amo, // balance, the amount we deposited
       opt, // vote, agree or disagree with the claim
       0,   // token index, none whitelisted for now
