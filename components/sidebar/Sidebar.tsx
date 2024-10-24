@@ -14,15 +14,15 @@ import { SocialButton } from "@/components/sidebar/button/SocialButton";
 import { ThemeButton } from "@/components/sidebar/button/ThemeButton";
 import { UserButton } from "@/components/sidebar/button/UserButton";
 import { WalletButton } from "@/components/sidebar/button/WalletButton";
+import { WindowStore } from "@/modules/window/WindowStore";
 
 export const Sidebar = () => {
   const [show, setShow] = React.useState<boolean>(false);
-  const [width, setWidth] = React.useState<boolean>(false);
 
   const onClick = () => {
     // Hide the sidebar if the user clicks a button while the user's screen
     // width is below the lg breakpoint.
-    if (width) {
+    if (!WindowStore.getState().breakpoint) {
       setShow(false);
     }
   };
@@ -38,13 +38,13 @@ export const Sidebar = () => {
     // page load.
     {
       setShow(qry.matches);
-      setWidth(!qry.matches);
+      WindowStore.getState().updateBreakpoint(qry.matches);
     }
 
     // Toggle the show state as the screen width changes.
     const onChange = (eve: MediaQueryListEvent) => {
       setShow(eve.matches);
-      setWidth(!qry.matches);
+      WindowStore.getState().updateBreakpoint(eve.matches);
     };
 
     {

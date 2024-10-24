@@ -3,6 +3,7 @@ import * as React from "react";
 import { ClaimObject } from "@/modules/claim/ClaimObject";
 import { EditorStore } from "@/modules/editor/EditorStore";
 import { TrimWhitespace } from "@/modules/string/TrimWhitespace";
+import { WindowStore } from "@/modules/window/WindowStore";
 
 interface Props {
   claim: ClaimObject;
@@ -22,6 +23,21 @@ export const ClaimVoteValue = (props: Props) => {
   // The value field here has only one purpose, allowing the user to cancel the
   // verification using the ESC key.
   if (props.claim.isResolve()) {
+    // Resolves should not render the focussed input field on mobile for two
+    // reasons.
+    //
+    //     1. On mobile the virtual keyboard pops up if an input field has
+    //        focus. Doing that without having any input field to work with
+    //        doesn't make any sense.
+    //
+    //     2. On mobile there is no escape key to close the button overlay. So
+    //        rendering the input field doesn't make any sense, because it can't
+    //        be used for its intended purpose anyway.
+    //
+    if (!WindowStore.getState().breakpoint) {
+      return <></>;
+    }
+
     return (
       <input
         style={{
@@ -48,7 +64,7 @@ export const ClaimVoteValue = (props: Props) => {
         w-full h-full p-2 bg-transparent
         border-b-2 border-sky-400 outline-none disabled:cursor-not-allowed
         placeholder:text-gray-400 placeholder:dark:text-gray-500
-        text-2xl sm:text-4xl font-light text-right caret-sky-400
+        text-4xl font-light text-right caret-sky-400
       `)}
       disabled={def !== ""}
       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
