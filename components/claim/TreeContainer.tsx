@@ -48,6 +48,7 @@ export const TreeContainer = (props: Props) => {
       <div className="my-4">
         <ClaimHeader
           claim={current}
+          latest={props.tree.latest(current)}
         />
       </div>
 

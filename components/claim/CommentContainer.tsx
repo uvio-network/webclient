@@ -21,7 +21,10 @@ export const CommentContainer = (props: Props) => {
       `)}
     >
       <div className="my-4">
-        <ClaimHeader claim={props.comment} />
+        <ClaimHeader
+          claim={props.comment}
+          latest={props.comment}
+        />
       </div>
 
       <div className="my-4">
