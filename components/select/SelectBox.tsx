@@ -6,6 +6,7 @@ import { ChevronUpIcon } from "@/components/icon/ChevronUpIcon";
 import { SelectItem } from "@/components/select/SelectItem";
 
 export interface SelectItem {
+  act: boolean;
   key: string;
   val: React.ReactElement;
 }
@@ -20,6 +21,7 @@ export const SelectBox = (props: Props) => {
   return (
     <Select.Root
       defaultValue={props.selected.key}
+      value={props.selected.key}
       disabled={props.values.length <= 1}
       onValueChange={(key: string) => {
         props.onSelect(key);
@@ -27,9 +29,8 @@ export const SelectBox = (props: Props) => {
     >
       <Select.Trigger
         className={`
-          w-full h-full rounded leading-none outline-none
-          data-[placeholder]:text-gray-400
-          dark:data-[placeholder]:text-gray-500
+          w-full h-full text-left rounded leading-none outline-none
+          data-[placeholder]:text-gray-400 dark:data-[placeholder]:text-gray-500
         `}
       >
         <Select.Value placeholder={<>{props.selected.val}</>}>
@@ -53,8 +54,12 @@ export const SelectBox = (props: Props) => {
           </Select.ScrollUpButton>
 
           <Select.Viewport className="">
-            {props.values.map((x: SelectItem, i: number) => (
-              <SelectItem key={x.key} value={x.key}>
+            {props.values.filter((x: SelectItem) => (x.act)).map((x: SelectItem, _) => (
+              <SelectItem
+                key={x.key}
+                disabled={!x.act}
+                value={x.key}
+              >
                 {x.val && React.cloneElement(x.val, {})}
               </SelectItem>
             ))}

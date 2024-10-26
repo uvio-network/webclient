@@ -57,10 +57,10 @@ export const EditorForm = (props: Props) => {
           <EditorLabels write={write} />
 
           <div className="flex">
-            <div className="basis-3/4">
+            <div className="basis-3/5">
               <EditorExpiry />
             </div>
-            <div className="basis-1/4">
+            <div className="basis-2/5">
               {props.EditorStake && React.cloneElement(props.EditorStake, {})}
             </div>
           </div>
@@ -69,7 +69,7 @@ export const EditorForm = (props: Props) => {
 
       <button
         className={`
-          flex items-center justify-center my-1 px-2 py-1 sm:py-4 w-full h-full rounded
+          flex items-center justify-center my-1 px-2 py-4 w-full h-full rounded
           ${disabled ? "text-gray-700 bg-sky-300 cursor-not-allowed" : "text-gray-900 bg-sky-400 hover:text-black hover:bg-sky-500"}
         `}
         disabled={disabled}

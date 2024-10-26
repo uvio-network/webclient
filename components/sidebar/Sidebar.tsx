@@ -101,7 +101,7 @@ export const Sidebar = () => {
       </div>
 
       {/* This is the button that controls the visibility of the sidebar. */}
-      <div className="mx-2 my-4 sm:m-4">
+      <div className="w-fit h-fit mx-2 my-4 sm:m-4">
         <BaseButton
           onClick={tglShow}
           icon={<BarsLeftIcon />}

@@ -1,43 +1,145 @@
 import moment from "moment";
 
+const format = "Do MMM YYYY";
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+export interface TimeItem {
+  act: boolean;
+  val: string;
+}
 
 export class Time {
   private mom: moment.Moment;
+  private sel: moment.Moment;
 
   constructor(mom: moment.Moment) {
-    this.mom = mom.utc();
+    this.mom = mom.clone().utc();
+    this.sel = mom.clone().utc();
   }
 
-  allDays(): string[] {
-    const day = this.mom.daysInMonth();
-    return Array.from({ length: day }, (_, i) => FormatDay(i + 1));
-  }
+  //
+  //
+  //
 
-  allMonths(): string[] {
-    return months;
-  }
+  allDays = (): TimeItem[] => {
+    return Array.from({ length: this.mom.daysInMonth() }, (_, i) => {
+      const day = FormatDay(i + 1);
+      const mom = moment.utc(`${day} ${this.getMonth()} ${this.getYear()}`, format, true);
+      const act = mom.isValid() && mom.isSameOrAfter(this.mom, "day");
 
-  allYears(): string[] {
-    const yea = this.mom.year();
-    return Array.from({ length: 11 }, (_, i) => String(yea + i));
-  }
+      return {
+        act: act,
+        val: day,
+      };
+    });
+  };
 
-  currentDay(): string {
-    return FormatDay(this.mom.date());
-  }
+  allMonths = (): TimeItem[] => {
+    return months.map((x, _) => {
+      const act = this.newMonth(x).isSameOrAfter(this.mom, "month");
 
-  currentMonth(): string {
-    return this.mom.format("MMM");
-  }
+      return {
+        act: act,
+        val: x,
+      };
+    });
+  };
 
-  currentYear(): string {
-    return this.allYears()[0];
-  }
+  allYears = (): TimeItem[] => {
+    return Array.from({ length: 11 }, (_, i) => {
+      const yea = (this.mom.year() + i).toString();
+      const act = this.newYear(yea).isSameOrAfter(this.mom, "year");
 
-  nextDay(): string {
-    return FormatDay(this.mom.add(1, "day").date());
-  }
+      return {
+        act: act,
+        val: yea,
+      };
+    });
+  };
+
+  //
+  //
+  //
+
+  getDay = (mom?: moment.Moment): string => {
+    if (mom) {
+      return FormatDay(mom.date());
+    }
+
+    return FormatDay(this.sel.date());
+  };
+
+  getMonth = (mom?: moment.Moment): string => {
+    if (mom) {
+      return mom.format("MMM");
+    }
+
+    return this.sel.format("MMM");
+  };
+
+  getYear = (mom?: moment.Moment): string => {
+    if (mom) {
+      return mom.year().toString();
+    }
+
+    return this.sel.year().toString();
+  };
+
+  //
+  //
+  //
+
+  newDay = (day: string): moment.Moment => {
+    const mom = moment.utc(`${day} ${this.getMonth()} ${this.getYear()}`, format, true);
+
+    if (mom.isValid()) {
+      return mom;
+    }
+
+    return moment.utc(`1st ${this.getMonth()} ${this.getYear()}`, format).endOf("month");
+  };
+
+  newMonth = (mon: string): moment.Moment => {
+    const mom = moment.utc(`${this.getDay()} ${mon} ${this.getYear()}`, format, true);
+
+    if (mom.isValid()) {
+      return mom;
+    }
+
+    return moment.utc(`1st ${mon} ${this.getYear()}`, format).endOf("month");
+  };
+
+  newYear = (yea: string): moment.Moment => {
+    const sel = moment.utc(`${this.getDay()} ${this.getMonth()} ${yea}`, format, true);
+
+    if (sel.isValid() && sel.isSameOrAfter(this.mom, "day")) {
+      return sel;
+    }
+
+    const end = moment.utc(`1st ${this.getMonth()} ${yea}`, format).endOf("month");
+
+    if (end.isValid() && end.isSameOrAfter(this.mom, "day")) {
+      return end;
+    }
+
+    return this.mom.clone();
+  };
+
+  //
+  //
+  //
+
+  setDay = (day: string) => {
+    this.sel = this.newDay(day);
+  };
+
+  setMonth = (mon: string) => {
+    this.sel = this.newMonth(mon);
+  };
+
+  setYear = (yea: string) => {
+    this.sel = this.newYear(yea);
+  };
 };
 
 export const FormatDay = (day: number): string => {
@@ -61,7 +163,7 @@ export const FormatMonth = (mon: number): string => {
 };
 
 export const Unix = (str: string): number => {
-  const num: number = moment.utc(str, "Do MMM YYYY", true).unix();
+  const num: number = moment.utc(str, format, true).unix();
 
   if (isNaN(num)) {
     return 0;
