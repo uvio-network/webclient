@@ -166,19 +166,19 @@ export class ClaimObject {
   }
 
   isDispute(): boolean {
-    return this.lifecycle().phase() === "dispute";
+    return this.lifecycle().phase(true) === "dispute";
   }
 
   isPropose(): boolean {
-    return this.lifecycle().phase() === "propose";
+    return this.lifecycle().phase(true) === "propose";
   }
 
   isResolve(): boolean {
-    return this.lifecycle().phase() === "resolve";
+    return this.lifecycle().phase(true) === "resolve";
   }
 
   isSettled(): boolean {
-    return this.lifecycle().phase() === "settled";
+    return this.lifecycle().phase(true) === "settled";
   }
 
   kind(): string {

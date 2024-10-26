@@ -46,7 +46,7 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
         EditorStore.getState().updatePending(true);
         EditorStore.getState().updatePost(props.claim.getPost());
         EditorStore.getState().updatePropose(props.claim);
-        EditorStore.getState().updateYear(props.claim.expiry().year());
+        EditorStore.getState().updateYear(props.claim.expiry().year().toString());
       }
 
       if (props.claim.latestVote().pending()) {
@@ -117,7 +117,7 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
         <div className="flex-1 w-full">
           <button
             className={TrimWhitespace(`
-              flex px-2 py-1 sm:py-4 w-full h-full
+              flex px-2 py-4 w-full h-full
               rounded items-center justify-center
               ${disabled ? "text-gray-700 bg-sky-300 cursor-not-allowed" : "text-gray-900 bg-sky-400 hover:text-black hover:bg-sky-500"}
             `)}

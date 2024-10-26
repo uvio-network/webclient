@@ -1,6 +1,7 @@
 import moment from "moment";
 
 import { Time } from "@/modules/time/Time";
+import { TimeItem } from "@/modules/time/Time";
 import { Unix } from "@/modules/time/Time";
 
 describe("Time", () => {
@@ -8,35 +9,92 @@ describe("Time", () => {
     const tim: Time = new Time(moment.unix(1723895522));
 
     test("allDays", () => {
-      const day: string[] = tim.allDays();
+      const day: TimeItem[] = tim.allDays();
       expect(day).toHaveLength(31);
-      expect(day).toEqual(["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th", "11th", "12th", "13th", "14th", "15th", "16th", "17th", "18th", "19th", "20th", "21st", "22nd", "23rd", "24th", "25th", "26th", "27th", "28th", "29th", "30th", "31st"]);
+      expect(day).toEqual([
+        { "act": false, "val": "1st" },
+        { "act": false, "val": "2nd" },
+        { "act": false, "val": "3rd" },
+        { "act": false, "val": "4th" },
+        { "act": false, "val": "5th" },
+        { "act": false, "val": "6th" },
+        { "act": false, "val": "7th" },
+        { "act": false, "val": "8th" },
+        { "act": false, "val": "9th" },
+        { "act": false, "val": "10th" },
+        { "act": false, "val": "11th" },
+        { "act": false, "val": "12th" },
+        { "act": false, "val": "13th" },
+        { "act": false, "val": "14th" },
+        { "act": false, "val": "15th" },
+        { "act": false, "val": "16th" },
+        { "act": true, "val": "17th" },
+        { "act": true, "val": "18th" },
+        { "act": true, "val": "19th" },
+        { "act": true, "val": "20th" },
+        { "act": true, "val": "21st" },
+        { "act": true, "val": "22nd" },
+        { "act": true, "val": "23rd" },
+        { "act": true, "val": "24th" },
+        { "act": true, "val": "25th" },
+        { "act": true, "val": "26th" },
+        { "act": true, "val": "27th" },
+        { "act": true, "val": "28th" },
+        { "act": true, "val": "29th" },
+        { "act": true, "val": "30th" },
+        { "act": true, "val": "31st" },
+      ]);
     });
 
     test("allMonths", () => {
-      const mon: string[] = tim.allMonths();
+      const mon: TimeItem[] = tim.allMonths();
       expect(mon).toHaveLength(12);
-      expect(mon).toEqual(["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]);
+      expect(mon).toEqual([
+        { "act": false, "val": "Jan" },
+        { "act": false, "val": "Feb" },
+        { "act": false, "val": "Mar" },
+        { "act": false, "val": "Apr" },
+        { "act": false, "val": "May" },
+        { "act": false, "val": "Jun" },
+        { "act": false, "val": "Jul" },
+        { "act": true, "val": "Aug" },
+        { "act": true, "val": "Sep" },
+        { "act": true, "val": "Oct" },
+        { "act": true, "val": "Nov" },
+        { "act": true, "val": "Dec" },
+      ]);
     });
 
     test("allYears", () => {
-      const yea: string[] = tim.allYears();
+      const yea: TimeItem[] = tim.allYears();
       expect(yea).toHaveLength(11);
-      expect(yea).toEqual(["2024", "2025", "2026", "2027", "2028", "2029", "2030", "2031", "2032", "2033", "2034"]);
+      expect(yea).toEqual([
+        { "act": true, "val": "2024" },
+        { "act": true, "val": "2025" },
+        { "act": true, "val": "2026" },
+        { "act": true, "val": "2027" },
+        { "act": true, "val": "2028" },
+        { "act": true, "val": "2029" },
+        { "act": true, "val": "2030" },
+        { "act": true, "val": "2031" },
+        { "act": true, "val": "2032" },
+        { "act": true, "val": "2033" },
+        { "act": true, "val": "2034" },
+      ]);
     });
 
-    test("currentDay", () => {
-      const day: string = tim.currentDay();
+    test("getDay", () => {
+      const day: string = tim.getDay();
       expect(day).toEqual("17th");
     });
 
-    test("currentMonth", () => {
-      const mon: string = tim.currentMonth();
+    test("getMonth", () => {
+      const mon: string = tim.getMonth();
       expect(mon).toEqual("Aug");
     });
 
-    test("currentYear", () => {
-      const yea: string = tim.currentYear();
+    test("getYear", () => {
+      const yea: string = tim.getYear();
       expect(yea).toEqual("2024");
     });
   });

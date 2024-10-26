@@ -19,12 +19,12 @@ import { VoteCreateResponse } from "@/modules/api/vote/create/Response";
 
 export interface EditorMessage {
   claims: ContractConfig;
-  day: number | string;
+  day: string;
   from: Address;
   kind: string;
   labels: string;
   markdown: string;
-  month: number | string;
+  month: string;
   option: boolean;
   overlay: boolean;
   parent: ClaimObject;
@@ -37,7 +37,7 @@ export interface EditorMessage {
   resolve: ClaimObject;
   stake: string;
   vote: VoteCreateResponse;
-  year: number | string;
+  year: string;
 };
 
 export const EditorStore = create(
@@ -65,12 +65,12 @@ export const EditorStore = create(
         set(() => {
           return {
             claims: EmptyContractConfig(),
-            day: 0,
+            day: "",
             from: "0x0",
             kind: "",
             labels: "",
             markdown: "",
-            month: 0,
+            month: "",
             option: false,
             overlay: false,
             parent: EmptyClaimObject(),
@@ -82,7 +82,7 @@ export const EditorStore = create(
             resolve: EmptyClaimObject(),
             stake: "",
             vote: EmptyVoteCreateResponse(),
-            year: 0,
+            year: "",
           };
         });
       },
@@ -140,7 +140,7 @@ export const EditorStore = create(
       isPropose: (): boolean => {
         return (!exiCla(get().propose) && !exiCla(get().resolve)) || (exiCla(get().propose) && !exiCla(get().resolve));
       },
-      updateDay: (d: number | string) => {
+      updateDay: (d: string) => {
         set((state: EditorMessage) => {
           return {
             ...state,
@@ -172,7 +172,7 @@ export const EditorStore = create(
           };
         });
       },
-      updateMonth: (m: number | string) => {
+      updateMonth: (m: string) => {
         set((state: EditorMessage) => {
           return {
             ...state,
@@ -284,7 +284,7 @@ export const EditorStore = create(
           };
         });
       },
-      updateYear: (y: number | string) => {
+      updateYear: (y: string) => {
         set((state: EditorMessage) => {
           return {
             ...state,

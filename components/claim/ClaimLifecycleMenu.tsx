@@ -62,6 +62,7 @@ export const ClaimLifecycleMenu = (props: Props) => {
           window.history.pushState(null, "", `/claim/${key}`);
         }}
         selected={{
+          act: true,
           key: props.current.id(),
           val: <BaseButton
             background="none"
@@ -84,6 +85,7 @@ export const ClaimLifecycleMenu = (props: Props) => {
 
 const sinSel = (cla: ClaimObject): SelectItem => {
   return {
+    act: true,
     key: cla.id(),
     val: <BaseLabel
       color={cla.lifecycle().color()}

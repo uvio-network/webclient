@@ -20,11 +20,13 @@ export const Tooltip = (props: Props) => {
       open={open}
       onOpenChange={setOpen}
     >
-      <HoverCard.Trigger
-        onTouchStart={() => setOpen(true)}
-        onMouseDown={() => setOpen(true)}
-      >
-        {props.trigger}
+      <HoverCard.Trigger asChild>
+        <span
+          onTouchStart={() => setOpen(true)}
+          onMouseDown={() => setOpen(true)}
+        >
+          {props.trigger}
+        </span>
       </HoverCard.Trigger>
       <HoverCard.Portal>
         <HoverCard.Content
