@@ -1,7 +1,7 @@
 import { EditorStore } from "@/modules/editor/EditorStore";
 import { encodeFunctionData } from "viem";
 import { EncodeFunctionDataParameters } from "viem";
-import { Transaction } from "@biconomy/account";
+import { Transaction } from "@/modules/transaction/Transaction";
 import { WalletStore } from "@/modules/wallet/WalletStore";
 
 export const Encode = (): Transaction => {

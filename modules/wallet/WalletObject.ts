@@ -9,7 +9,7 @@ import { PublicClient } from "viem";
 import { Receipt } from "@/modules/wallet/WalletInterface";
 import { RejectedReceipt } from "@/modules/wallet/WalletInterface";
 import { Signer } from "@/modules/wallet/WalletInterface";
-import { Transaction } from "@biconomy/account";
+import { Transaction } from "@/modules/transaction/Transaction";
 import { UserRejectedRequestError } from "viem";
 
 export class WalletObject implements Signer {
