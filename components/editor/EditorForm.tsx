@@ -75,6 +75,16 @@ export const EditorForm = (props: Props) => {
         disabled={disabled}
         type="button"
         onClick={() => {
+          {
+            setDisabled(true);
+          }
+
+          if (props.Kind === "claim") {
+            setProcessing("Signing Transaction");
+          } else {
+            setProcessing("Posting Comment");
+          }
+
           SubmitPost({
             after: () => {
               if (props.Kind === "claim") {
@@ -115,13 +125,7 @@ export const EditorForm = (props: Props) => {
               setProcessing("");
             },
             valid: () => {
-              setDisabled(true);
-
-              if (props.Kind === "claim") {
-                setProcessing("Signing Transaction");
-              } else {
-                setProcessing("Posting Comment");
-              }
+              //
             },
           });
         }}

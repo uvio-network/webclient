@@ -125,6 +125,11 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
             type="button"
             onClick={() => {
               if (props.claim.pending()) {
+                {
+                  setDisabled(true);
+                  setProcessing("Signing Transaction");
+                }
+
                 SubmitPost({
                   after: () => {
                     setProcessing("Confirming Onchain");
@@ -165,11 +170,20 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
                     setProcessing("");
                   },
                   valid: () => {
-                    setDisabled(true);
-                    setProcessing("Signing Transaction");
+                    //
                   },
                 });
               } else if (overlay || props.claim.patchVote() || props.claim.latestVote().pending()) {
+                {
+                  setDisabled(true);
+                }
+
+                if (props.claim.patchVote()) {
+                  setProcessing(`Submitting ${EditorStore.getState().kind === "stake" ? "Stake" : "Vote"}`);
+                } else {
+                  setProcessing("Signing Transaction");
+                }
+
                 SubmitVote({
                   after: () => {
                     setProcessing("Confirming Onchain");
@@ -213,12 +227,7 @@ export const ClaimVoteButtonsOverlay = (props: Props) => {
                     setProcessing("");
                   },
                   valid: () => {
-                    setDisabled(true);
-                    if (props.claim.patchVote()) {
-                      setProcessing(`Submitting ${EditorStore.getState().kind === "stake" ? "Stake" : "Vote"}`);
-                    } else {
-                      setProcessing("Signing Transaction");
-                    }
+                    //
                   },
                 });
               }
