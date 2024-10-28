@@ -1,6 +1,6 @@
 import * as Privy from "@privy-io/react-auth";
 
-import { Address, Hex } from "viem";
+import { Address } from "viem";
 import { BiconomySmartAccountV2 } from "@biconomy/account";
 import { ChainStore } from "@/modules/chain/ChainStore";
 import { createSmartAccountClient } from "@biconomy/account";

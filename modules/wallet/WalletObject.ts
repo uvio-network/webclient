@@ -1,6 +1,6 @@
 import * as Privy from "@privy-io/react-auth";
 
-import { Address, Hex } from "viem";
+import { Address } from "viem";
 import { NewPublicClient } from "@/modules/chain/PublicClient";
 import { NewWalletEmbedded } from "@/modules/wallet/WalletEmbedded";
 import { NewWalletInjected } from "@/modules/wallet/WalletInjected";

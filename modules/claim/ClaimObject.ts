@@ -5,6 +5,7 @@ import { ChainStore } from "@/modules/chain/ChainStore";
 import { EmptyPostSearchResponse } from "@/modules/api/post/search/Response";
 import { EmptyUserSearchResponse } from "@/modules/api/user/search/Response";
 import { EmptyVoteObject } from "@/modules/vote/VoteObject";
+import { Hash } from "@/modules/wallet/WalletInterface";
 import { LifecycleObject } from "@/modules/lifecycle/LifecycleObject";
 import { NewSummary } from "@/modules/summary/Summary";
 import { PostSearchResponse } from "@/modules/api/post/search/Response";
@@ -15,7 +16,6 @@ import { UserSearchResponse } from "@/modules/api/user/search/Response";
 import { UserStore } from "@/modules/user/UserStore";
 import { VoteObject } from "@/modules/vote/VoteObject";
 import { VoteSearchResponse } from "@/modules/api/vote/search/Response";
-import { Hash } from "../wallet/WalletInterface";
 
 export const EmptyClaimObject = (): ClaimObject => {
   return new ClaimObject(EmptyPostSearchResponse(), EmptyUserSearchResponse(), undefined, []);
