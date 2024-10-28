@@ -15,6 +15,7 @@ import { UserSearchResponse } from "@/modules/api/user/search/Response";
 import { UserStore } from "@/modules/user/UserStore";
 import { VoteObject } from "@/modules/vote/VoteObject";
 import { VoteSearchResponse } from "@/modules/api/vote/search/Response";
+import { Hash } from "../wallet/WalletInterface";
 
 export const EmptyClaimObject = (): ClaimObject => {
   return new ClaimObject(EmptyPostSearchResponse(), EmptyUserSearchResponse(), undefined, []);
@@ -161,8 +162,11 @@ export class ClaimObject {
     return this.post.expiry !== "" && this.post.expiry !== "0";
   }
 
-  hash(): string {
-    return this.post.hash;
+  hash(): Hash {
+    return {
+      transaction: this.post.hash,
+      userOp: "",
+    };
   }
 
   isDispute(): boolean {

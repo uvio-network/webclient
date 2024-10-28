@@ -14,12 +14,16 @@ export const ValidatePostTransactions = async () => {
   // transaction hash in local storage. If we have this transaction hash for
   // this claim, then we cannot simulate the transaction again, because the
   // claim's ID is then already allocated onchain. If we were to continue below
-  // desspite the fact of that claim ID being taken, the simulation below would
-  // fail and the user would get stuck. We can safely return here, because the
-  // transaction got already confirmed onchain, meaning it was already simulated
-  // and found to be valid.
+  // despite the fact of that claim ID being allocated already, then the
+  // simulation below would fail and the user would get stuck. We can safely
+  // return here, because the transaction got already confirmed onchain, meaning
+  // it was already simulated and found to be valid.
   const hsh = edi.getPostHash();
-  if (hsh !== "") {
+
+  const tra = hsh && hsh.transaction && hsh.transaction !== "" ? true : false;
+  const use = hsh && hsh.userOp && hsh.userOp !== "" ? true : false;
+
+  if (tra || use) {
     return;
   }
 

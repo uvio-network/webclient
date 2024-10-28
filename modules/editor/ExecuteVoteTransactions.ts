@@ -22,7 +22,11 @@ export const ExecuteVoteTransactions = async (bef: () => void, aft: () => void) 
   // If a pending vote was confirmed onchain, and if we have the transaction
   // hash stored locally, then we do not have to execute another transaction.
   const hsh = edi.getVoteHash();
-  if (hsh !== "") {
+
+  const tra = hsh && hsh.transaction && hsh.transaction !== "" ? true : false;
+  const use = hsh && hsh.userOp && hsh.userOp !== "" ? true : false;
+
+  if (tra || use) {
     // If a transaction hash exists, then we do not call the underlying wallet
     // object to execute another transaction. That means we have to execute the
     // callbacks given to us manually before updating the receipt state. We do
@@ -32,6 +36,10 @@ export const ExecuteVoteTransactions = async (bef: () => void, aft: () => void) 
     {
       bef();
       aft();
+    }
+
+    if (use && !tra) {
+      hsh.transaction = await wal.object.getUserOpReceipt(hsh.userOp)
     }
 
     {
@@ -58,9 +66,7 @@ export const ExecuteVoteTransactions = async (bef: () => void, aft: () => void) 
     txn.push(UpdateResolve.Encode());
   }
 
-  const res = await wal.object.sendTransaction(txn, bef, aft);
-
   {
-    edi.updateReceipt(res);
+    edi.updateReceipt(await wal.object.sendTransaction(txn, bef, aft));
   }
 };
