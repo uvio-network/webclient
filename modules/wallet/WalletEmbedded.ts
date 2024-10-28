@@ -8,7 +8,7 @@ import { NewBundlerURL } from "@/modules/biconomy/BundlerURL";
 import { PaymasterMode } from "@biconomy/account";
 import { Receipt } from "@/modules/wallet/WalletInterface";
 import { Signer } from "@/modules/wallet/WalletInterface";
-import { Transaction } from "@biconomy/account";
+import { Transaction } from "@/modules/transaction/Transaction";
 
 export const NewWalletEmbedded = async (wal: Privy.ConnectedWallet, index: number = 0): Promise<Signer> => {
   const active = ChainStore.getState().getActive();

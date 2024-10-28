@@ -10,7 +10,7 @@ import { parseGwei } from "viem";
 import { PublicClient } from "viem";
 import { Receipt } from "@/modules/wallet/WalletInterface";
 import { Signer } from "@/modules/wallet/WalletInterface";
-import { Transaction } from "@biconomy/account";
+import { Transaction } from "@/modules/transaction/Transaction";
 import { TransactionReceipt } from "viem";
 import { WalletClient } from "viem";
 
