@@ -4,7 +4,7 @@ import * as UpdateResolve from "@/modules/transaction/claims/write/UpdateResolve
 
 import { EditorStore } from "@/modules/editor/EditorStore";
 import { SuccessReceipt } from "@/modules/wallet/WalletInterface";
-import { Transaction } from "@biconomy/account";
+import { Transaction } from "@/modules/transaction/TransactionInterface";
 import { WalletStore } from "@/modules/wallet/WalletStore";
 
 export const ExecuteVoteTransactions = async (bef: () => void, aft: () => void) => {

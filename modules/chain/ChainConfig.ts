@@ -5,7 +5,7 @@ import { TokenConfig } from "@/modules/token/TokenConfig";
 import { truncateEthAddress } from "@/modules/wallet/WalletAddress";
 
 export interface ChainConfig extends Omit<Chain, "contracts"> {
-  biconomyPaymasterApiKey: string;
+  coinbasePaymasterEndpoint: string;
   contracts: { [key: string]: ContractConfig[] };
   rpcEndpoints: string[];
   tokens: { [key: string]: TokenConfig };

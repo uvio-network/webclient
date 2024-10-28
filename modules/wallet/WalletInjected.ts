@@ -10,7 +10,7 @@ import { parseGwei } from "viem";
 import { PublicClient } from "viem";
 import { Receipt } from "@/modules/wallet/WalletInterface";
 import { Signer } from "@/modules/wallet/WalletInterface";
-import { Transaction } from "@biconomy/account";
+import { Transaction } from "@/modules/transaction/TransactionInterface";
 import { TransactionReceipt } from "viem";
 import { WalletClient } from "viem";
 
@@ -69,9 +69,11 @@ class Injected implements Signer {
     const rec: TransactionReceipt[] = [];
 
     for (const x of txn) {
-      bef();
+      {
+        bef();
+      }
 
-      const has = await this.cli.sendTransaction({
+      const hsh = await this.cli.sendTransaction({
         account: this.address(),
         data: x.data as Hex,
         to: x.to as Address,
@@ -80,10 +82,12 @@ class Injected implements Signer {
         maxPriorityFeePerGas: parseGwei("0.5"),
       });
 
-      aft();
+      {
+        aft();
+      }
 
       rec.push(await this.pub.waitForTransactionReceipt({
-        hash: has,
+        hash: hsh,
       }));
     }
 
