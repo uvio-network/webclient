@@ -11,7 +11,7 @@ import { UVX } from "@/modules/abi/UVX";
 export const ChainWhitelist: ChainConfig[] = [
   {
     ...localhost,
-    biconomyPaymasterApiKey: "",
+    coinbasePaymasterEndpoint: "",
     contracts: {
       "Claims-UVX": [
         { abi: ClaimsV050, address: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0", latest: true },
@@ -27,7 +27,7 @@ export const ChainWhitelist: ChainConfig[] = [
   // https://docs.uvio.network/contracts/base-sepolia
   {
     ...baseSepolia,
-    biconomyPaymasterApiKey: Config.BaseSepoliaBiconomyPaymasterApiKey,
+    coinbasePaymasterEndpoint: Config.BaseSepoliaCoinbasePaymasterEndpoint,
     contracts: {
       "Claims-UVX": [
         { abi: ClaimsV040, address: "0x537cE8e9F4Cce5a1D8033B63f274187157a966b3", latest: false },

@@ -2,7 +2,7 @@ export const ApiServerRpcEndpoint: string = process.env.NEXT_PUBLIC_APISERVER_RP
 export const ApiServerRpcSendJSON: boolean = (process.env.NEXT_PUBLIC_APISERVER_RPC_SENDJSON || "").toLowerCase() === "true" || true;
 
 export const BaseSepoliaAlchemyRpcEndpoint: string = process.env.NEXT_PUBLIC_BASE_SEPOLIA_ALCHEMY_RPC_ENDPOINT || "";
-export const BaseSepoliaBiconomyPaymasterApiKey: string = process.env.NEXT_PUBLIC_BASE_SEPOLIA_BICONOMY_PAYMASTER_API_KEY || "";
+export const BaseSepoliaCoinbasePaymasterEndpoint: string = process.env.NEXT_PUBLIC_BASE_SEPOLIA_COINBASE_PAYMASTER_ENDPOINT || "";
 
 export const DefaultChainId: number = Number(process.env.NEXT_PUBLIC_DEFAULT_CHAIN_ID) || 84532;
 

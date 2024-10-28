@@ -3,7 +3,7 @@ import * as TokenApprove from "@/modules/transaction/token/write/TokenApprove";
 import { EditorStore } from "@/modules/editor/EditorStore";
 import { encodeFunctionData } from "viem";
 import { EncodeFunctionDataParameters } from "viem";
-import { Transaction } from "@biconomy/account";
+import { Transaction } from "@/modules/transaction/TransactionInterface";
 import { WalletStore } from "@/modules/wallet/WalletStore";
 
 export const Encode = (): Transaction => {

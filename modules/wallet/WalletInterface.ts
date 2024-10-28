@@ -1,5 +1,5 @@
 import { Address } from "viem";
-import { Transaction } from "@biconomy/account";
+import { Transaction } from "@/modules/transaction/TransactionInterface";
 
 export interface Receipt {
   hash: string;

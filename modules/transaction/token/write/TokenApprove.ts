@@ -9,7 +9,7 @@ import { padHex } from "viem";
 import { PublicClient } from "viem";
 import { StateMapping } from "viem";
 import { TokenConfig } from "@/modules/token/TokenConfig";
-import { Transaction } from "@biconomy/account";
+import { Transaction } from "@/modules/transaction/TransactionInterface";
 
 export const Encode = (amo: bigint, spd: Address, tok: TokenConfig): Transaction => {
   return {
