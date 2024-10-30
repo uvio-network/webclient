@@ -4,6 +4,7 @@ import { Address } from "viem";
 import { BiconomySmartAccountV2 } from "@biconomy/account";
 import { ChainStore } from "@/modules/chain/ChainStore";
 import { createSmartAccountClient } from "@biconomy/account";
+import { EmptyReceipt } from "@/modules/wallet/WalletInterface";
 import { NewBundlerURL } from "@/modules/biconomy/BundlerURL";
 import { PaymasterMode } from "@biconomy/account";
 import { Receipt } from "@/modules/wallet/WalletInterface";
@@ -47,23 +48,45 @@ class Embedded implements Signer {
     return "embedded";
   }
 
-  async sendTransaction(txn: Transaction[], bef: () => void, aft: () => void): Promise<Receipt> {
-    const opt = {
-      paymasterServiceData: { mode: PaymasterMode.SPONSORED },
+  async getUserOpReceipt(hsh: string): Promise<string> {
+    if (this.con.bundler) {
+      const rec = await this.con.bundler.getUserOpReceipt(hsh);
+      return rec.receipt?.transactionHash as string | "";
     }
 
-    bef();
+    return "";
+  }
 
-    const res = await this.con.sendTransaction(txn, opt);
+  async sendTransaction(txn: Transaction[], bef: () => void, aft: () => void): Promise<Receipt> {
+    const rec = EmptyReceipt();
 
-    aft();
+    try {
+      {
+        bef();
+      }
 
-    const { receipt, success } = await res.wait();
+      const { userOpHash, wait } = await this.con.sendTransaction(txn, {
+        paymasterServiceData: { mode: PaymasterMode.SPONSORED },
+      });
 
-    return {
-      hash: receipt.transactionHash,
-      rejected: false,
-      success: success.toLowerCase() === "true" ? true : false,
-    };
+      {
+        aft();
+      }
+
+      {
+        rec.hash.userOp = userOpHash;
+      }
+
+      const { receipt, success } = await wait();
+
+      {
+        rec.hash.transaction = receipt.transactionHash;
+        rec.success = success.toLowerCase() === "true" ? true : false;
+      }
+    } catch (err) {
+      //
+    }
+
+    return rec;
   }
 }

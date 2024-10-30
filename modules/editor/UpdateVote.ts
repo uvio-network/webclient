@@ -11,7 +11,7 @@ export const UpdateVote = async () => {
     // intern
     id: edi.vote.id,
     // public
-    hash: edi.receipt.hash,
+    hash: edi.receipt.hash.transaction,
     meta: "",
   };
 

@@ -11,7 +11,7 @@ export const UpdatePost = async () => {
     // intern
     id: edi.post.id,
     // public
-    hash: edi.receipt.hash,
+    hash: edi.receipt.hash.transaction,
     meta: "",
   };
 

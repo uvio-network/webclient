@@ -7,9 +7,11 @@ import { create } from "zustand";
 import { parseUnits } from "viem";
 import { EmptyClaimObject } from "@/modules/claim/ClaimObject";
 import { EmptyContractConfig } from "@/modules/contract/ContractConfig";
+import { EmptyHash } from "@/modules/wallet/WalletInterface";
 import { EmptyPostCreateResponse } from "@/modules/api/post/create/Response";
 import { EmptyReceipt } from "@/modules/wallet/WalletInterface";
 import { EmptyVoteCreateResponse } from "@/modules/api/vote/create/Response";
+import { Hash } from "@/modules/wallet/WalletInterface";
 import { PostCreateResponse } from "@/modules/api/post/create/Response";
 import { Receipt } from "@/modules/wallet/WalletInterface";
 import { TokenConfig } from "@/modules/token/TokenConfig";
@@ -54,12 +56,14 @@ export const EditorStore = create(
 
         const pos = get().post;
         if (pos !== undefined && pos.id !== "") {
-          localStorage.removeItem(posKey(pos.id));
+          localStorage.removeItem(posKey(pos.id, "transaction"));
+          localStorage.removeItem(posKey(pos.id, "userOp"));
         }
 
         const vot = get().vote;
         if (vot !== undefined && vot.id !== "") {
-          localStorage.removeItem(votKey(vot.id));
+          localStorage.removeItem(votKey(vot.id, "transaction"));
+          localStorage.removeItem(votKey(vot.id, "userOp"));
         }
 
         set(() => {
@@ -102,14 +106,17 @@ export const EditorStore = create(
       getLabels: (): string => {
         return getLab(get().labels, get().propose);
       },
-      getPostHash: (): string => {
+      getPostHash: (): Hash => {
         const pos = get().post;
 
         if (pos !== undefined && pos.id !== "") {
-          return localStorage.getItem(posKey(pos.id)) || "";
+          return {
+            transaction: localStorage.getItem(posKey(pos.id, "transaction")) || "",
+            userOp: localStorage.getItem(posKey(pos.id, "userOp")) || "",
+          }
         }
 
-        return "";
+        return EmptyHash();
       },
       getSymbol: (): string => {
         return tokStr(getStk(get().stake, get().propose));
@@ -117,14 +124,17 @@ export const EditorStore = create(
       getToken: (): TokenConfig => {
         return tokCon(getStk(get().stake, get().propose));
       },
-      getVoteHash: (): string => {
+      getVoteHash: (): Hash => {
         const vot = get().vote;
 
         if (vot !== undefined && vot.id !== "") {
-          return localStorage.getItem(votKey(vot.id)) || "";
+          return {
+            transaction: localStorage.getItem(votKey(vot.id, "transaction")) || "",
+            userOp: localStorage.getItem(votKey(vot.id, "userOp")) || "",
+          }
         }
 
-        return "";
+        return EmptyHash();
       },
       updateClaims: (c: ContractConfig) => {
         set((state: EditorMessage) => {
@@ -237,12 +247,26 @@ export const EditorStore = create(
         });
       },
       updateReceipt: (r: Receipt) => {
-        if (get().kind === "stake" || get().kind === "truth") {
-          localStorage.setItem(votKey(get().vote.id), r.hash);
+        const kin = get().kind;
+        const pos = get().post;
+        const vot = get().vote;
+
+        if (kin === "claim") {
+          if (r.hash.transaction && r.hash.transaction !== "") {
+            localStorage.setItem(posKey(pos.id, "transaction"), r.hash.transaction);
+          }
+          if (r.hash.userOp && r.hash.userOp !== "") {
+            localStorage.setItem(posKey(pos.id, "userOp"), r.hash.userOp);
+          }
         }
 
-        if (get().kind === "claim") {
-          localStorage.setItem(posKey(get().post.id), r.hash);
+        if (kin === "stake" || kin === "truth") {
+          if (r.hash.transaction && r.hash.transaction !== "") {
+            localStorage.setItem(votKey(vot.id, "transaction"), r.hash.transaction);
+          }
+          if (r.hash.userOp && r.hash.userOp !== "") {
+            localStorage.setItem(votKey(vot.id, "userOp"), r.hash.userOp);
+          }
         }
 
         set((state: EditorMessage) => {
@@ -350,10 +374,6 @@ const getStk = (stk: string, pro: ClaimObject): string => {
   return "";
 };
 
-const posKey = (oid: string): string => {
-  return oid + ".post.uvio.network/hash";
-};
-
 const tokCon = (stk: string): TokenConfig => {
   return ChainStore.getState().getActive().tokens[tokStr(stk)];
 };
@@ -368,6 +388,14 @@ const tokStr = (stk: string): string => {
   return TrimWhitespace(spl[1]);
 };
 
-const votKey = (oid: string): string => {
-  return oid + ".vote.uvio.network/hash";
+//
+//
+//
+
+const posKey = (pos: string, key: "transaction" | "userOp"): string => {
+  return pos + ".post.uvio.network/" + key;
+};
+
+const votKey = (vot: string, key: "transaction" | "userOp"): string => {
+  return vot + ".vote.uvio.network/" + key;
 };

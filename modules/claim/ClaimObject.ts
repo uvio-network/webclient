@@ -5,6 +5,7 @@ import { ChainStore } from "@/modules/chain/ChainStore";
 import { EmptyPostSearchResponse } from "@/modules/api/post/search/Response";
 import { EmptyUserSearchResponse } from "@/modules/api/user/search/Response";
 import { EmptyVoteObject } from "@/modules/vote/VoteObject";
+import { Hash } from "@/modules/wallet/WalletInterface";
 import { LifecycleObject } from "@/modules/lifecycle/LifecycleObject";
 import { NewSummary } from "@/modules/summary/Summary";
 import { PostSearchResponse } from "@/modules/api/post/search/Response";
@@ -161,8 +162,11 @@ export class ClaimObject {
     return this.post.expiry !== "" && this.post.expiry !== "0";
   }
 
-  hash(): string {
-    return this.post.hash;
+  hash(): Hash {
+    return {
+      transaction: this.post.hash,
+      userOp: "",
+    };
   }
 
   isDispute(): boolean {

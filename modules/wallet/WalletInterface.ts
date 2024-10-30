@@ -1,29 +1,33 @@
 import { Address } from "viem";
 import { Transaction } from "@/modules/transaction/Transaction";
 
+export interface Hash {
+  transaction: string | Address;
+  userOp: string | Address;
+};
+
 export interface Receipt {
-  hash: string;
+  hash: Hash;
   rejected: boolean;
   success: boolean;
 };
 
+export const EmptyHash = (): Hash => {
+  return {
+    transaction: "",
+    userOp: "",
+  };
+};
+
 export const EmptyReceipt = (): Receipt => {
   return {
-    hash: "",
+    hash: EmptyHash(),
     rejected: false,
-    success: false,
+    success: true,
   };
 };
 
-export const RejectedReceipt = (): Receipt => {
-  return {
-    hash: "",
-    rejected: true,
-    success: false,
-  };
-};
-
-export const SuccessReceipt = (hsh: string): Receipt => {
+export const SuccessReceipt = (hsh: Hash): Receipt => {
   return {
     hash: hsh,
     rejected: false,
@@ -34,5 +38,6 @@ export const SuccessReceipt = (hsh: string): Receipt => {
 export interface Signer {
   address(): Address;
   connectorType(): string;
+  getUserOpReceipt(hsh: string): Promise<string>;
   sendTransaction(txn: Transaction[], bef: () => void, aft: () => void): Promise<Receipt>;
 }
