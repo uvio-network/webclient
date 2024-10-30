@@ -8,6 +8,7 @@ import { PublicClient } from "viem";
 import { Receipt } from "@/modules/wallet/WalletInterface";
 import { Signer } from "@/modules/wallet/WalletInterface";
 import { Transaction } from "@/modules/transaction/Transaction";
+import { zeroAddress } from "viem";
 
 export class WalletObject implements Signer {
   private pub: PublicClient;
@@ -34,11 +35,19 @@ export class WalletObject implements Signer {
   }
 
   address(): Address {
-    return this.sig.address();
+    if (this.sig) {
+      return this.sig.address();
+    }
+
+    return zeroAddress;
   }
 
   connectorType(): string {
-    return this.sig.connectorType();
+    if (this.sig) {
+      return this.sig.connectorType();
+    }
+
+    return "";
   }
 
   public(): PublicClient {
