@@ -70,12 +70,11 @@ export const TreeContainer = (props: Props) => {
               __html: ProcessString(
                 current.markdown(),
                 {
-                  "true": bldStr,
-                  "false": bldStr,
-                  "invalid": bldStr, // must run before "valid"
-                  "valid": bldStr,
-                  "your": rawStr,    // must run before "you"
-                  "you": bldStr,
+                  "**true**": bldStr,
+                  "**false**": bldStr,
+                  "**valid**": bldStr,
+                  "**invalid**": bldStr,
+                  "**you**": bldStr,
                 },
               )
             }} />
@@ -131,9 +130,5 @@ export const TreeContainer = (props: Props) => {
 };
 
 const bldStr = (x: string): string => {
-  return `<strong>${x}</strong>`;
-};
-
-const rawStr = (x: string): string => {
-  return x;
+  return `<strong>${x.replace(/\*\*/g, "")}</strong>`;
 };

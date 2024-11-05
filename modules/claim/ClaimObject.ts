@@ -212,7 +212,7 @@ export class ClaimObject {
 
     if (this.selected()) {
       if (this.voted()) {
-        text += " And you have cast your vote already. Thank you for participating!";
+        text += " And **you** have cast your vote already. Thank you for participating!";
       } else {
         text += " And **you** have been selected too. Make sure to cast your vote in time!";
       }

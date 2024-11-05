@@ -20,7 +20,7 @@ export const ClaimVoteButtons = (props: Props) => {
   const minimum = props.claim.summary().post.minimum;
   const token = props.claim.token();
 
-  const isActive = claAct(isResolve, isExpired, isSelected, isUser, hasVoted);
+  const isActive = claAct(isResolve, isExpired, isSelected, hasVoted);
 
   const onClick = (sid: boolean) => {
     return () => {
@@ -88,10 +88,15 @@ const avlBal = (sym: string): number => {
   return TokenStore.getState().available[sym]?.balance || 0;
 };
 
-const claAct = (res: boolean, exp: boolean, sel: boolean, use: boolean, vot: boolean): boolean => {
+const claAct = (res: boolean, exp: boolean, sel: boolean, vot: boolean): boolean => {
+  // If the current claim is a resolve, and if it is not expired, and if the
+  // current user has been selected to vote, and if the current voter has not
+  // voted yet, then this claim is active.
   if (res) {
-    return !exp && sel && use && !vot;
+    return !exp && sel && !vot;
   }
 
-  return !exp && use;
+  // If the current claim is a propose or dispute, and if it is not expired,
+  // then this claim is active.
+  return !exp;
 };
