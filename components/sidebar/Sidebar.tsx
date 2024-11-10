@@ -9,6 +9,7 @@ import { BaseButton } from "@/components/button/BaseButton";
 import { HorizontalSeparator } from "@/components/layout/HorizontalSeparator";
 import { LifecycleButton } from "@/components/sidebar/button/LifecycleButton";
 import { LoadingStore } from "@/components/loading/LoadingStore";
+import { NotificationButton } from "@/components/sidebar/button/NotificationButton";
 import { ProposeButton } from "@/components/sidebar/button/ProposeButton";
 import { SocialButton } from "@/components/sidebar/button/SocialButton";
 import { ThemeButton } from "@/components/sidebar/button/ThemeButton";
@@ -82,6 +83,7 @@ export const Sidebar = () => {
 
         {/* lists */}
         <ProposeButton onClick={onClick} />
+        <NotificationButton onClick={onClick} />
 
         <HorizontalSeparator />
 

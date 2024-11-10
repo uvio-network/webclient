@@ -3,9 +3,9 @@
 
 const truncateRegex = /^(0x[a-zA-Z0-9]{4})[a-zA-Z0-9]+([a-zA-Z0-9]{4})$/;
 
-export const truncateEthAddress = (address?: string, separator: string = '••••') => {
-  if (!address) return '';
-  const match = address.match(truncateRegex);
-  if (!match) return address;
-  return `${match[1]}${separator}${match[2]}`;
+export const truncateEthAddress = (address?: string, separator: string = "•••") => {
+  if (!address) return "";
+  const mat = address.match(truncateRegex);
+  if (!mat) return address;
+  return `${mat[1]}${separator}${mat[2]}`;
 };
