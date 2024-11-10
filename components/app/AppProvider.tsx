@@ -4,6 +4,7 @@ import * as Config from "@/modules/config";
 
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { ChainStore } from "@/modules/chain/ChainStore";
+import { NotificationProvider } from "@/components/notification/NotificationProvider";
 import { PrivyProvider } from "@privy-io/react-auth";
 import { Sidebar } from "@/components/sidebar/Sidebar";
 import { ToastProvider } from "@/components/toast/ToastProvider";
@@ -27,6 +28,7 @@ export const AppProvider = () => {
         <Sidebar />
       </PrivyProvider >
 
+      <NotificationProvider />
       <ToastProvider />
     </>
   );

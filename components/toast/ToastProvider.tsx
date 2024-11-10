@@ -52,7 +52,7 @@ export const ToastProvider = () => {
 
             {mes.spin && (
               <div className="w-full h-1 bg-transparent rounded overflow-hidden mt-2">
-                <div className="h-full bg-blue-600 progress-effect" />
+                <div className="h-full bg-blue-600 dark:bg-blue-400 progress-effect" />
               </div>
             )}
           </RadixToast.Root>

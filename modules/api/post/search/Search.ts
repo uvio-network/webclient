@@ -1,12 +1,13 @@
 import { API } from "@/modules/api/post/API";
 import { PostSearchRequest } from "@/modules/api/post/search/Request";
 import { PostSearchResponse } from "@/modules/api/post/search/Response";
+import { SearchI_Filter } from "@uvio-network/apitscode/src/post/search";
 
 export async function PostSearch(tok: string, req: PostSearchRequest[]): Promise<PostSearchResponse[]> {
   try {
     const cal = await API.search(
       {
-        filter: req[0].time === "latest" ? { paging: { kind: "page", start: "0", stop: "49" } } : {},
+        filter: newFil(req[0].time || ""),
         object: req.map((x) => ({
           intern: {
             id: x.id || "",
@@ -57,3 +58,11 @@ export async function PostSearch(tok: string, req: PostSearchRequest[]): Promise
     return Promise.reject(err);
   }
 }
+
+const newFil = (tim: "page" | string): SearchI_Filter => {
+  if (tim === "page") {
+    return { paging: { kind: "page", start: "0", stop: "49" } };
+  }
+
+  return {};
+};

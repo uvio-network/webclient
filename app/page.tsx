@@ -12,7 +12,7 @@ export default function Page() {
       <ClaimList
         comments={false}
         query={["claim", "time", "latest"]}
-        request={{ time: "latest" }}
+        request={{ time: "page" }}
       />
     </>
   );

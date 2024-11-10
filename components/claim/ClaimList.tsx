@@ -81,7 +81,7 @@ export const ClaimList = (props: Props) => {
             user={user}
           />
 
-          {i < posts.data?.length - 1 && (
+          {i < posts.data.length - 1 && (
             <div className="w-full h-12 mb-8">
               <VerticalSeparator />
             </div>

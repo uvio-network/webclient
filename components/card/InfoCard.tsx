@@ -29,7 +29,7 @@ export const InfoCard = (props: Props) => {
         {" Learn more at "}
 
         <Link
-          className="text-blue-600"
+          className="text-blue-600 dark:text-blue-400"
           href="https://docs.uvio.network"
           target="_blank"
         >
