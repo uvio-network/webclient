@@ -11,7 +11,7 @@ export const BaseLabel = (props: Props) => {
   return (
     <div
       className={TrimWhitespace(`
-        w-fit px-1 py-[1px] rounded
+        w-fit h-fit px-1 py-[1px] rounded
         text-sm font-mono font-medium border whitespace-nowrap
         ${props.dashed === true ? "border-dashed" : ""}
         ${props.className ? props.className : ""}
