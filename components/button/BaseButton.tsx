@@ -81,7 +81,7 @@ export const BaseButton = React.forwardRef<HTMLDivElement, Props>(function BaseB
         ${disabled ? "cursor-default" : "cursor-pointer"}
         ${props.color ? props.color : "text-gray-400 dark:text-gray-500"}
         ${props.font ? props.font : "font-medium"}
-        ${props.hover ? props.hover && !disabled : ((props.confirm === true && click) || disabled) ? "" : "hover:text-black dark:hover:text-white"}
+        ${props.hover ? props.hover : ((props.confirm === true && click) || disabled) ? "" : "hover:text-black dark:hover:text-white"}
         ${props.background ? props.background : "hover:bg-gray-200 dark:hover:bg-gray-700"}
       `)}
       onClick={disabled ? undefined : onClick}

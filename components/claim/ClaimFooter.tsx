@@ -19,12 +19,11 @@ interface Props {
 export const ClaimFooter = (props: Props) => {
   const router = useRouter();
 
-  const claimPage = "/claim/" + props.claim.id();
-
   const isClaim = props.claim.kind() === "claim";
   const isComment = props.claim.kind() === "comment";
   const isPage = ClaimPage(usePathname()) !== "";
 
+  const claimPage = "/claim/" + props.claim.id();
   const filter = QueryStore.getState().claim.filter;
   const token = isClaim ? props.claim.token() : props.claim.parent()!.token();
 
