@@ -1,21 +1,30 @@
-import * as ToastSender from "@/components/toast/ToastSender";
-
 import { BaseButton } from "@/components/button/BaseButton";
-import { NoButton } from "@/components/button/NoButton";
 import { ClaimFooterCard } from "@/components/claim/ClaimFooterCard";
 import { ClaimObject } from "@/modules/claim/ClaimObject";
+import { ClaimPage } from "@/modules/claim/ClaimPage";
+import { EditorStore } from "@/modules/editor/EditorStore";
+import { NoButton } from "@/components/button/NoButton";
+import { QueryStore } from "@/modules/query/QueryStore";
 import { Tooltip } from "@/components/tooltip/Tooltip";
 import { TriangleDownIcon } from "@/components/icon/TriangleDownIcon";
 import { TriangleUpIcon } from "@/components/icon/TriangleUpIcon";
+import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 interface Props {
   claim: ClaimObject;
+  comments: number;
 }
 
 export const ClaimFooter = (props: Props) => {
+  const router = useRouter();
+
   const isClaim = props.claim.kind() === "claim";
   const isComment = props.claim.kind() === "comment";
+  const isPage = ClaimPage(usePathname()) !== "";
 
+  const claimPage = "/claim/" + props.claim.id();
+  const filter = QueryStore.getState().claim.filter;
   const token = isClaim ? props.claim.token() : props.claim.parent()!.token();
 
   const postAgree = props.claim.summary().post.agreement;
@@ -24,8 +33,35 @@ export const ClaimFooter = (props: Props) => {
   const textAgree = votStr(isComment, props.claim, postAgree, token);
   const textDisagree = votStr(isComment, props.claim, postDisagree, token);
 
-  const onClick = () => {
-    ToastSender.Info("It's comming just chill ok!");
+  const onClick = (sid: boolean) => {
+    return () => {
+      if (isPage) {
+        if (sid) {
+          if (filter === "agree") {
+            QueryStore.getState().updateClaimFilter("all");
+          } else {
+            QueryStore.getState().updateClaimFilter("agree");
+          }
+        } else {
+          if (filter === "disagree") {
+            QueryStore.getState().updateClaimFilter("all");
+          } else {
+            QueryStore.getState().updateClaimFilter("disagree");
+          }
+        }
+      } else {
+        // show the button overlay for staking on the next page
+        {
+          EditorStore.getState().updateOption(sid)
+          EditorStore.getState().updateOverlay(true)
+        }
+
+        // redirect to claim page
+        {
+          router.push(claimPage);
+        }
+      }
+    }
   };
 
   return (
@@ -35,10 +71,12 @@ export const ClaimFooter = (props: Props) => {
           <div className="grid place-content-start">
             {isClaim && !props.claim.isResolve() && (
               <BaseButton
+                background={butBac(props.comments, isPage, filter, true)}
+                disabled={isPage && props.comments === 0}
                 effect={textAgree}
                 font="font-normal"
                 icon={<TriangleUpIcon className="mb-[1px]" />}
-                onClick={onClick}
+                onClick={onClick(true)}
                 position="right"
                 text={<>{textAgree}</>}
               />
@@ -88,10 +126,12 @@ export const ClaimFooter = (props: Props) => {
           <div className="grid place-content-end">
             {isClaim && !props.claim.isResolve() && (
               <BaseButton
+                background={butBac(props.comments, isPage, filter, false)}
+                disabled={isPage && props.comments === 0}
                 effect={textDisagree}
                 font="font-normal"
                 icon={<TriangleDownIcon className="mb-[1px]" />}
-                onClick={onClick}
+                onClick={onClick(false)}
                 position="left"
                 text={<>{textDisagree}</>}
               />
@@ -129,6 +169,35 @@ export const ClaimFooter = (props: Props) => {
       </div>
     </div>
   );
+};
+
+// butBack returns the background configuration for the base button component in
+// the claim footer.
+//
+//     The current UX is as such that hover only highlights the font, regardless
+//     the page.
+//
+//     No background is applied on the feed page.
+//
+//     Background is applied on the claim page, if the given side is selected to
+//     show only the given type of comments, namely "agree" or "disagree".
+//
+const butBac = (com: number, pag: boolean, fil: "agree" | "all" | "disagree", sid: boolean): string | undefined => {
+  if (pag) {
+    if (com === 0) {
+      return "none";
+    }
+
+    if ((sid && fil === "agree") || (!sid && fil === "disagree")) {
+      return "bg-gray-100 dark:bg-gray-900";
+    }
+
+    if (fil === "all") {
+      return "none";
+    }
+  }
+
+  return "none";
 };
 
 const votStr = (com: boolean, cla: ClaimObject, num: number, tok: string): string => {

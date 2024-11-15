@@ -8,6 +8,7 @@ interface Props {
   background?: string;
   color?: string;
   confirm?: boolean;
+  disabled?: boolean;
   effect?: string;
   font?: string;
   hover?: string;
@@ -22,7 +23,7 @@ interface Props {
 
 export const BaseButton = React.forwardRef<HTMLDivElement, Props>(function BaseButton(props: Props, ref) {
   const [click, setClick] = React.useState<boolean>(false);
-  const [disabled, setDisabled] = React.useState<boolean>(false);
+  const [disabled, setDisabled] = React.useState<boolean>(props.disabled ? props.disabled : false);
 
   const onClick = (eve: React.MouseEvent<HTMLDivElement>) => {
     if (props.confirm === true) {

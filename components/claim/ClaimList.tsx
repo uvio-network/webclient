@@ -26,6 +26,10 @@ export const ClaimList = (props: Props) => {
     loaded: state.loaded,
   })));
 
+  const { filter } = QueryStore(useShallow((state) => ({
+    filter: state.claim.filter,
+  })));
+
   const { token, user } = UserStore(useShallow((state) => ({
     token: state.token,
     user: state.object,
@@ -93,7 +97,12 @@ export const ClaimList = (props: Props) => {
                 titl="Comments"
               />
 
-              {x.comment().map((y: ClaimObject, i: number) => (
+              {x.comment().filter((y: ClaimObject) => {
+                if (filter === "all") return true;
+                if (filter === "agree" && y.side() === true) return true;
+                if (filter === "disagree" && y.side() === false) return true;
+                return false;
+              }).map((y: ClaimObject, i: number, filteredComments) => (
                 <div key={y.id()}>
                   <CommentContainer
                     comment={y}
