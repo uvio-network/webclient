@@ -123,6 +123,7 @@ export const TreeContainer = (props: Props) => {
       {!isSettled && (
         <ClaimFooter
           claim={current}
+          comments={props.tree.comment().length}
         />
       )}
     </div>
