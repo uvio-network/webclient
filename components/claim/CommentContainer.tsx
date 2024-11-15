@@ -45,6 +45,7 @@ export const CommentContainer = (props: Props) => {
 
       <ClaimFooter
         claim={props.comment}
+        comments={0}
       />
     </div>
   );
