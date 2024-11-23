@@ -27,7 +27,7 @@ export const SubmitVote = async (props: Props) => {
 
   {
     if (edi.kind === "stake") {
-      if (!ValidateStake()) return;
+      if (!ValidateStake()) return props.rejected();
     }
   }
 
