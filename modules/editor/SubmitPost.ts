@@ -38,14 +38,14 @@ export const SubmitPost = async (props: Props) => {
   // page.
   {
     if (edi.kind === "claim") {
-      if (!ValidateMarkdown()) return;
-      if (!ValidateLabels()) return;
-      if (!ValidateExpiry()) return;
-      if (!ValidateStake()) return;
+      if (!ValidateMarkdown()) return props.rejected();
+      if (!ValidateLabels()) return props.rejected();
+      if (!ValidateExpiry()) return props.rejected();
+      if (!ValidateStake()) return props.rejected();
     }
 
     if (edi.kind === "comment") {
-      if (!ValidateMarkdown()) return;
+      if (!ValidateMarkdown()) return props.rejected();
     }
   }
 
